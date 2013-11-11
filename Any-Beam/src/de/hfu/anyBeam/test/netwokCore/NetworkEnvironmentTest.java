@@ -1,6 +1,8 @@
-package de.hfu.anyBeam.netwokCore;
+package de.hfu.anyBeam.test.netwokCore;
 
 import java.io.IOException;
+
+import de.hfu.anyBeam.netwokCore.NetworkEnvironment;
 
 public class NetworkEnvironmentTest {
 	
