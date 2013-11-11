@@ -1,3 +1,4 @@
+package de.hfu.anyBeam.netwokCore;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -15,16 +16,6 @@ public class NetworkEnvironment {
 	private final int PORT;
 	private final Vector<InetAddress> CLIENTS = new Vector<InetAddress>();
 	private final Vector<NetworkEnvironmentListener> LISTENERS = new Vector<NetworkEnvironmentListener>();
-
-	public static void main(String[] args) {
-
-		try {
-			new NetworkEnvironment(4242, true).createClientList();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
 
 	public NetworkEnvironment(int port, boolean listen) throws IOException {
 		this.PORT = port;
