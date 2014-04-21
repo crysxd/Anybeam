@@ -1,5 +1,11 @@
-package de.hfu.anybeam;
+package de.hfu.anybeam.fragment;
 
+import de.hfu.anybeam.R;
+import de.hfu.anybeam.R.drawable;
+import de.hfu.anybeam.R.id;
+import de.hfu.anybeam.R.layout;
+import de.hfu.anybeam.R.menu;
+import de.hfu.anybeam.R.string;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
