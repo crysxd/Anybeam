@@ -19,15 +19,18 @@ public class PlaceholderFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String ARG_NAME = "section_name";
+    
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static PlaceholderFragment newInstance(int sectionNumber) {
+    public static PlaceholderFragment newInstance(CharSequence sectionName, int sectionNumber) {    	
         PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        args.putCharSequence(ARG_NAME, sectionName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,7 +43,7 @@ public class PlaceholderFragment extends Fragment {
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_activity_main, container, false);
         TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+        textView.setText("Send to: " + getArguments().getCharSequence(ARG_NAME));
         return rootView;
     }
 
