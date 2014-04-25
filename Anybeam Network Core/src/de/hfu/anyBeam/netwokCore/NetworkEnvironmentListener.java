@@ -6,5 +6,7 @@ public interface NetworkEnvironmentListener {
 	
 	public void clientAdded(InetAddress i);
 	public void clientListCleared();
+	public void searchStarted();
+	public void searchDone();
 
 }
