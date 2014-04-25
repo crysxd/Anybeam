@@ -1,10 +1,6 @@
 package de.hfu.anyBeam.netwokCore;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +34,6 @@ public class NetworkEnvironment {
 	/*
 	 * Non static content
 	 */
-	private Future<?> myBroadcastListenerFuture;
 	private final int PORT;
 	private final Vector<InetAddress> CLIENTS = new Vector<InetAddress>();
 	private final Vector<NetworkEnvironmentListener> LISTENERS = new Vector<NetworkEnvironmentListener>();
@@ -52,7 +47,7 @@ public class NetworkEnvironment {
 		this.GROUP = group;
 		this.ID = (long) Math.floor(System.currentTimeMillis() * Math.random());
 		
-		this.myBroadcastListenerFuture = this.THREAD_EXECUTOR.submit(new BroadcastListener(this));
+		this.THREAD_EXECUTOR.submit(new BroadcastListener(this));
 	}
 	
 	public String getGroupName() {
