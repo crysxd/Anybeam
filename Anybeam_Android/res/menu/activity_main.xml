@@ -3,9 +3,8 @@
     tools:context="de.hfu.anybeam.ActivityMain" >
 
     <item
-        android:id="@+id/action_refresh"
+        android:id="@+id/action_example"
         android:showAsAction="withText|ifRoom"
-        android:icon="@drawable/ic_action_refresh"
         android:title="@string/action_example"/>
     <item
         android:id="@+id/action_settings"
