@@ -2,6 +2,7 @@ package de.hfu.anyBeam.netwokCore.test;
 
 import java.net.InetAddress;
 
+import de.hfu.anyBeam.netwokCore.Client;
 import de.hfu.anyBeam.netwokCore.NetworkEnvironment;
 import de.hfu.anyBeam.netwokCore.NetworkEnvironmentListener;
 
@@ -13,9 +14,13 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 	
 	private NetworkEnvironmentTest() {
 		try {
-			NetworkEnvironment.createNetworkEnvironment("MY_GROUP", 1337);
+			NetworkEnvironment.createNetworkEnvironment("MY_GROUP", 1337, "MacBook Pro");
 			NetworkEnvironment.getNetworkEnvironment("my_group").addNetworkEnvironmentListener(this);
-			NetworkEnvironment.getNetworkEnvironment("MY_Group").createClientList();
+			Thread.sleep(750);
+			NetworkEnvironment.getNetworkEnvironment("my_group").unregisterOnNetwork();
+			System.out.println("Exit");
+			Thread.sleep(1000);
+			System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -23,8 +28,8 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 	}
 
 	@Override
-	public void clientAdded(InetAddress i) {
-		System.out.println("Client added: " + i);
+	public void clientAdded(Client c) {
+		System.out.println("Client added: " + c);
 		
 	}
 
@@ -34,15 +39,14 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 	}
 
 	@Override
-	public void searchStarted() {
-		System.out.println("Search started...");
+	public void clientRemoved(Client c) {
+		System.out.println("Client removed: " + c);
 		
 	}
 
 	@Override
-	public void searchDone() {
-		System.out.println("Search done.");
-		System.exit(0);
+	public void clientUpdated(Client c) {
+		System.out.println("Client updated: " + c);
 		
 	}
 
