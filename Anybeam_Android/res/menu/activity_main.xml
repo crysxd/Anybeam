@@ -4,9 +4,9 @@
 
     <item
         android:id="@+id/action_refresh"
-        android:showAsAction="withText|ifRoom"
         android:icon="@drawable/ic_action_refresh"
-        android:title="@string/action_example"/>
+        android:showAsAction="always"
+        android:title="@string/action_refresh"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
