@@ -6,8 +6,9 @@ public class Client {
 	
 	private InetAddress address;
 	private String name;
+	private int dataPort;
 	
-	public Client(InetAddress a, String n) {
+	public Client(InetAddress a, String n, int dataPort) {
 		this.setAddress(a);
 		this.setName(n);
 	}
@@ -28,6 +29,14 @@ public class Client {
 		this.name = name;
 	}
 	
+	public void setDataPort(int dataPort) {
+		this.dataPort = dataPort;
+	}
+	
+	public int getDataPort() {
+		return this.dataPort;
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("{address:\"%s\", name:\"%s\"}", this.getAddress(), this.getName());
@@ -41,7 +50,7 @@ public class Client {
 		
 		Client c = (Client) obj;
 		
-		return c.getName().equals(this.getName()) && c.getAddress().equals(this.getAddress());
+		return this == c || c.getName().equals(this.getName()) && c.getAddress().equals(this.getAddress());
 	}
 	
 

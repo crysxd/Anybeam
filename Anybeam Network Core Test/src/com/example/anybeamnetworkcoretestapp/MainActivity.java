@@ -1,7 +1,6 @@
 package com.example.anybeamnetworkcoretestapp;
 
 import java.io.IOException;
-import java.net.InetAddress;
 
 import de.hfu.anyBeam.netwokCore.Client;
 import de.hfu.anyBeam.netwokCore.NetworkEnvironment;
@@ -9,56 +8,114 @@ import de.hfu.anyBeam.netwokCore.NetworkEnvironmentListener;
 import android.os.Bundle;
 import android.os.Looper;
 import android.app.Activity;
-import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements NetworkEnvironmentListener {
 
+	private TextView console;
+	private TextView clientCount;
+	private final String GROUP_NAME = "my_group";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		((TextView) MainActivity.this.findViewById(R.id.textView1)).setText("0");
+		this.clientCount = (TextView) MainActivity.this.findViewById(R.id.clientCount);
+		this.console = (TextView) MainActivity.this.findViewById(R.id.console);
+		this.clientCount.setText("--");
+		this.console.setText("--");
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		if(item.getItemId() == R.id.action_refresh) {
+			NetworkEnvironment.getNetworkEnvironment(this.GROUP_NAME).refershClientList();
+			Toast.makeText(MainActivity.this, "Refreshing client list...", Toast.LENGTH_SHORT).show();
+			return true;
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+
+		new Thread() {
+			public void run() {
+				Looper.prepare();
+				try {
+					NetworkEnvironment.getNetworkEnvironment(MainActivity.this.GROUP_NAME).dispose();
+				} catch (Exception e) {
+					Toast.makeText(MainActivity.this, "NetworkEnvironment disposal FAILURE", Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+				}
+			}
+		}.start();
+		
+		Toast.makeText(MainActivity.this, "NetworkEnvironment disposal OK", Toast.LENGTH_SHORT).show();
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
 
 		try {
-			NetworkEnvironment.createNetworkEnvironment("MY_GROUP", 1337, "Android");
-			NetworkEnvironment.getNetworkEnvironment("MY_GROUP").addNetworkEnvironmentListener(this);
-		} catch (IOException e) {
-			Toast.makeText(this, "NetworkEnvironment initialisation FAILURE", Toast.LENGTH_LONG).show();
+			NetworkEnvironment.createNetworkEnvironment(this.GROUP_NAME, 1337, 1338, "Android").addNetworkEnvironmentListener(this);
+			this.updateView();
+			Toast.makeText(this, "NetworkEnvironment initialisation OK", Toast.LENGTH_SHORT).show();
+		} catch (Exception e) {
+			Toast.makeText(this, "NetworkEnvironment initialisation FAILURE", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void clientAdded(final Client c) {
+		updateView();
+		
 		this.runOnUiThread(new Runnable() {
-
+			
 			@Override
 			public void run() {
-				Toast.makeText(MainActivity.this, "Client found: " + c.getName(), Toast.LENGTH_SHORT).show();
-				Log.d("NetworkEnvironment", "Client found: " + c);
-				((TextView) MainActivity.this.findViewById(R.id.textView1)).setText(NetworkEnvironment.getNetworkEnvironment("my_group").getCleintList().size()+"");
+				Toast.makeText(MainActivity.this, c.getName() + " found", Toast.LENGTH_SHORT).show();
+				
 			}
 		});
 	}
 
 	@Override
 	public void clientListCleared() {
-		Log.d("NetworkEnvironment", "Clients cleared");
+		updateView();
 
 	}
 
 	@Override
 	public void clientRemoved(final Client c) {
-		this.runOnUiThread(new Runnable() {
-
+		updateView();
+this.runOnUiThread(new Runnable() {
+			
 			@Override
 			public void run() {
-				Toast.makeText(MainActivity.this, "Client lost: " + c.getName(), Toast.LENGTH_SHORT).show();
-				Log.d("NetworkEnvironment", "Client lost: " + c);
-				((TextView) MainActivity.this.findViewById(R.id.textView1)).setText(NetworkEnvironment.getNetworkEnvironment("my_group").getCleintList().size()+"");
-
+				Toast.makeText(MainActivity.this, c.getName() + " lost", Toast.LENGTH_SHORT).show();
+				
 			}
 		});
 
@@ -66,17 +123,22 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 
 	@Override
 	public void clientUpdated(final Client c) {
+		updateView();
+
+	}
+
+	public void updateView() {
 		this.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				Toast.makeText(MainActivity.this, "Client updated: " + c.getName(), Toast.LENGTH_SHORT).show();
-				Log.d("NetworkEnvironment", "Client updated: " + c);
-				((TextView) MainActivity.this.findViewById(R.id.textView1)).setText(NetworkEnvironment.getNetworkEnvironment("my_group").getCleintList().size()+"");
+				console.setText("");
+				clientCount.setText("Anzahl Clients: " + NetworkEnvironment.getNetworkEnvironment("my_group").getClientCount());
 
+				for(Client l : NetworkEnvironment.getNetworkEnvironment("my_group").getClientList())
+					console.append(l.getName() + "\n");
 			}
 		});
-		
 	}
 
 }

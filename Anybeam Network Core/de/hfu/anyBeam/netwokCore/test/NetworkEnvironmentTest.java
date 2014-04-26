@@ -1,7 +1,5 @@
 package de.hfu.anyBeam.netwokCore.test;
 
-import java.net.InetAddress;
-
 import de.hfu.anyBeam.netwokCore.Client;
 import de.hfu.anyBeam.netwokCore.NetworkEnvironment;
 import de.hfu.anyBeam.netwokCore.NetworkEnvironmentListener;
@@ -12,15 +10,21 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 		new NetworkEnvironmentTest();
 	}
 	
+	private NetworkEnvironment currentNe;
+		
 	private NetworkEnvironmentTest() {
 		try {
-			NetworkEnvironment.createNetworkEnvironment("MY_GROUP", 1337, "MacBook Pro");
-			NetworkEnvironment.getNetworkEnvironment("my_group").addNetworkEnvironmentListener(this);
-			Thread.sleep(750);
-			NetworkEnvironment.getNetworkEnvironment("my_group").unregisterOnNetwork();
-			System.out.println("Exit");
-			Thread.sleep(1000);
-			System.exit(0);
+			int max = 10000;
+			for(int i=0; i<=max; i++) {
+				this.currentNe = NetworkEnvironment.createNetworkEnvironment("MY_GROUP", 1337, 1338, "MacBook Pro");
+				currentNe.addNetworkEnvironmentListener(this);
+				Thread.sleep(10000);
+				currentNe.dispose();
+				Thread.sleep(1000);
+				System.out.println("Iteration " + i + " of " + max + " done.");
+			}
+			
+			System.exit(0);	
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -29,24 +33,24 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 
 	@Override
 	public void clientAdded(Client c) {
-		System.out.println("Client added: " + c);
+//		System.out.println("\tClient added: " + c + " -> client count:" + this.currentNe.getClientCount());
 		
 	}
 
 	@Override
 	public void clientListCleared() {
-		System.out.println("Clients cleared");
+		System.out.println("\tClients cleared");
 	}
 
 	@Override
 	public void clientRemoved(Client c) {
-		System.out.println("Client removed: " + c);
+		System.out.println("\tClient removed: " + c + " -> client count:" + this.currentNe.getClientCount());
 		
 	}
 
 	@Override
 	public void clientUpdated(Client c) {
-		System.out.println("Client updated: " + c);
+		System.out.println("\tClient updated: " + c);
 		
 	}
 

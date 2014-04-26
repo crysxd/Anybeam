@@ -10,8 +10,8 @@ public class NetworkBroadcast implements Runnable {
 	private final byte[] PAYLOAD;
 	private final int PORT;
 	private final int TRY_COUNT = 3;
-	private final long TRY_GAP = 10;
-	
+	private final long TRY_GAP = 15;
+
 	public NetworkBroadcast(int port, byte[] payload) throws IOException {
 		this.PORT = port;
 		this.PAYLOAD = payload;
@@ -25,6 +25,7 @@ public class NetworkBroadcast implements Runnable {
 		p.setPort(this.PORT);
 		p.setData(this.PAYLOAD);
 		ss.send(p);
+		ss.close();
 	}
 
 	@Override
@@ -35,9 +36,10 @@ public class NetworkBroadcast implements Runnable {
 			for(int i=0; i<TRY_COUNT; i++) {
 				this.sendBroadcast();
 				
-				Thread.sleep(this.TRY_GAP);
+				if(TRY_COUNT > 1)
+					Thread.sleep((long) (this.TRY_GAP*Math.random()));
 			}
-			this.sendBroadcast();
+
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
