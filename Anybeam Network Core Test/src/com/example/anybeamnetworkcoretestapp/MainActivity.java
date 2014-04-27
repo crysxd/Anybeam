@@ -22,7 +22,8 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 	private TextView console;
 	private TextView clientCount;
 	private final String GROUP_NAME = "my_group";
-
+	private int counter = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,13 +90,13 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 
 	@Override
 	public void clientAdded(final Client c) {
+		counter++;
 		updateView();
-		
 		this.runOnUiThread(new Runnable() {
 			
 			@Override
 			public void run() {
-				Toast.makeText(MainActivity.this, c.getName() + " found", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(MainActivity.this, c.getName() + " found", Toast.LENGTH_SHORT).show();
 				
 			}
 		});
@@ -114,7 +115,7 @@ this.runOnUiThread(new Runnable() {
 			
 			@Override
 			public void run() {
-				Toast.makeText(MainActivity.this, c.getName() + " lost", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(MainActivity.this, c.getName() + " lost", Toast.LENGTH_SHORT).show();
 				
 			}
 		});
@@ -133,7 +134,7 @@ this.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				console.setText("");
-				clientCount.setText("Anzahl Clients: " + NetworkEnvironment.getNetworkEnvironment("my_group").getClientCount());
+				clientCount.setText("Anzahl Clients: " + NetworkEnvironment.getNetworkEnvironment("my_group").getClientCount() + " | Total: " + counter);
 
 				for(Client l : NetworkEnvironment.getNetworkEnvironment("my_group").getClientList())
 					console.append(l.getName() + "\n");

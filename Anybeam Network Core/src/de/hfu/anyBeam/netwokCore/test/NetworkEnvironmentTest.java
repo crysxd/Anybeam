@@ -14,16 +14,16 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 		
 	private NetworkEnvironmentTest() {
 		try {
-			int max = 100;
+			int max = 1000000;
 			
 			System.out.println("Starting, " + max + " iterations left.");
-			for(int i=0; i<=max; i++) {
+			for(int i=1; i<=max+1; i++) {
 				this.currentNe = NetworkEnvironment.createNetworkEnvironment("MY_GROUP", 1337, 1338, "MacBook Pro");
 				currentNe.addNetworkEnvironmentListener(this);
-				Thread.sleep(10000);
+				Thread.sleep(50);
 				currentNe.dispose();
-				Thread.sleep(10000);
-				System.out.println("Iteration " + i + " of " + max + " done.");
+				Thread.sleep(50);
+				System.out.println("Iteration " + (i+1) + " of " + max + " done.");
 			}
 			
 			System.exit(0);	
