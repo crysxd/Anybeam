@@ -22,7 +22,6 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 				currentNe.addNetworkEnvironmentListener(this);
 				Thread.sleep(50);
 				currentNe.dispose();
-				Thread.sleep(50);
 				System.out.println("Iteration " + (i+1) + " of " + max + " done.");
 			}
 			
@@ -34,7 +33,7 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 	}
 
 	@Override
-	public void clientAdded(Client c) {
+	public void clientFound(Client c) {
 //		System.out.println("\tClient added: " + c + " -> client count:" + this.currentNe.getClientCount());
 		
 	}
@@ -45,7 +44,7 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 	}
 
 	@Override
-	public void clientRemoved(Client c) {
+	public void clientLost(Client c) {
 		System.out.println("\tClient removed: " + c + " -> client count:" + this.currentNe.getClientCount());
 		
 	}

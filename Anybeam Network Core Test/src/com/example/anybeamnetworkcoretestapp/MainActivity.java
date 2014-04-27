@@ -84,7 +84,7 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 	}
 
 	@Override
-	public void clientAdded(final Client c) {
+	public void clientFound(final Client c) {
 		counter++;
 		updateView();
 		this.runOnUiThread(new Runnable() {
@@ -104,7 +104,7 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 	}
 
 	@Override
-	public void clientRemoved(final Client c) {
+	public void clientLost(final Client c) {
 		updateView();
 this.runOnUiThread(new Runnable() {
 			

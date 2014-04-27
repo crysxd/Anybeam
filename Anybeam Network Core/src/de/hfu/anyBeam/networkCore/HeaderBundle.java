@@ -5,9 +5,10 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
+
 public class HeaderBundle {
 	
-	Map<String, String> DATA = new HashMap<String, String>();
+	private final Map<String, String> DATA = new HashMap<String, String>();
 	
 	
 	public HeaderBundle() {
@@ -39,7 +40,7 @@ public class HeaderBundle {
 	}
 	
 	public String get(String key) {
-		return (String) this.DATA.get(key);
+		return this.DATA.get(key);
 	}
 	
 	public double getDouble(String key) {
