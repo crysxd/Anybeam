@@ -7,10 +7,12 @@ public class Client {
 	private InetAddress address;
 	private String name;
 	private int dataPort;
+	private String id;
 	
-	public Client(InetAddress a, String n, int dataPort) {
+	public Client(InetAddress a, String n, int dataPort, String id) {
 		this.setAddress(a);
 		this.setName(n);
+		this.setId(id);
 	}
 	
 	public InetAddress getAddress() {
@@ -35,6 +37,14 @@ public class Client {
 	
 	public int getDataPort() {
 		return this.dataPort;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public String getId() {
+		return this.id;
 	}
 	
 	@Override

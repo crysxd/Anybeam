@@ -22,12 +22,12 @@ public class NetworkEnvironment {
 	 * Static content 
 	 */
 	private final static Map<String, NetworkEnvironment> ENVIRONMENTS = new HashMap<String, NetworkEnvironment>();
-
-	private static long generateId(String group) {
+	
+	private static String generateId(String group) {
 
 		group = group.toUpperCase();
 
-		double sum = 0;
+		StringBuilder id = new StringBuilder();
 		try {
 			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 
@@ -39,8 +39,10 @@ public class NetworkEnvironment {
 
 					for(byte b : mac) {
 						ByteBuffer buf = ByteBuffer.wrap(new byte[] {0x00, 0x00, 0x00, b});		
-						sum += buf.getInt();
+						id.append(String.format("%h:", buf.getInt()));
 					}
+					
+					id.append(group);
 					
 					break;
 				} catch(Exception e) {
@@ -53,17 +55,19 @@ public class NetworkEnvironment {
 			e.printStackTrace();
 		}
 
-		double id = Math.pow(sum, 5);
-		id = Math.pow(group.hashCode(), 2) / sum - id;
-		
-		return (long) Math.floor(id);
+		return id.toString();
 	}
 
 	public static NetworkEnvironment createNetworkEnvironment(
 			String group, int dataPort, int broadcastPort, String name) throws IOException {
 
 		group = group.toUpperCase();
-
+		
+		
+		if(group.contains(":")) {
+			throw new IllegalArgumentException("The group name contains the illegal char ':'.");
+		}
+		
 
 		if(NetworkEnvironment.getNetworkEnvironment(group) != null) {
 			throw new IllegalArgumentException("An NetworkEnvironment with the given group already exists! " +
@@ -87,16 +91,16 @@ public class NetworkEnvironment {
 	 */
 	private final int DATA_PORT;
 	private final int BROADCAST_PORT;
-	private final Map<Long, Client> CLIENTS = new HashMap<Long, Client>();
+	private final Map<String, Client> CLIENTS = new HashMap<String, Client>();
 	private final Vector<NetworkEnvironmentListener> LISTENERS = new Vector<NetworkEnvironmentListener>();
-	private final long ID;
+	private final String ID;
 	private final String GROUP;
 	private final ExecutorService THREAD_EXECUTOR = Executors.newCachedThreadPool();
-	private final double VERSION = 0.12;
+	private final double VERSION = 0.13;
 	private final String NAME;
 	private final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock();
 
-	private NetworkEnvironment(int broadcastPort, int dataPort, String group, String name, long id) throws IOException {
+	private NetworkEnvironment(int broadcastPort, int dataPort, String group, String name, String id) throws IOException {
 		this.DATA_PORT = dataPort;
 		this.BROADCAST_PORT = broadcastPort;
 		this.GROUP = group.toUpperCase();
@@ -112,7 +116,7 @@ public class NetworkEnvironment {
 		return this.GROUP;
 	}
 
-	public long getID() {
+	public String getID() {
 		return this.ID;
 	}
 
@@ -224,7 +228,7 @@ public class NetworkEnvironment {
 		nc.run();
 	}
 
-	private void addClient(long id, final Client C) {
+	private void addClient(String id, final Client C) {
 
 		try {
 			this.LOCK.writeLock().lock();
@@ -253,17 +257,17 @@ public class NetworkEnvironment {
 
 	}
 
-	private void removeClient(long id) {
+	private void removeClient(String id) {
 
 		try {
 			this.LOCK.writeLock().lock();
 
-			final Client C = this.CLIENTS.remove(id);
+			Client c = this.CLIENTS.remove(id);
 
-			if(C == null)
+			if(c == null)
 				return;
 
-			this.dispatchEvent("clientRemoved", new Class[]{Client.class}, C);
+			this.dispatchEvent("clientRemoved", new Class[]{Client.class}, c);
 
 		} catch (Exception e) {
 
@@ -312,16 +316,16 @@ public class NetworkEnvironment {
 				return false;
 			}
 
-			if(b.getLong("ID") == this.getID()) {
+			if(b.get("ID").equals(this.getID())) {
 				return false;
 			}
 
 			if(b.get("METHOD").equals("REGISTER") || b.get("METHOD").equals("ANSWER")) {
-				this.addClient(b.getLong("ID"), new Client(address, b.get("NAME"), b.getInt("PORT")));
+				this.addClient(b.get("ID"), new Client(address, b.get("NAME"), b.getInt("PORT"), b.get("ID")));
 				return !b.get("METHOD").equals("ANSWER");
 
 			} else if(b.get("METHOD").equals("UNREGISTER")) {
-				this.removeClient(b.getLong("ID"));
+				this.removeClient(b.get("ID"));
 				return false;
 
 			} 

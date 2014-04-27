@@ -22,7 +22,7 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 				currentNe.addNetworkEnvironmentListener(this);
 				Thread.sleep(10000);
 				currentNe.dispose();
-				Thread.sleep(1000);
+				Thread.sleep(10000);
 				System.out.println("Iteration " + i + " of " + max + " done.");
 			}
 			
