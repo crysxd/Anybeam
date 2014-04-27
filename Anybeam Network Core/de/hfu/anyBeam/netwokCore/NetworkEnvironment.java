@@ -3,8 +3,9 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,44 +22,59 @@ public class NetworkEnvironment {
 	 * Static content 
 	 */
 	private final static Map<String, NetworkEnvironment> ENVIRONMENTS = new HashMap<String, NetworkEnvironment>();
-	
+
 	private static long generateId(String group) {
-		
+
 		group = group.toUpperCase();
-		
+
 		double sum = 0;
 		try {
-			byte[] mac = NetworkInterface.getNetworkInterfaces().nextElement().getHardwareAddress();
-			
-			for(byte b : mac)
-				sum += b;
-			
-		} catch (SocketException e) {
+			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+
+			while(interfaces.hasMoreElements()) {
+
+				try {
+					byte[] mac = interfaces.nextElement().getHardwareAddress();
+
+
+					for(byte b : mac) {
+						ByteBuffer buf = ByteBuffer.wrap(new byte[] {0x00, 0x00, 0x00, b});		
+						sum += buf.getInt();
+					}
+					
+					break;
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+				
+			}
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		double id = Math.pow(sum, 5);
 		id = Math.pow(group.hashCode(), 2) / sum - id;
 		
 		return (long) Math.floor(id);
 	}
-	
+
 	public static NetworkEnvironment createNetworkEnvironment(
 			String group, int dataPort, int broadcastPort, String name) throws IOException {
-		
+
 		group = group.toUpperCase();
 
-		
+
 		if(NetworkEnvironment.getNetworkEnvironment(group) != null) {
 			throw new IllegalArgumentException("An NetworkEnvironment with the given group already exists! " +
 					"(Hint: use getNetworkEnvironment(...) to get the existing instance)");
 		}
 
-		
+
 		NetworkEnvironment.ENVIRONMENTS.put(group, new NetworkEnvironment(
 				broadcastPort, dataPort, group.toUpperCase(), name, NetworkEnvironment.generateId(group)));
-		
-		
+
+
 		return NetworkEnvironment.getNetworkEnvironment(group);
 	}
 
@@ -107,7 +123,7 @@ public class NetworkEnvironment {
 	public int getDataPort() {
 		return this.DATA_PORT;
 	}
-	
+
 	public int getBroadcastPort() {
 		return this.BROADCAST_PORT;
 	}
@@ -120,7 +136,7 @@ public class NetworkEnvironment {
 
 		try {
 			this.LOCK.writeLock().lock();
-			
+
 			this.THREAD_EXECUTOR.shutdownNow();
 			this.unregisterOnNetwork();
 			this.THREAD_EXECUTOR.awaitTermination(10, TimeUnit.MILLISECONDS);
@@ -133,19 +149,19 @@ public class NetworkEnvironment {
 	}
 
 	public List<Client> getClientList() {
-		
+
 		List<Client> l;
-		
+
 		try {
 			this.LOCK.readLock().lock();
-			
+
 			l = new ArrayList<Client>();
 			l.addAll(this.CLIENTS.values());
-			
+
 		} finally {
 			this.LOCK.readLock().unlock();
 		}
-		
+
 		return l;
 	}
 
@@ -162,16 +178,16 @@ public class NetworkEnvironment {
 	}
 
 	public int getClientCount() {
-		
+
 		int size = -1;
-		
+
 		try {
 			this.LOCK.readLock().lock();
 			size =  this.CLIENTS.size();
 		} finally {
 			this.LOCK.readLock().unlock();
 		}
-		
+
 		return size;
 	}
 
@@ -216,20 +232,20 @@ public class NetworkEnvironment {
 			if(this.CLIENTS.containsKey(id)) {
 				if(!this.CLIENTS.get(id).equals(C)) {
 					this.CLIENTS.put(id, C);
-					
+
 					this.dispatchEvent("clientUpdated", new Class[]{Client.class}, C);
-					
+
 				}
 
 				return;
 			}
 
 			this.CLIENTS.put(id, C);		
-			
+
 			this.dispatchEvent("clientAdded", new Class[]{Client.class}, C);
 
 		} catch (Exception e) {
-			
+
 		} finally {
 			this.LOCK.writeLock().unlock();
 
@@ -250,14 +266,14 @@ public class NetworkEnvironment {
 			this.dispatchEvent("clientRemoved", new Class[]{Client.class}, C);
 
 		} catch (Exception e) {
-			
+
 		} finally {
 			this.LOCK.writeLock().unlock();
 
 		}
 	}
 
-	private void clearClientList() {
+	public void clearClientList() {
 
 		try {
 			this.LOCK.writeLock().lock();
@@ -265,9 +281,9 @@ public class NetworkEnvironment {
 			this.CLIENTS.clear();
 
 			this.dispatchEvent("clientListCleared");
-			
+
 		} catch (Exception e) {
-			
+
 		} finally {
 			this.LOCK.writeLock().unlock();
 
@@ -317,14 +333,14 @@ public class NetworkEnvironment {
 		return false;
 
 	}
-	
-	private void dispatchEvent(String methodName) throws Exception {
+
+	public void dispatchEvent(String methodName) throws Exception {
 		this.dispatchEvent(methodName, new Class[]{});
 	}
-	
-	private void dispatchEvent(String methodName, Class<?>[] parameterTypes, final Object... PARAMETERS) throws Exception {
+
+	public void dispatchEvent(String methodName, Class<?>[] parameterTypes, final Object... PARAMETERS) throws Exception {
 		final Method M = NetworkEnvironmentListener.class.getMethod(methodName, parameterTypes);
-		
+
 		this.THREAD_EXECUTOR.execute(new Runnable() {
 			public void run() {
 				for(NetworkEnvironmentListener l : NetworkEnvironment.this.LISTENERS) {

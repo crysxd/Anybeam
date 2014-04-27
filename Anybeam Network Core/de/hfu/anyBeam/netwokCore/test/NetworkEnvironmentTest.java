@@ -14,7 +14,9 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 		
 	private NetworkEnvironmentTest() {
 		try {
-			int max = 10000;
+			int max = 100;
+			
+			System.out.println("Starting, " + max + " iterations left.");
 			for(int i=0; i<=max; i++) {
 				this.currentNe = NetworkEnvironment.createNetworkEnvironment("MY_GROUP", 1337, 1338, "MacBook Pro");
 				currentNe.addNetworkEnvironmentListener(this);
