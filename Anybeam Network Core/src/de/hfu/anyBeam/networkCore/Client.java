@@ -1,4 +1,4 @@
-package de.hfu.anyBeam.networkCore;
+package de.hfu.anybeam.networkCore;
 
 import java.net.InetAddress;
 

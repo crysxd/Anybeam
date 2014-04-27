@@ -1,8 +1,8 @@
 package com.example.anybeamnetworkcoretestapp;
 
-import de.hfu.anyBeam.networkCore.Client;
-import de.hfu.anyBeam.networkCore.NetworkEnvironment;
-import de.hfu.anyBeam.networkCore.NetworkEnvironmentListener;
+import de.hfu.anybeam.networkCore.Client;
+import de.hfu.anybeam.networkCore.NetworkEnvironment;
+import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import android.os.Bundle;
 import android.os.Looper;
 import android.app.Activity;
