@@ -1,19 +1,14 @@
 package com.example.anybeamnetworkcoretestapp;
 
-import java.io.IOException;
-
-import de.hfu.anyBeam.netwokCore.Client;
-import de.hfu.anyBeam.netwokCore.NetworkEnvironment;
-import de.hfu.anyBeam.netwokCore.NetworkEnvironmentListener;
+import de.hfu.anyBeam.networkCore.Client;
+import de.hfu.anyBeam.networkCore.NetworkEnvironment;
+import de.hfu.anyBeam.networkCore.NetworkEnvironmentListener;
 import android.os.Bundle;
 import android.os.Looper;
 import android.app.Activity;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 

@@ -1,8 +1,8 @@
 package de.hfu.anyBeam.netwokCore.test;
 
-import de.hfu.anyBeam.netwokCore.Client;
-import de.hfu.anyBeam.netwokCore.NetworkEnvironment;
-import de.hfu.anyBeam.netwokCore.NetworkEnvironmentListener;
+import de.hfu.anyBeam.networkCore.Client;
+import de.hfu.anyBeam.networkCore.NetworkEnvironment;
+import de.hfu.anyBeam.networkCore.NetworkEnvironmentListener;
 
 public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 	
