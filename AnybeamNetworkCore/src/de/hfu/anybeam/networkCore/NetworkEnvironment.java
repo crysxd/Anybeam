@@ -238,7 +238,7 @@ public class NetworkEnvironment {
 				if(!this.CLIENTS.get(id).equals(c)) {
 					this.CLIENTS.get(id).copy(c);
 
-					this.dispatchEvent("clientFound", new Class[]{Client.class}, this.CLIENTS.get(id));
+					this.dispatchEvent("clientUpdated", new Class[]{Client.class}, this.CLIENTS.get(id));
 
 				}
 
@@ -247,7 +247,7 @@ public class NetworkEnvironment {
 
 			this.CLIENTS.put(id, c);		
 
-			this.dispatchEvent("clientAdded", new Class[]{Client.class}, c);
+			this.dispatchEvent("clientFound", new Class[]{Client.class}, c);
 
 		} catch (Exception e) {
 
