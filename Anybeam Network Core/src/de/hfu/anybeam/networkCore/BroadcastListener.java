@@ -16,7 +16,7 @@ public class BroadcastListener implements Runnable {
 	public BroadcastListener(NetworkEnvironment env) throws IOException {
 		this.MY_ENVIRONMENT = env;
 		this.DATA_SOCKET = new DatagramSocket(this.MY_ENVIRONMENT.getBroadcastPort(), InetAddress.getByName("0.0.0.0")); 
-		this.DATA_SOCKET.setSoTimeout(10);
+		this.DATA_SOCKET.setSoTimeout(100);
 	}
 
 	public void run() {	

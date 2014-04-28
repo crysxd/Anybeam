@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
@@ -138,11 +139,13 @@ public class NetworkEnvironment {
 	public void dispose() throws Exception {
 
 		try {
+			
 			this.LOCK.writeLock().lock();
+			NetworkEnvironment.ENVIRONMENTS.remove(this.getGroupName());
 
 			this.THREAD_EXECUTOR.shutdownNow();
+			this.THREAD_EXECUTOR.awaitTermination(100, TimeUnit.MILLISECONDS);
 			this.unregisterOnNetwork();
-			NetworkEnvironment.ENVIRONMENTS.remove(this.getGroupName());
 
 		} finally {
 			this.LOCK.writeLock().unlock();
@@ -235,7 +238,7 @@ public class NetworkEnvironment {
 				if(!this.CLIENTS.get(id).equals(c)) {
 					this.CLIENTS.get(id).copy(c);
 
-					this.dispatchEvent("clientUpdated", new Class[]{Client.class}, this.CLIENTS.get(id));
+					this.dispatchEvent("clientFound", new Class[]{Client.class}, this.CLIENTS.get(id));
 
 				}
 
@@ -265,7 +268,7 @@ public class NetworkEnvironment {
 			if(c == null)
 				return;
 
-			this.dispatchEvent("clientRemoved", new Class[]{Client.class}, c);
+			this.dispatchEvent("clientLost", new Class[]{Client.class}, c);
 
 		} catch (Exception e) {
 
