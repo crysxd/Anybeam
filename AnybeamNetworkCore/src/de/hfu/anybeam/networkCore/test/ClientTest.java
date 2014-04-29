@@ -8,8 +8,10 @@ import de.hfu.anybeam.networkCore.Client;
 public class ClientTest {
 	
 	public static void main(String[] args) throws UnknownHostException {
-		Client c1 = new Client(InetAddress.getLocalHost(), "Client 1", 1337, "xx:xx:xx:xx:xx:xx:group");
-		Client c2 = new Client(InetAddress.getLocalHost(), "Client 2", 1337, "yy:yy:yy:yy:yy:yy:group");
+		Client c1 = new Client(InetAddress.getLocalHost(), "Client 1", 1337, 
+				"xx:xx:xx:xx:xx:xx:group");
+		Client c2 = new Client(InetAddress.getLocalHost(), "Client 2", 1337, 
+				"yy:yy:yy:yy:yy:yy:group");
 
 		System.out.println(c1);
 		System.out.println(c2);

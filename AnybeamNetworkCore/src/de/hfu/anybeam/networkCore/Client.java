@@ -1,9 +1,29 @@
 package de.hfu.anybeam.networkCore;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 
 /**
@@ -170,5 +190,40 @@ public class Client implements Comparable<Client>, Serializable {
 		return this.getName().compareTo(o.getName());
 	}
 	
+	public void sendData(InputStream in, byte[] secretKey, long inputStreamSize, String sourceName) 
+			throws Exception {
+	
+		//connect
+		Socket soc = new Socket();
+		soc.connect(new InetSocketAddress(this.getAddress(), this.getDataPort()));
+		
+		OutputStream out = null;
+		try {
+			//Create cipher
+			Cipher c = Cipher.getInstance("AES");
+			SecretKeySpec k = new SecretKeySpec(secretKey, "AES");
+			c.init(Cipher.ENCRYPT_MODE, k);
+			
+			//create writers
+			out = new CipherOutputStream(soc.getOutputStream(), c);
+			
+			//Write header
+			out.write(new HeaderBundle().put("NAME", sourceName)
+					.put("LENGTH", inputStreamSize).put("ID", this.getId()).
+					generateHeaderString().getBytes());
+			out.write('\n');
+			
+			//copy
+			int read = 0;
+			while((read = in.read()) >= 0) {
+				out.write(read);
+			}
+			
+		} finally {
+			out.close();
+			soc.close();
+		}
+
+	}
 
 }

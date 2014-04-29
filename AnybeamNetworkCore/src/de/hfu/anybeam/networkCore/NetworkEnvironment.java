@@ -1,4 +1,5 @@
 package de.hfu.anybeam.networkCore;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -22,7 +24,7 @@ public class NetworkEnvironment {
 	 * Static content 
 	 */
 	private final static Map<String, NetworkEnvironment> ENVIRONMENTS = new HashMap<String, NetworkEnvironment>();
-	
+
 	private static String generateId(String group) {
 
 		group = group.toUpperCase();
@@ -41,14 +43,14 @@ public class NetworkEnvironment {
 						ByteBuffer buf = ByteBuffer.wrap(new byte[] {0x00, 0x00, 0x00, b});		
 						id.append(String.format("%h:", buf.getInt()));
 					}
-					
+
 					id.append(group);
-					
+
 					break;
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
-				
+
 			}
 
 		} catch (Exception e) {
@@ -59,15 +61,16 @@ public class NetworkEnvironment {
 	}
 
 	public static NetworkEnvironment createNetworkEnvironment(
-			String group, int dataPort, int broadcastPort, String name) throws IOException {
-
+			String group, int dataPort, int broadcastPort, 
+			String name) throws IOException {
+		
 		group = group.toUpperCase();
-		
-		
+
+
 		if(group.contains(":")) {
 			throw new IllegalArgumentException("The group name contains the illegal char ':'.");
 		}
-		
+
 
 		if(NetworkEnvironment.getNetworkEnvironment(group) != null) {
 			throw new IllegalArgumentException("An NetworkEnvironment with the given group already exists! " +
@@ -75,8 +78,8 @@ public class NetworkEnvironment {
 		}
 
 
-		NetworkEnvironment.ENVIRONMENTS.put(group, new NetworkEnvironment(
-				broadcastPort, dataPort, group.toUpperCase(), name, NetworkEnvironment.generateId(group)));
+		NetworkEnvironment.ENVIRONMENTS.put(group, new NetworkEnvironment(broadcastPort, dataPort, 
+				group.toUpperCase(), name, NetworkEnvironment.generateId(group)));
 
 
 		return NetworkEnvironment.getNetworkEnvironment(group);
@@ -96,11 +99,13 @@ public class NetworkEnvironment {
 	private final String ID;
 	private final String GROUP;
 	private final ExecutorService THREAD_EXECUTOR = Executors.newCachedThreadPool();
-	private final double VERSION = 0.13;
+	private final double VERSION = 0.14;
 	private final String NAME;
 	private final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock();
+	private Future<?> clientSearchTask;
 
-	private NetworkEnvironment(int broadcastPort, int dataPort, String group, String name, String id) throws IOException {
+	private NetworkEnvironment(int broadcastPort, int dataPort, 
+			String group, String name, String id) throws IOException {
 		this.DATA_PORT = dataPort;
 		this.BROADCAST_PORT = broadcastPort;
 		this.GROUP = group.toUpperCase();
@@ -139,7 +144,7 @@ public class NetworkEnvironment {
 	public void dispose() throws Exception {
 
 		try {
-			
+
 			this.LOCK.writeLock().lock();
 			NetworkEnvironment.ENVIRONMENTS.remove(this.getGroupName());
 
@@ -196,6 +201,10 @@ public class NetworkEnvironment {
 		return size;
 	}
 
+	public Client getClientForId(String id) {
+		return null;
+	}
+	
 	public NetworkEnvironmentListener getNetworkEnvironmentListener(int index) {
 		return this.LISTENERS.get(index);
 	}
@@ -204,12 +213,67 @@ public class NetworkEnvironment {
 		this.LISTENERS.clear();
 	}
 
-	public void refershClientList() {
-		this.clearClientList();
+	public void startClientSearch() {
 		try {
-			this.registerOnNetwork();
-		} catch (IOException e) {
-			e.printStackTrace();
+			this.LOCK.writeLock().lock();
+
+			if(this.clientSearchTask != null) {
+				this.clientSearchTask.cancel(true);
+			}
+
+			this.clientSearchTask = this.THREAD_EXECUTOR.submit(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						NetworkEnvironment.this.dispatchEvent("clientSearchStarted");
+
+						NetworkEnvironment.this.clearClientList();
+
+						for(int i=0; i<20; i++) {
+
+							if(Thread.interrupted()) {
+								return;
+							}
+
+							try {
+								NetworkEnvironment.this.registerOnNetwork();
+								Thread.sleep(500);
+
+							} catch (InterruptedException e) {
+								return;
+
+							} catch (Exception e) {
+							}
+						}
+
+
+						NetworkEnvironment.this.dispatchEvent("clientSearchDone");
+					} catch (Exception e) {
+						
+					} finally {
+						NetworkEnvironment.this.clientSearchTask = null;
+
+					}
+				}
+			});
+		} finally {
+			this.LOCK.writeLock().unlock();
+		}
+	}
+
+	public void cancelClientSearch() {
+		try {
+			this.LOCK.writeLock().lock();
+			if(this.clientSearchTask != null) {
+				this.clientSearchTask.cancel(true);
+				this.clientSearchTask = null;
+				try {
+					NetworkEnvironment.this.dispatchEvent("clientSearchDone");
+				} catch (Exception e) {
+				}
+			}
+		} finally {
+			this.LOCK.writeLock().unlock();
 		}
 	}
 
@@ -322,7 +386,8 @@ public class NetworkEnvironment {
 			}
 
 			if(b.get("METHOD").equals("REGISTER") || b.get("METHOD").equals("ANSWER")) {
-				this.addClient(b.get("ID"), new Client(address, b.get("NAME"), b.getInt("PORT"), b.get("ID")));
+				this.addClient(b.get("ID"), new Client(
+						address, b.get("NAME"), b.getInt("PORT"), b.get("ID")));
 				return !b.get("METHOD").equals("ANSWER");
 
 			} else if(b.get("METHOD").equals("UNREGISTER")) {

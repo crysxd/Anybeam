@@ -3,6 +3,8 @@ package com.example.anybeamnetworkcoretestapp;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
+import de.hfu.anybeam.networkCore.test.NetworkEnvironmentTest;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.app.Activity;
@@ -40,8 +42,7 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 		if(item.getItemId() == R.id.action_refresh) {
-			NetworkEnvironment.getNetworkEnvironment(this.GROUP_NAME).refershClientList();
-			Toast.makeText(MainActivity.this, "Refreshing client list...", Toast.LENGTH_SHORT).show();
+			NetworkEnvironment.getNetworkEnvironment(this.GROUP_NAME).startClientSearch();
 			return true;
 		}
 		
@@ -74,7 +75,9 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		super.onResume();
 
 		try {
-			NetworkEnvironment.createNetworkEnvironment(this.GROUP_NAME, 1337, 1338, "Android").addNetworkEnvironmentListener(this);
+			NetworkEnvironment.createNetworkEnvironment(
+					this.GROUP_NAME, 1337, 1338, Build.MODEL, 
+					NetworkEnvironmentTest.generateTestKey(2048)).addNetworkEnvironmentListener(this);
 			this.updateView();
 			Toast.makeText(this, "NetworkEnvironment initialisation OK", Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
@@ -133,6 +136,32 @@ this.runOnUiThread(new Runnable() {
 
 				for(Client l : NetworkEnvironment.getNetworkEnvironment("my_group").getClientList())
 					console.append(l.getName() + "\n");
+			}
+		});
+	}
+
+	@Override
+	public void clientSearchStarted() {
+		this.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Toast.makeText(MainActivity.this, "Searching started", Toast.LENGTH_SHORT).show();
+						MainActivity.this.getActionBar().setTitle("Searching...");
+					}
+				});
+		
+	}
+
+	@Override
+	public void clientSearchDone() {
+		this.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+//				Toast.makeText(MainActivity.this, "Search done", Toast.LENGTH_SHORT).show();
+				MainActivity.this.getActionBar().setTitle(R.string.app_name);
+
 			}
 		});
 	}

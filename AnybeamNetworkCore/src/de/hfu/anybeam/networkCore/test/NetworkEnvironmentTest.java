@@ -17,15 +17,16 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 			int max = 1000000;
 			
 			System.out.println("Starting, " + max + " iterations left.");
-			for(int i=1; i<=max+1; i++) {
-				this.currentNe = NetworkEnvironment.createNetworkEnvironment("MY_GROUP", 1337, 1338, "MacBook Pro");
+//			for(int i=1; i<=max+1; i++) {
+				this.currentNe = NetworkEnvironment.createNetworkEnvironment(
+						"MY_GROUP", 1337, 1338, System.getProperty("user.name") + " on " + System.getProperty("os.name"));
 				currentNe.addNetworkEnvironmentListener(this);
-				Thread.sleep(50);
-				currentNe.dispose();
-				System.out.println("Iteration " + (i+1) + " of " + max + " done.");
-			}
+//				Thread.sleep(1000);
+//				currentNe.dispose();
+//				System.out.println("Iteration " + (i+1) + " of " + max + " done.");
+//			}
 			
-			System.exit(0);	
+//			System.exit(0);	
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -34,7 +35,7 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 
 	@Override
 	public void clientFound(Client c) {
-//		System.out.println("\tClient added: " + c + " -> client count:" + this.currentNe.getClientCount());
+		System.out.println("\tClient added: " + c + " -> client count:" + this.currentNe.getClientCount());
 		
 	}
 
@@ -53,6 +54,27 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 	public void clientUpdated(Client c) {
 		System.out.println("\tClient updated: " + c);
 		
+	}
+	
+	public static String generateTestKey(int bit) {
+		StringBuilder key = new StringBuilder();
+		for(int i=0; i<bit/8; i++) {
+			key.append('x');
+		}
+		
+		return key.toString();
+	}
+
+	@Override
+	public void clientSearchStarted() {
+		System.out.println("Started start");
+		
+	}
+
+	@Override
+	public void clientSearchDone() {
+		System.out.println("Search done");
+
 	}
 
 }
