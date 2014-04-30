@@ -3,6 +3,7 @@ package de.hfu.anybeam;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
+import de.hfu.anybeam.networkCore.test.NetworkEnvironmentTest;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -13,7 +14,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ActivityMain extends Activity implements NetworkEnvironmentListener {
+public class MainActivity extends Activity implements NetworkEnvironmentListener {
 
 	private TextView console;
 	private TextView clientCount;
@@ -24,8 +25,8 @@ public class ActivityMain extends Activity implements NetworkEnvironmentListener
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		this.clientCount = (TextView) ActivityMain.this.findViewById(R.id.clientCount);
-		this.console = (TextView) ActivityMain.this.findViewById(R.id.console);
+		this.clientCount = (TextView) MainActivity.this.findViewById(R.id.clientCount);
+		this.console = (TextView) MainActivity.this.findViewById(R.id.console);
 		this.clientCount.setText("--");
 		this.console.setText("--");
 	}
@@ -33,7 +34,7 @@ public class ActivityMain extends Activity implements NetworkEnvironmentListener
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.global, menu);
+	    inflater.inflate(R.menu.main, menu);
 	    return true;
 	}
 	
@@ -57,15 +58,15 @@ public class ActivityMain extends Activity implements NetworkEnvironmentListener
 			public void run() {
 				Looper.prepare();
 				try {
-					NetworkEnvironment.getNetworkEnvironment(ActivityMain.this.GROUP_NAME).dispose();
+					NetworkEnvironment.getNetworkEnvironment(MainActivity.this.GROUP_NAME).dispose();
 				} catch (Exception e) {
-					Toast.makeText(ActivityMain.this, "NetworkEnvironment disposal FAILURE", Toast.LENGTH_SHORT).show();
+					Toast.makeText(MainActivity.this, "NetworkEnvironment disposal FAILURE", Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
 				}
 			}
 		}.start();
 		
-		Toast.makeText(ActivityMain.this, "NetworkEnvironment disposal OK", Toast.LENGTH_SHORT).show();
+		Toast.makeText(MainActivity.this, "NetworkEnvironment disposal OK", Toast.LENGTH_SHORT).show();
 
 	}
 
@@ -144,8 +145,8 @@ this.runOnUiThread(new Runnable() {
 					
 					@Override
 					public void run() {
-						Toast.makeText(ActivityMain.this, "Searching started", Toast.LENGTH_SHORT).show();
-						ActivityMain.this.getActionBar().setTitle("Searching...");
+						Toast.makeText(MainActivity.this, "Searching started", Toast.LENGTH_SHORT).show();
+						MainActivity.this.getActionBar().setTitle("Searching...");
 					}
 				});
 		
@@ -158,7 +159,7 @@ this.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 //				Toast.makeText(MainActivity.this, "Search done", Toast.LENGTH_SHORT).show();
-				ActivityMain.this.getActionBar().setTitle(R.string.app_name);
+				MainActivity.this.getActionBar().setTitle(R.string.app_name);
 
 			}
 		});
