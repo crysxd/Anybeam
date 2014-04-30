@@ -6,21 +6,21 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class HeaderBundle {
+public class UrlParameterBundle {
 	
 	private final Map<String, String> DATA = new HashMap<String, String>();
 	
 	
-	public HeaderBundle() {
+	public UrlParameterBundle() {
 		
 	}
 	
-	public HeaderBundle(String data) {
+	public UrlParameterBundle(String data) {
 		this.parseDataString(data);
 	}
 	
-	public HeaderBundle put(String key, Object value) {
-		if(key.contains(";")) 
+	public UrlParameterBundle put(String key, Object value) {
+		if(key.contains("&")) 
 			throw new IllegalArgumentException("Key contains illegal pattern ';'. (key=" + key + ")");
 		
 		if(key.contains("=")) 
@@ -28,7 +28,7 @@ public class HeaderBundle {
 	
 		String valueString = value.toString();
 		
-		if(valueString.contains(";")) 
+		if(valueString.contains("&")) 
 			throw new IllegalArgumentException("Value contains illegal pattern ';'. (value=" + valueString + ")");
 		
 		if(valueString.contains("=")) 
@@ -63,21 +63,17 @@ public class HeaderBundle {
 		return Boolean.valueOf(this.DATA.get(key));
 	}
 	
-	private void parseDataString(String data) {
-		int index=0;
+	private void parseDataString(String data) {		
+		String parts[] = data.split("&");
 		
-		while(index >= 0 && index < data.length()) {
-			int endKey = data.indexOf('=', index);
-			int endValue = data.indexOf(';', endKey);
-			
-			if(endKey < 0 || endValue < 0)
-				break;
-			
-			String key = data.substring(index, endKey);
-			String value = data.substring(endKey+1, endValue);
-			this.put(key, value);
-			
-			index = endValue + 1;
+		for(String p : parts) {
+			int index = p.indexOf('=');
+		
+			if(index > 0) {
+				String key = p.substring(0, index);
+				String value = p.substring(index+1, p.length());
+				this.put(key, value);
+			}
 		}
 	}
 	
@@ -88,8 +84,10 @@ public class HeaderBundle {
 		Iterator<String> values = this.DATA.values().iterator();
 		
 		while(keys.hasNext()) {
-			s.append(String.format(Locale.ENGLISH, "%s=%s;", keys.next(), values.next()));
+			s.append(String.format(Locale.ENGLISH, "%s=%s&", keys.next(), values.next()));
 		}
+		
+		s.deleteCharAt(s.length()-1);
 		
 		return s.toString();
 	}

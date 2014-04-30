@@ -1,25 +1,37 @@
 package de.hfu.anybeam.networkCore.test;
 
 import de.hfu.anybeam.networkCore.Client;
+import de.hfu.anybeam.networkCore.DeviceType;
+import de.hfu.anybeam.networkCore.EncryptionType;
+import de.hfu.anybeam.networkCore.EncryptionUtils;
+import de.hfu.anybeam.networkCore.NetworkCoreUtils;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
+import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 
 public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 	
 	public static void main(String[] args) {
-		new NetworkEnvironmentTest();
+		try {
+			new NetworkEnvironmentTest();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private NetworkEnvironment currentNe;
 		
-	private NetworkEnvironmentTest() {
+	private NetworkEnvironmentTest() throws Exception {
+		
+		NetworkEnvironmentSettings settings = 
+				new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, 
+						EncryptionType.DES, 1338, 1337, EncryptionUtils.generateSecretKey(EncryptionType.DES));
 		try {
 			int max = 1000000;
 			
 			System.out.println("Starting, " + max + " iterations left.");
 //			for(int i=1; i<=max+1; i++) {
-				this.currentNe = NetworkEnvironment.createNetworkEnvironment(
-						"MY_GROUP", 1337, 1338, System.getProperty("user.name") + " on " + System.getProperty("os.name"));
+				this.currentNe = NetworkCoreUtils.createNetworkEnvironment(settings);
 				currentNe.addNetworkEnvironmentListener(this);
 //				Thread.sleep(1000);
 //				currentNe.dispose();

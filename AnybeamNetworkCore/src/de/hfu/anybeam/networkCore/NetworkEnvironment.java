@@ -1,12 +1,8 @@
 package de.hfu.anybeam.networkCore;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,115 +10,37 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 public class NetworkEnvironment {
 
-	/*
-	 * Static content 
-	 */
-	private final static Map<String, NetworkEnvironment> ENVIRONMENTS = new HashMap<String, NetworkEnvironment>();
+	private final double VERSION = 0.15;
 
-	private static String generateId(String group) {
-
-		group = group.toUpperCase();
-
-		StringBuilder id = new StringBuilder();
-		try {
-			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-
-			while(interfaces.hasMoreElements()) {
-
-				try {
-					byte[] mac = interfaces.nextElement().getHardwareAddress();
-
-
-					for(byte b : mac) {
-						ByteBuffer buf = ByteBuffer.wrap(new byte[] {0x00, 0x00, 0x00, b});		
-						id.append(String.format("%h:", buf.getInt()));
-					}
-
-					id.append(group);
-
-					break;
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return id.toString();
-	}
-
-	public static NetworkEnvironment createNetworkEnvironment(
-			String group, int dataPort, int broadcastPort, 
-			String name) throws IOException {
-		
-		group = group.toUpperCase();
-
-
-		if(group.contains(":")) {
-			throw new IllegalArgumentException("The group name contains the illegal char ':'.");
-		}
-
-
-		if(NetworkEnvironment.getNetworkEnvironment(group) != null) {
-			throw new IllegalArgumentException("An NetworkEnvironment with the given group already exists! " +
-					"(Hint: use getNetworkEnvironment(...) to get the existing instance)");
-		}
-
-
-		NetworkEnvironment.ENVIRONMENTS.put(group, new NetworkEnvironment(broadcastPort, dataPort, 
-				group.toUpperCase(), name, NetworkEnvironment.generateId(group)));
-
-
-		return NetworkEnvironment.getNetworkEnvironment(group);
-	}
-
-	public static NetworkEnvironment getNetworkEnvironment(String group) {
-		return NetworkEnvironment.ENVIRONMENTS.get(group.toUpperCase());
-	}
-
-	/*
-	 * Non static content
-	 */
-	private final int DATA_PORT;
-	private final int BROADCAST_PORT;
+	private final NetworkEnvironmentSettings SETTINGS;
 	private final Map<String, Client> CLIENTS = new HashMap<String, Client>();
 	private final Vector<NetworkEnvironmentListener> LISTENERS = new Vector<NetworkEnvironmentListener>();
-	private final String ID;
-	private final String GROUP;
 	private final ExecutorService THREAD_EXECUTOR = Executors.newCachedThreadPool();
-	private final double VERSION = 0.14;
-	private final String NAME;
 	private final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock();
+	private final BroadcastListener BROADCAST_LISTENER;
+
 	private Future<?> clientSearchTask;
 
-	private NetworkEnvironment(int broadcastPort, int dataPort, 
-			String group, String name, String id) throws IOException {
-		this.DATA_PORT = dataPort;
-		this.BROADCAST_PORT = broadcastPort;
-		this.GROUP = group.toUpperCase();
-		this.ID = id;
-		this.NAME = name;
-
-		this.THREAD_EXECUTOR.execute(new BroadcastListener(this));
+	NetworkEnvironment(NetworkEnvironmentSettings settings) throws IOException {
+		this.SETTINGS = settings;
+		
+		this.BROADCAST_LISTENER = new BroadcastListener(this);
+		this.THREAD_EXECUTOR.execute(this.BROADCAST_LISTENER);
 
 		this.registerOnNetwork();
 	}
 
 	public String getGroupName() {
-		return this.GROUP;
+		return this.SETTINGS.getGroupName();
 	}
 
 	public String getID() {
-		return this.ID;
+		return this.SETTINGS.getLocalId();
 	}
 
 	public double getVersion() {
@@ -130,26 +48,34 @@ public class NetworkEnvironment {
 	}
 
 	public int getDataPort() {
-		return this.DATA_PORT;
+		return this.SETTINGS.getDataPort();
 	}
 
 	public int getBroadcastPort() {
-		return this.BROADCAST_PORT;
+		return this.SETTINGS.getBroadcastPort();
 	}
 
-	public String getName() {
-		return this.NAME;
+	public String getDeviceName() {
+		return this.SETTINGS.getDeviceName();
+	}
+	
+	public String getOsName() {
+		return this.SETTINGS.getOsName();
 	}
 
+	public DeviceType getDeviceType() {
+		return this.SETTINGS.getDeviceType();
+	}
+	
 	public void dispose() throws Exception {
 
 		try {
 
 			this.LOCK.writeLock().lock();
-			NetworkEnvironment.ENVIRONMENTS.remove(this.getGroupName());
-
+			NetworkCoreUtils.disposeNetworkEnvironment(this.getGroupName());
+			
+			this.BROADCAST_LISTENER.dispose();
 			this.THREAD_EXECUTOR.shutdownNow();
-			this.THREAD_EXECUTOR.awaitTermination(100, TimeUnit.MILLISECONDS);
 			this.unregisterOnNetwork();
 
 		} finally {
@@ -202,7 +128,19 @@ public class NetworkEnvironment {
 	}
 
 	public Client getClientForId(String id) {
-		return null;
+		
+		try {
+			for(Client c: this.CLIENTS.values()) {
+				if(c.getId().equals(id)) {
+					return c;
+				}
+			}
+			
+			return null;
+			
+		} finally {
+			this.LOCK.readLock().unlock();
+		}
 	}
 	
 	public NetworkEnvironmentListener getNetworkEnvironmentListener(int index) {
@@ -243,6 +181,7 @@ public class NetworkEnvironment {
 								return;
 
 							} catch (Exception e) {
+								
 							}
 						}
 
@@ -278,7 +217,7 @@ public class NetworkEnvironment {
 	}
 
 	private void registerOnNetwork() throws IOException {
-		HeaderBundle b = this.createDefaultHeaderBundle();
+		UrlParameterBundle b = this.createDefaultHeaderBundle();
 		b.put("METHOD", "REGISTER");
 
 		NetworkBroadcast nc = new NetworkBroadcast(this.getBroadcastPort(), b.generateHeaderString().getBytes());
@@ -286,7 +225,7 @@ public class NetworkEnvironment {
 	}
 
 	private void unregisterOnNetwork() throws Exception {
-		HeaderBundle b = this.createDefaultHeaderBundle();
+		UrlParameterBundle b = this.createDefaultHeaderBundle();
 		b.put("METHOD", "UNREGISTER");
 
 		NetworkBroadcast nc = new NetworkBroadcast(this.getBroadcastPort(), b.generateHeaderString().getBytes());
@@ -359,9 +298,10 @@ public class NetworkEnvironment {
 		}
 	}
 
-	private HeaderBundle createDefaultHeaderBundle() {
-		return new HeaderBundle().put("VERSION", this.getVersion()).put("GROUP", this.getGroupName())
-				.put("ID", this.getID()).put("NAME", this.getName()).put("PORT", this.getDataPort());
+	private UrlParameterBundle createDefaultHeaderBundle() {
+		return new UrlParameterBundle().put("VERSION", this.getVersion()).put("GROUP", this.getGroupName())
+				.put("ID", this.getID()).put("DEVICE_NAME", this.getDeviceName()).put("PORT", this.getDataPort())
+				.put("OS_NAME", this.getOsName()).put("DEVICE_TYPE", this.getDeviceType());
 	}
 
 	byte[] createRegisterAnswerPayload() {
@@ -371,7 +311,7 @@ public class NetworkEnvironment {
 	boolean potentialClientFound(String payload, InetAddress address) {
 		try {
 
-			HeaderBundle b = new HeaderBundle(payload);
+			UrlParameterBundle b = new UrlParameterBundle(payload);
 
 			if(b.getDouble("VERSION") != this.getVersion()) {
 				return false;
@@ -387,7 +327,9 @@ public class NetworkEnvironment {
 
 			if(b.get("METHOD").equals("REGISTER") || b.get("METHOD").equals("ANSWER")) {
 				this.addClient(b.get("ID"), new Client(
-						address, b.get("NAME"), b.getInt("PORT"), b.get("ID")));
+						address, b.get("DEVICE_NAME"), b.getInt("PORT"), b.get("ID"), 
+						b.get("OS_NAME"), this.getGroupName(), b.get("DEVICE_TYPE")));
+				
 				return !b.get("METHOD").equals("ANSWER");
 
 			} else if(b.get("METHOD").equals("UNREGISTER")) {

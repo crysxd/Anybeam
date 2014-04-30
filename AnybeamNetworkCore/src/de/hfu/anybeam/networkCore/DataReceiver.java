@@ -1,28 +1,21 @@
 package de.hfu.anybeam.networkCore;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.spec.SecretKeySpec;
-
 public class DataReceiver implements Runnable {
 	
-	private final byte[] SECRET_KEY;
+	private final NetworkEnvironmentSettings SETTINGS;
 	private final ExecutorService THREAD_EXECUTOR = Executors.newCachedThreadPool();
 	private final ServerSocket SOCKET;
 	private final DataReceiverAdapter ADAPTER;
 	
-	public DataReceiver(byte[] secretKey, int port, DataReceiverAdapter adapter) throws IOException {
-		this.SECRET_KEY = secretKey;
-		this.SOCKET = new ServerSocket(port);
+	public DataReceiver(NetworkEnvironmentSettings settings, DataReceiverAdapter adapter) throws IOException {
+		this.SETTINGS = settings;
+		this.SOCKET = new ServerSocket(this.SETTINGS.getDataPort());
 		this.THREAD_EXECUTOR.submit(this);
 		this.ADAPTER = adapter;
 	}
@@ -38,7 +31,7 @@ public class DataReceiver implements Runnable {
 	@Override
 	public void run() {
 		
-		int connectionId = 0;
+		long connectionId = System.currentTimeMillis();
 		
 		while(!Thread.interrupted()) {
 			
@@ -47,7 +40,7 @@ public class DataReceiver implements Runnable {
 				Socket soc = this.SOCKET.accept();
 				ConnectionHandler ch = new ConnectionHandler(
 						soc.getInputStream(), 
-						this.SECRET_KEY, 
+						this.SETTINGS, 
 						this.ADAPTER, 
 						connectionId++);
 				this.THREAD_EXECUTOR.execute(ch);
