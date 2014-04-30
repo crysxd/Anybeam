@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,13 +13,19 @@ public class BroadcastListener implements Runnable {
 	private final NetworkEnvironment MY_ENVIRONMENT;
 	private final DatagramSocket DATA_SOCKET;
 	private final static ExecutorService THREAD_EXECUTOR = Executors.newCachedThreadPool();
-
+	private boolean disposed = false;
+	
 	public BroadcastListener(NetworkEnvironment env) throws IOException {
 		this.MY_ENVIRONMENT = env;
 		this.DATA_SOCKET = new DatagramSocket(this.MY_ENVIRONMENT.getBroadcastPort(), InetAddress.getByName("0.0.0.0")); 
-		this.DATA_SOCKET.setSoTimeout(100);
+	}
+	
+	public void dispose() {
+		this.disposed = true;
+		this.DATA_SOCKET.close();
 	}
 
+	@Override
 	public void run() {	
 		while(!Thread.interrupted()) {
 			try {
@@ -31,19 +38,21 @@ public class BroadcastListener implements Runnable {
 				this.DATA_SOCKET.receive(receivePacket);
 				final InetAddress adr = receivePacket.getAddress();
 				final String text = new String(receiveData.clone());
-//				System.out.println("Receive: " + text);
 
 				if(BroadcastListener.this.MY_ENVIRONMENT.potentialClientFound(text, adr)) {
 					BroadcastListener.THREAD_EXECUTOR.execute(
 							new Answer(adr, this.MY_ENVIRONMENT.createRegisterAnswerPayload()));
-//					BroadcastListener.THREAD_EXECUTOR.execute(
-//							new NetworkBroadcast(this.MY_ENVIRONMENT.getPort(), this.MY_ENVIRONMENT.createRegisterAnswerPayload()));
 				}
 				
-			} catch(Exception e) {
+			} catch(SocketTimeoutException e) {
+				
+			}catch(Exception e) {
+				if(disposed || Thread.interrupted())
+					break;
+				
+				e.printStackTrace();
 			}
 		}
-		
 		this.DATA_SOCKET.close();
 	}
 

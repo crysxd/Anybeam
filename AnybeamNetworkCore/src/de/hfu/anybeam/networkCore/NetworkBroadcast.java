@@ -40,6 +40,8 @@ public class NetworkBroadcast implements Runnable {
 					Thread.sleep((long) (this.TRY_GAP*Math.random()));
 			}
 
+		} catch(InterruptedException e) {
+			
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
