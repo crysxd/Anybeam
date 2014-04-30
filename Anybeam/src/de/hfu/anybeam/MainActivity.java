@@ -24,9 +24,9 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 
 	private ListView clientList;
 	private final String GROUP_NAME = "my_group";
-	private final NetworkEnvironmentSettings SETTINGS = new NetworkEnvironmentSettings("my_group", Build.MODEL, DeviceType.TYPE_LAPTOP, 
+	private final NetworkEnvironmentSettings SETTINGS = new NetworkEnvironmentSettings("my_group", Build.MODEL, DeviceType.TYPE_SMARPHONE, 
 			EncryptionType.AES128, 1338, 1337,  new byte[0], "Android");
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

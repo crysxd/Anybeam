@@ -30,7 +30,7 @@ public class ClientAdapter extends ArrayAdapter<Client> {
 		
 		
 		// Lookup view for data population
-		ImageView ivDeviceImage = (ImageView) convertView.findViewById(R.id.ivDeviceName);
+		ImageView ivDeviceImage = (ImageView) convertView.findViewById(R.id.ivDeviceType);
 		TextView tvDeviceName = (TextView) convertView.findViewById(R.id.tvDeviceName);
 		TextView tvDeviceIP = (TextView) convertView.findViewById(R.id.tvDeviceIP);
 		// Populate the data into the template view using the data object
