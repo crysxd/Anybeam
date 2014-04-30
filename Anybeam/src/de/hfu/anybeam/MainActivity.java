@@ -1,9 +1,10 @@
 package de.hfu.anybeam;
 
+import java.util.ArrayList;
+
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
-import de.hfu.anybeam.networkCore.test.NetworkEnvironmentTest;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -11,24 +12,19 @@ import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements NetworkEnvironmentListener {
 
-	private TextView console;
-	private TextView clientCount;
+	private ListView clientList;
 	private final String GROUP_NAME = "my_group";
-	private int counter = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		this.clientCount = (TextView) MainActivity.this.findViewById(R.id.clientCount);
-		this.console = (TextView) MainActivity.this.findViewById(R.id.console);
-		this.clientCount.setText("--");
-		this.console.setText("--");
+		this.clientList = (ListView) MainActivity.this.findViewById(R.id.clientList);
 	}
 	
 	@Override
@@ -87,7 +83,6 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 
 	@Override
 	public void clientFound(final Client c) {
-		counter++;
 		updateView();
 		this.runOnUiThread(new Runnable() {
 			
@@ -130,11 +125,14 @@ this.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				console.setText("");
-				clientCount.setText("Anzahl Clients: " + NetworkEnvironment.getNetworkEnvironment("my_group").getClientCount() + " | Total: " + counter);
-
-				for(Client l : NetworkEnvironment.getNetworkEnvironment("my_group").getClientList())
-					console.append(l.getName() + "\n");
+//				console.setText("");
+//				clientCount.setText("Anzahl Clients: " + NetworkEnvironment.getNetworkEnvironment("my_group").getClientCount() + " | Total: " + counter);
+//
+//				for(Client l : NetworkEnvironment.getNetworkEnvironment("my_group").getClientList())
+//					console.append(l.getName() + "\n");
+				clientList.setAdapter(
+					new ClientAdapter(getApplicationContext(), 
+						new ArrayList<Client> (NetworkEnvironment.getNetworkEnvironment("my_group").getClientList())));
 			}
 		});
 	}
