@@ -34,23 +34,21 @@ public class ClientAdapter extends ArrayAdapter<Client> {
 		TextView tvDeviceName = (TextView) convertView.findViewById(R.id.tvDeviceName);
 		TextView tvDeviceIP = (TextView) convertView.findViewById(R.id.tvDeviceIP);
 		// Populate the data into the template view using the data object
-		
-		int rand = (int) Math.floor(Math.random() * 5);
-		
-		switch (rand) {
-		case 0:
+				
+		switch (c.getDeviceType()) {
+		case TYPE_SMARPHONE:
 			//Selects Phone Icon
 			ivDeviceImage.setImageResource(R.drawable.ic_device_phone);
 			break;
-		case 1:
+		case TYPE_TABLET:
 			//Selects Tablet Icon
 			ivDeviceImage.setImageResource(R.drawable.ic_device_tablet);
 			break;
-		case 2:
+		case TYPE_LAPTOP:
 			//Selects Laptop Icon
 			ivDeviceImage.setImageResource(R.drawable.ic_device_laptop);
 			break;
-		case 3:
+		case TYPE_DESKTOP:
 			//Selects Computer Icon
 			ivDeviceImage.setImageResource(R.drawable.ic_device_computer);			
 			break;
@@ -68,5 +66,5 @@ public class ClientAdapter extends ArrayAdapter<Client> {
 		// Return the completed view to render on screen
 		return convertView;
 	}
-
+	
 }
