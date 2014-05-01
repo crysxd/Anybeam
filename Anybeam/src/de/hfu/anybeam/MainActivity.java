@@ -3,7 +3,8 @@ package de.hfu.anybeam;
 import java.util.ArrayList;
 
 import de.hfu.anybeam.MainActivity;
-
+import de.hfu.anybeam.R;
+import de.hfu.anybeam.fragments.DeviceInfoFragment;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
@@ -14,9 +15,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,6 +39,7 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		this.clientList = (ListView) MainActivity.this.findViewById(R.id.clientList);
+		this.setListener();
 	}
 	
 	@Override
@@ -135,8 +143,9 @@ this.runOnUiThread(new Runnable() {
 				clientList.setAdapter(
 					new ClientAdapter(getApplicationContext(), 
 						new ArrayList<Client> (NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList())));
+
 			}
-		});
+		}); //end of runOnUiThread
 	}
 
 	@Override
@@ -161,6 +170,33 @@ this.runOnUiThread(new Runnable() {
 //				Toast.makeText(MainActivity.this, "Search done", Toast.LENGTH_SHORT).show();
 				MainActivity.this.getActionBar().setTitle(R.string.app_name);
 
+			}
+		});
+	}
+	
+	private void setListener() {
+		clientList.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Client c = (Client) clientList.getItemAtPosition(position);
+
+				FragmentManager fm = getFragmentManager();
+				DeviceInfoFragment devInfo = DeviceInfoFragment.newInstance(c);
+				devInfo.show(fm, "fragment_device_info");
+
+				return true;
+			}
+		});
+		
+		clientList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Log.i("MyError", "clicked");
+				
 			}
 		});
 	}

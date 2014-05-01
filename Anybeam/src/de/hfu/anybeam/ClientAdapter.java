@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import de.hfu.anybeam.DeviceIconUtils;
+import de.hfu.anybeam.R;
 import de.hfu.anybeam.networkCore.Client;
 
 public class ClientAdapter extends ArrayAdapter<Client> {
@@ -34,31 +36,9 @@ public class ClientAdapter extends ArrayAdapter<Client> {
 		TextView tvDeviceName = (TextView) convertView.findViewById(R.id.tvDeviceName);
 		TextView tvDeviceIP = (TextView) convertView.findViewById(R.id.tvDeviceIP);
 		// Populate the data into the template view using the data object
-				
-		switch (c.getDeviceType()) {
-		case TYPE_SMARPHONE:
-			//Selects Phone Icon
-			ivDeviceImage.setImageResource(R.drawable.ic_device_phone);
-			break;
-		case TYPE_TABLET:
-			//Selects Tablet Icon
-			ivDeviceImage.setImageResource(R.drawable.ic_device_tablet);
-			break;
-		case TYPE_LAPTOP:
-			//Selects Laptop Icon
-			ivDeviceImage.setImageResource(R.drawable.ic_device_laptop);
-			break;
-		case TYPE_DESKTOP:
-			//Selects Computer Icon
-			ivDeviceImage.setImageResource(R.drawable.ic_device_computer);			
-			break;
-
-		default:
-			//Selects Device Unknown Icon
-			ivDeviceImage.setImageResource(R.drawable.ic_device_unknown);
-			break;
-		}
 		
+		ivDeviceImage.setImageResource(DeviceIconUtils.getIconForDeviceType(c.getDeviceType()));
+			
 		tvDeviceName.setText(c.getName());
 		tvDeviceName.setTextColor(Color.BLACK);
 		tvDeviceIP.setText(c.getAddress().toString());
@@ -66,5 +46,7 @@ public class ClientAdapter extends ArrayAdapter<Client> {
 		// Return the completed view to render on screen
 		return convertView;
 	}
+	
+	
 	
 }
