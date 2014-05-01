@@ -8,6 +8,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 public class EncryptionUtils {
 	
@@ -75,6 +76,37 @@ public class EncryptionUtils {
 	
 	public static int getTrasmissionPaddingMaxLength() {
 		return 32;
+	}
+	
+	public static int getKeyChecksum(byte[] key) {
+		
+		double crc = 0;
+		for(int i=0; i<key.length; i++) {
+			crc += Math.pow(i+1, 2) * key[i];
+		}
+		
+		return (int) crc % 9999;
+		
+	}
+	
+	public static String getHumanReadableKeyFromKey(byte[] key) {
+		
+		 HexBinaryAdapter adapter = new HexBinaryAdapter();
+		 StringBuilder s =  new StringBuilder(adapter.marshal(key));
+		 
+		 for(int i=0; i<s.length(); i++) {
+			 
+			 if((i+1)%5==0) {
+				 s.insert(i, '-');
+			 }
+		 }
+		 
+		 return s.toString();
+	}
+	
+	public static byte[] getKeyFromHumanReadableKey(String humanReadable) {
+		 HexBinaryAdapter adapter = new HexBinaryAdapter();
+		 return adapter.unmarshal(humanReadable.replaceAll("-", ""));
 	}
 
 }

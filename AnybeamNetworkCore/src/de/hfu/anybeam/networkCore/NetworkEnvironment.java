@@ -67,6 +67,10 @@ public class NetworkEnvironment {
 		return this.SETTINGS.getDeviceType();
 	}
 	
+	public NetworkEnvironmentSettings getNetworkEnvironmentSettings() {
+		return this.SETTINGS;
+	}
+	
 	public void dispose() throws Exception {
 
 		try {
@@ -301,7 +305,8 @@ public class NetworkEnvironment {
 	private UrlParameterBundle createDefaultHeaderBundle() {
 		return new UrlParameterBundle().put("VERSION", this.getVersion()).put("GROUP", this.getGroupName())
 				.put("ID", this.getID()).put("DEVICE_NAME", this.getDeviceName()).put("PORT", this.getDataPort())
-				.put("OS_NAME", this.getOsName()).put("DEVICE_TYPE", this.getDeviceType());
+				.put("OS_NAME", this.getOsName()).put("DEVICE_TYPE", this.getDeviceType())
+				.put("KEY_CHECKSUM", this.SETTINGS.getEncryptionKeyChecksum());
 	}
 
 	byte[] createRegisterAnswerPayload() {

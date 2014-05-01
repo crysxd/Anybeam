@@ -28,6 +28,7 @@ public class Client implements Comparable<Client>, Serializable {
 	private String osName;
 	private DeviceType deviceType;
 	private String group;
+	private int encryptionKeyChecksum;
 	
 	/**
 	 * Creates a new {@link Client} instance with the given Information.
@@ -36,7 +37,7 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param dataPort The port on which the client is listening for incoming data tranmissions
 	 * @param id The client's id
 	 */
-	public Client(InetAddress a, String n, int dataPort, String id, String osName, String group, String deviceType) {
+	public Client(InetAddress a, String n, int dataPort, String id, String osName, String group, int encryptionKeyChecksum, String deviceType) {
 		this.setAddress(a);
 		this.setName(n);
 		this.setId(id);
@@ -52,7 +53,7 @@ public class Client implements Comparable<Client>, Serializable {
 		}
 	}
 	
-	public Client(InetAddress a, String n, int dataPort, String id, String osName, String group, DeviceType deviceType) {
+	public Client(InetAddress a, String n, int dataPort, String id, String osName, String group,int encryptionKeyChecksum, DeviceType deviceType) {
 		this.setAddress(a);
 		this.setName(n);
 		this.setId(id);
@@ -156,6 +157,22 @@ public class Client implements Comparable<Client>, Serializable {
 
 	public void setGroup(String group) {
 		this.group = group;
+	}
+
+	public int getEncryptionKeyChecksum() {
+		return encryptionKeyChecksum;
+	}
+
+	public void setEncryptionKeyChecksum(int encryptionKeyChecksum) {
+		this.encryptionKeyChecksum = encryptionKeyChecksum;
+	}
+	
+	public boolean isEncryptionKeyCompatible() {
+		return this.isEncryptionKeyCompatible(NetworkCoreUtils.getNetEnvironmentSettings(this.getGroup()));
+	}
+	
+	public boolean isEncryptionKeyCompatible(NetworkEnvironmentSettings settings) {
+		return settings.getEncryptionKeyChecksum() == this.getEncryptionKeyChecksum();
 	}
 
 	/**
