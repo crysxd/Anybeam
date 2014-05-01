@@ -8,6 +8,7 @@ import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
+import de.hfu.anybeam.networkCore.EncryptionUtils;
 import de.hfu.anybeam.networkCore.NetworkCoreUtils;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
@@ -31,8 +32,22 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 
 	private ListView clientList;
 	private final String GROUP_NAME = "my_group";
-	private final NetworkEnvironmentSettings SETTINGS = new NetworkEnvironmentSettings("my_group", Build.MODEL, DeviceType.TYPE_SMARPHONE, 
-			EncryptionType.AES128, 1338, 1337,  new byte[0], "Android");
+	private final NetworkEnvironmentSettings SETTINGS;
+	
+	public MainActivity() {
+		NetworkEnvironmentSettings set = null;
+		try {
+			set = new NetworkEnvironmentSettings("my_group", Build.MODEL, DeviceType.TYPE_SMARPHONE, 
+					EncryptionType.AES128, 1338, 1337,  EncryptionUtils.generateSecretKey(EncryptionType.AES128), "Android");
+		} catch(Exception e) {
+			e.printStackTrace();
+			set = new NetworkEnvironmentSettings("my_group", Build.MODEL, DeviceType.TYPE_SMARPHONE, 
+					EncryptionType.AES128, 1338, 1337,  new byte[0], "Android");
+		}
+		
+		this.SETTINGS = set;
+		
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +86,13 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 				try {
 					NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).dispose();
 				} catch (Exception e) {
-					Toast.makeText(MainActivity.this, "NetworkEnvironment disposal FAILURE", Toast.LENGTH_SHORT).show();
+//					Toast.makeText(MainActivity.this, "NetworkEnvironment disposal FAILURE", Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
 				}
 			}
 		}.start();
 		
-		Toast.makeText(MainActivity.this, "NetworkEnvironment disposal OK", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(MainActivity.this, "NetworkEnvironment disposal OK", Toast.LENGTH_SHORT).show();
 
 	}
 
@@ -88,9 +103,9 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		try {
 			NetworkCoreUtils.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
 			this.updateView();
-			Toast.makeText(this, "NetworkEnvironment initialisation OK", Toast.LENGTH_SHORT).show();
+//			Toast.makeText(this, "NetworkEnvironment initialisation OK", Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
-			Toast.makeText(this, "NetworkEnvironment initialisation FAILURE", Toast.LENGTH_SHORT).show();
+//			Toast.makeText(this, "NetworkEnvironment initialisation FAILURE", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
 	}
@@ -139,10 +154,11 @@ this.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				
-				clientList.setAdapter(
-					new ClientAdapter(getApplicationContext(), 
-						new ArrayList<Client> (NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList())));
+				ArrayList<Client> l = new ArrayList<Client> (NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList());
+				l.addAll(NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList());
+				l.addAll(NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList());
+				l.addAll(NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList());
+				clientList.setAdapter(new ClientAdapter(getApplicationContext(), l));
 
 			}
 		}); //end of runOnUiThread

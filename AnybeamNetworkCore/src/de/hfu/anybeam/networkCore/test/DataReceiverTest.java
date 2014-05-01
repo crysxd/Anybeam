@@ -36,7 +36,7 @@ public class DataReceiverTest implements DataReceiverAdapter {
 		
 		File in = new File("/Users/chrwuer/Desktop/Bildschirmfoto 2014-04-25 um 15.41.39.png");
 		Client c = new Client(InetAddress.getLocalHost(), "Client 1", 1338, 
-				"xx:xx:xx:xx:xx:xx:group", System.getProperty("os.name"), "my_group", DeviceType.TYPE_LAPTOP);
+				"xx:xx:xx:xx:xx:xx:group", System.getProperty("os.name"), "my_group", 0, DeviceType.TYPE_LAPTOP);
 		
 		c.sendData(new FileInputStream(in), in.length(), in.getName(), s);
 	}

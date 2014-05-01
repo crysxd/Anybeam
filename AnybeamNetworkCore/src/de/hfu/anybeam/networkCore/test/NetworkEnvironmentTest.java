@@ -24,7 +24,7 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 	private NetworkEnvironmentTest() throws Exception {
 		
 		NetworkEnvironmentSettings settings = 
-				new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, 
+				new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_SMARPHONE, 
 						EncryptionType.DES, 1338, 1337, EncryptionUtils.generateSecretKey(EncryptionType.DES));
 		try {
 			int max = 1000000;

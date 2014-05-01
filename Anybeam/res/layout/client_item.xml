@@ -2,34 +2,55 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="7dp" >
-
-    <TextView
-        android:id="@+id/tvDeviceName"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ivDeviceType"
-        android:layout_toRightOf="@+id/ivDeviceType"
-        android:text="@string/replaceMe"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+    android:paddingBottom="7dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="3dp" >
 
     <TextView
         android:id="@+id/tvDeviceIP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/tvDeviceName"
         android:layout_below="@+id/tvDeviceName"
         android:layout_toRightOf="@+id/ivDeviceType"
         android:text="@string/replaceMe"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textColor="@color/grey" />
 
     <ImageView
         android:id="@+id/ivDeviceType"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_alignBottom="@+id/tvDeviceIP"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="7dp"
+        android:layout_alignTop="@+id/tvDeviceName"
+        android:layout_marginRight="5dp"
         android:contentDescription="@string/device_icon"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_device_laptop" />
+
+    <ImageView
+        android:id="@+id/ivWarningIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvDeviceIP"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/device_icon"
+        android:scaleType="center"
+        android:src="@drawable/ic_action_warning" />
+
+    <TextView
+        android:id="@+id/tvDeviceName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/ivWarningIcon"
+        android:layout_toRightOf="@+id/ivDeviceType"
+        android:text="@string/replaceMe"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

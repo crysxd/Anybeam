@@ -44,7 +44,8 @@ public class Client implements Comparable<Client>, Serializable {
 		this.setDataPort(dataPort);
 		this.setOsName(osName);
 		this.setGroup(group);
-		
+		this.setEncryptionKeyChecksum(encryptionKeyChecksum);
+
 		try {
 			this.setDeviceType(DeviceType.valueOf(deviceType));
 		} catch(Exception e) {
@@ -61,6 +62,7 @@ public class Client implements Comparable<Client>, Serializable {
 		this.setOsName(osName);
 		this.setDeviceType(deviceType);
 		this.setGroup(group);
+		this.setEncryptionKeyChecksum(encryptionKeyChecksum);
 	}
 	
 	/**
@@ -172,6 +174,13 @@ public class Client implements Comparable<Client>, Serializable {
 	}
 	
 	public boolean isEncryptionKeyCompatible(NetworkEnvironmentSettings settings) {
+		if(settings == null)
+			throw new IllegalArgumentException("The given NetworkEnvironmentSettings are null. "
+					+ "This can happen if the corresponding NetworkEnvironment for this Client's group "
+					+ "is not registered at NetworkCoreUtils. In this case you can provide a individual set of "
+					+ "NetworkEnvironmentSettings invoking sendData(InputStream, inputStreamSize, sourceName, "
+					+ "NetworkEnvironmentSettings). ");
+		
 		return settings.getEncryptionKeyChecksum() == this.getEncryptionKeyChecksum();
 	}
 

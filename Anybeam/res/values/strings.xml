@@ -7,6 +7,7 @@
     <string name="action_refresh">Client Liste neuladen</string>
     <string name="replaceMe">Replace Me</string>
     <string name="device_icon">Device Icon</string>
+    <string name="warning_icon">Warning Icon</string>
     <string name="adress">Adresse:</string>
     <string name="group">Gruppe:</string>
     <string name="id">ID:</string>

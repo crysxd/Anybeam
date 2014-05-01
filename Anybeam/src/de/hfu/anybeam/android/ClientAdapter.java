@@ -33,12 +33,13 @@ public class ClientAdapter extends ArrayAdapter<Client> {
 		
 		// Lookup view for data population
 		ImageView ivDeviceImage = (ImageView) convertView.findViewById(R.id.ivDeviceType);
+		ImageView ivWarningImage = (ImageView) convertView.findViewById(R.id.ivWarningIcon);
 		TextView tvDeviceName = (TextView) convertView.findViewById(R.id.tvDeviceName);
 		TextView tvDeviceIP = (TextView) convertView.findViewById(R.id.tvDeviceIP);
-		// Populate the data into the template view using the data object
-		
+
+		// Populate the data into the template view using the data object	
 		ivDeviceImage.setImageResource(DeviceIconUtils.getIconForDeviceType(c.getDeviceType()));
-			
+		ivWarningImage.setVisibility(c.isEncryptionKeyCompatible() ? View.GONE : View.VISIBLE);
 		tvDeviceName.setText(c.getName());
 		tvDeviceName.setTextColor(Color.BLACK);
 		tvDeviceIP.setText(c.getAddress().toString());
