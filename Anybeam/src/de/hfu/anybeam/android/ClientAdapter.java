@@ -1,4 +1,4 @@
-package de.hfu.anybeam;
+package de.hfu.anybeam.android;
 
 import java.util.ArrayList;
 
@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import de.hfu.anybeam.DeviceIconUtils;
-import de.hfu.anybeam.R;
+import de.hfu.anybeam.android.R;
+import de.hfu.anybeam.android.DeviceIconUtils;
 import de.hfu.anybeam.networkCore.Client;
 
 public class ClientAdapter extends ArrayAdapter<Client> {

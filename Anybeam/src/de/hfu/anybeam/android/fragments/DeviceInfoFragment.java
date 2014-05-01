@@ -1,7 +1,7 @@
-package de.hfu.anybeam.fragments;
+package de.hfu.anybeam.android.fragments;
 
-import de.hfu.anybeam.DeviceIconUtils;
-import de.hfu.anybeam.R;
+import de.hfu.anybeam.android.R;
+import de.hfu.anybeam.android.DeviceIconUtils;
 import de.hfu.anybeam.networkCore.Client;
 import android.app.DialogFragment;
 import android.os.Bundle;

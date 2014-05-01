@@ -1,6 +1,6 @@
-package de.hfu.anybeam;
+package de.hfu.anybeam.android;
 
-import de.hfu.anybeam.R;
+import de.hfu.anybeam.android.R;
 import de.hfu.anybeam.networkCore.DeviceType;
 
 public class DeviceIconUtils {

@@ -1,10 +1,10 @@
-package de.hfu.anybeam;
+package de.hfu.anybeam.android;
 
 import java.util.ArrayList;
 
-import de.hfu.anybeam.MainActivity;
-import de.hfu.anybeam.R;
-import de.hfu.anybeam.fragments.DeviceInfoFragment;
+import de.hfu.anybeam.android.R;
+import de.hfu.anybeam.android.MainActivity;
+import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
