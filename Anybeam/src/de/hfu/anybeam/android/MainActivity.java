@@ -155,9 +155,8 @@ this.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				ArrayList<Client> l = new ArrayList<Client> (NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList());
-				l.addAll(NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList());
-				l.addAll(NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList());
-				l.addAll(NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList());
+				for(int i=0; i<20; i++)
+					l.addAll(NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList());
 				clientList.setAdapter(new ClientAdapter(getApplicationContext(), l));
 
 			}

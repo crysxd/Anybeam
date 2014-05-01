@@ -3,15 +3,12 @@ package de.hfu.anybeam.android;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import de.hfu.anybeam.android.R;
-import de.hfu.anybeam.android.DeviceIconUtils;
 import de.hfu.anybeam.networkCore.Client;
 
 public class ClientAdapter extends ArrayAdapter<Client> {
