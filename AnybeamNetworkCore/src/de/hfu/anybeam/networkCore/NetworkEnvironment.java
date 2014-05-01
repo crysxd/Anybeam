@@ -333,7 +333,7 @@ public class NetworkEnvironment {
 			if(b.get("METHOD").equals("REGISTER") || b.get("METHOD").equals("ANSWER")) {
 				this.addClient(b.get("ID"), new Client(
 						address, b.get("DEVICE_NAME"), b.getInt("PORT"), b.get("ID"), 
-						b.get("OS_NAME"), this.getGroupName(), b.get("DEVICE_TYPE")));
+						b.get("OS_NAME"), this.getGroupName(), b.getInt("KEY_CHECKSUM"), b.get("DEVICE_TYPE")));
 				
 				return !b.get("METHOD").equals("ANSWER");
 
