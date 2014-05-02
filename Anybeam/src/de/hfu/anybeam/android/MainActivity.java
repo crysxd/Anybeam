@@ -3,7 +3,6 @@ package de.hfu.anybeam.android;
 import java.util.ArrayList;
 
 import de.hfu.anybeam.android.R;
-import de.hfu.anybeam.android.MainActivity;
 import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
@@ -46,7 +45,6 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		}
 		
 		this.SETTINGS = set;
-		
 	}
 
 	@Override
@@ -79,21 +77,16 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 	protected void onPause() {
 		super.onPause();
 
-
 		new Thread() {
 			public void run() {
 				Looper.prepare();
 				try {
 					NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).dispose();
 				} catch (Exception e) {
-//					Toast.makeText(MainActivity.this, "NetworkEnvironment disposal FAILURE", Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
 				}
 			}
 		}.start();
-		
-//		Toast.makeText(MainActivity.this, "NetworkEnvironment disposal OK", Toast.LENGTH_SHORT).show();
-
 	}
 
 	@Override
@@ -103,9 +96,7 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		try {
 			NetworkCoreUtils.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
 			this.updateView();
-//			Toast.makeText(this, "NetworkEnvironment initialisation OK", Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
-//			Toast.makeText(this, "NetworkEnvironment initialisation FAILURE", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
 	}
@@ -113,14 +104,6 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 	@Override
 	public void clientFound(final Client c) {
 		updateView();
-		this.runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-//				Toast.makeText(MainActivity.this, c.getName() + " found", Toast.LENGTH_SHORT).show();
-				
-			}
-		});
 	}
 
 	@Override
@@ -132,21 +115,11 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 	@Override
 	public void clientLost(final Client c) {
 		updateView();
-this.runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-//				Toast.makeText(MainActivity.this, c.getName() + " lost", Toast.LENGTH_SHORT).show();
-				
-			}
-		});
-
 	}
 
 	@Override
 	public void clientUpdated(final Client c) {
 		updateView();
-
 	}
 
 	public void updateView() {
@@ -155,12 +128,9 @@ this.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				ArrayList<Client> l = new ArrayList<Client> (NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList());
-//				for(int i=0; i<20; i++)
-//					l.addAll(NetworkCoreUtils.getNetworkEnvironment(MainActivity.this.GROUP_NAME).getClientList());
 				clientList.setAdapter(new ClientAdapter(getApplicationContext(), l));
-
 			}
-		}); //end of runOnUiThread
+		}); 
 	}
 
 	@Override
@@ -173,7 +143,6 @@ this.runOnUiThread(new Runnable() {
 						MainActivity.this.getActionBar().setTitle("Searching...");
 					}
 				});
-		
 	}
 
 	@Override
@@ -182,7 +151,6 @@ this.runOnUiThread(new Runnable() {
 			
 			@Override
 			public void run() {
-//				Toast.makeText(MainActivity.this, "Search done", Toast.LENGTH_SHORT).show();
 				MainActivity.this.getActionBar().setTitle(R.string.app_name);
 
 			}
@@ -195,6 +163,7 @@ this.runOnUiThread(new Runnable() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				Log.i("parent", parent.getCount() + "Elemente");
 				Client c = (Client) clientList.getItemAtPosition(position);
 
 				FragmentManager fm = getFragmentManager();
@@ -211,7 +180,6 @@ this.runOnUiThread(new Runnable() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Log.i("MyError", "clicked");
-				
 			}
 		});
 	}

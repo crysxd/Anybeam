@@ -12,5 +12,7 @@
     <string name="group">Gruppe:</string>
     <string name="id">ID:</string>
     <string name="os">OS:</string>
+    <string name="noclients">Keine Clients gefunden</string>
+    
 
 </resources>
