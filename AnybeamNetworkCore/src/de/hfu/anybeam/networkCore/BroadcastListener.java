@@ -37,9 +37,7 @@ public class BroadcastListener implements Runnable {
 
 				this.DATA_SOCKET.receive(receivePacket);
 				final InetAddress adr = receivePacket.getAddress();
-				final String text = new String(receiveData.clone())
-						.substring(0, receivePacket.getLength());
-
+				final String text = new String(receiveData.clone(), 0, receivePacket.getLength());
 
 				if(BroadcastListener.this.MY_ENVIRONMENT.potentialClientFound(text, adr)) {
 					BroadcastListener.THREAD_EXECUTOR.execute(

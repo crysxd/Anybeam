@@ -52,7 +52,6 @@ public class ConnectionHandler implements Runnable {
 		}
 	}
 	
-	@SuppressWarnings("resource")
 	@Override
 	public void run() {
 
