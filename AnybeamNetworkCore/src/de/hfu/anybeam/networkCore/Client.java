@@ -279,13 +279,20 @@ public class Client implements Comparable<Client>, Serializable {
 		
 		OutputStream out = null;
 		try {
-			//Create cipher
-			Cipher c = EncryptionUtils.createCipher(settings.getEncryptionType());
-			SecretKeySpec k = EncryptionUtils.createKey(settings.getEncryptionType(), settings.getEncryptionKey());
-			c.init(Cipher.ENCRYPT_MODE, k);
 			
-			//create writers
-			out = new CipherOutputStream(soc.getOutputStream(), c);
+			if(settings.getEncryptionType() != EncryptionType.NONE) {
+				//Create cipher
+				Cipher c = EncryptionUtils.createCipher(settings.getEncryptionType());
+				SecretKeySpec k = EncryptionUtils.createKey(settings.getEncryptionType(), settings.getEncryptionKey());
+				c.init(Cipher.ENCRYPT_MODE, k);
+				
+				//create writers
+				out = new CipherOutputStream(soc.getOutputStream(), c);
+			
+			} else {
+				//No encryption...just use socket output stream
+				out = soc.getOutputStream();
+			}
 			
 			//Write padding
 			out.write(EncryptionUtils.generateTransmissionPadding());

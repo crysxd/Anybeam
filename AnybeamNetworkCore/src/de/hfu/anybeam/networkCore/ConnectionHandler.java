@@ -59,13 +59,22 @@ public class ConnectionHandler implements Runnable {
 		InputStream in = null;
 
 		try {
-			//Create cipher
-			Cipher c = EncryptionUtils.createCipher(this.SETTINGS.getEncryptionType());
-			SecretKeySpec k = EncryptionUtils.createKey(this.SETTINGS.getEncryptionType(), this.SETTINGS.getEncryptionKey());
-			c.init(Cipher.DECRYPT_MODE, k);
-
-			//Create cipher input Stream
-			in = new CipherInputStream(this.INPUT, c);
+			
+			if(this.SETTINGS.getEncryptionType() != EncryptionType.NONE) {
+				//Create cipher
+				Cipher c = EncryptionUtils.createCipher(this.SETTINGS.getEncryptionType());
+				SecretKeySpec k = EncryptionUtils.createKey(this.SETTINGS.getEncryptionType(), this.SETTINGS.getEncryptionKey());
+				c.init(Cipher.DECRYPT_MODE, k);	
+				
+				//Create cipher input Stream
+				in = new CipherInputStream(this.INPUT, c);
+				
+			} else {
+			
+				//Use default input
+				in = this.INPUT;
+				
+			}
 			
 			//skip buffer
 			int counter = 0;

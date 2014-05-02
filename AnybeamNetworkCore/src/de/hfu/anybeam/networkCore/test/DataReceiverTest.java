@@ -1,7 +1,7 @@
 package de.hfu.anybeam.networkCore.test;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,18 +27,18 @@ public class DataReceiverTest implements DataReceiverAdapter {
 	public DataReceiverTest() throws Exception {
 		NetworkEnvironmentSettings s = 
 				new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, 
-						EncryptionType.AES128, 1338, 1337,  EncryptionUtils.generateSecretKey(EncryptionType.AES128));
+						EncryptionType.NONE, 1338, 1337,  EncryptionUtils.generateSecretKey(EncryptionType.NONE));
 //		NetworkEnvironmentSettings s2 = 
 //				new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, 
 //						EncryptionType.AES256, 1338, 1337,  EncryptionUtils.generateSecretKey(EncryptionType.AES256));
 				
 		dr = new DataReceiver(s, this);
 		
-		File in = new File("/Users/chrwuer/Desktop/Bildschirmfoto 2014-04-25 um 15.41.39.png");
 		Client c = new Client(InetAddress.getLocalHost(), "Client 1", 1338, 
 				"xx:xx:xx:xx:xx:xx:group", System.getProperty("os.name"), "my_group", 0, DeviceType.TYPE_LAPTOP);
 		
-		c.sendData(new FileInputStream(in), in.length(), in.getName(), s);
+		String in = "Hallo Welt!";
+		c.sendData(new ByteArrayInputStream(in.getBytes()), in.length(), "test.txt", s);
 	}
 
 	@Override
@@ -46,10 +46,10 @@ public class DataReceiverTest implements DataReceiverAdapter {
 		
 		System.out.println("Started transmission");
 		
-		e.getConnectionHandler().cancelTransmission();
+//		e.getConnectionHandler().cancelTransmission();
 		
 		try {
-			return new FileOutputStream(new File("/Users/chrwuer/Desktop/transmission.png"));
+			return new FileOutputStream(new File("/Users/chrwuer/Desktop/transmission.txt"));
 		} catch (FileNotFoundException ex) {
 			return System.err;
 		}

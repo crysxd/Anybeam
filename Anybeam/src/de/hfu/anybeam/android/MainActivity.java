@@ -122,7 +122,7 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		updateView();
 	}
 
-	public void updateView() {
+	private void updateView() {
 		this.runOnUiThread(new Runnable() {
 
 			@Override

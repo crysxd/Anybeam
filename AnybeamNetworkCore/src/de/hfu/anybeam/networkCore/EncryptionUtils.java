@@ -17,6 +17,7 @@ public class EncryptionUtils {
 		case AES128:
 		case AES256: return "AES";
 		case DES: return "DES";
+		case NONE: return "NONE";
 		}
 		
 		return null;
@@ -27,12 +28,16 @@ public class EncryptionUtils {
 		case AES128: return 128;
 		case AES256: return 256;
 		case DES: return 56;
+		case NONE: return 0;
 		}
 	
 		return -1;
 	}
 	
 	public static byte[] generateSecretKey(EncryptionType type) throws Exception {
+		if(type == EncryptionType.NONE)
+			return new byte[0];
+		
 		KeyGenerator keyGen = KeyGenerator.getInstance(EncryptionUtils.getEncryptionName(type));
 		keyGen.init(EncryptionUtils.getKeyLength(type)); // for example
 		SecretKey secretKey = keyGen.generateKey();
@@ -45,12 +50,14 @@ public class EncryptionUtils {
 		case AES128: 
 		case AES256: return Cipher.getInstance("AES/ECB/NoPadding");
 		case DES: return Cipher.getInstance("DES/ECB/NoPadding");
+		default: return null;
 		}
-		
-		return null;
 	}
 	
 	public static SecretKeySpec createKey(EncryptionType type, byte[] rawKeyData) {
+		if(type == EncryptionType.NONE)
+			return null;
+		
 		return new SecretKeySpec(rawKeyData, EncryptionUtils.getEncryptionName(type));
 	}
 	

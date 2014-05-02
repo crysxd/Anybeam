@@ -8,7 +8,7 @@ import de.hfu.anybeam.networkCore.EncryptionUtils;
 public class EncryptionUtilsTest {
 	
 	public static void main(String[] args) throws Exception {
-		byte[] key = EncryptionUtils.generateSecretKey(EncryptionType.DES);
+		byte[] key = EncryptionUtils.generateSecretKey(EncryptionType.NONE);
 		
 		System.out.println("Checksum: " + EncryptionUtils.getKeyChecksum(key));
 		String humanReadable =  EncryptionUtils.getHumanReadableKeyFromKey(key);
