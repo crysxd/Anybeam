@@ -9,13 +9,17 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.spec.SecretKeySpec;
 
-public class ConnectionHandler implements Runnable {
+class DataReceiverConnection extends AbstractTransmission {
 
+	private static long nextTransmissionId = 0;
+	
 	private final InputStream INPUT;
 	private final DataReceiverAdapter ADAPTER;
 	private final long TRANSMISSION_ID;
-	private final NetworkEnvironmentSettings SETTINGS;
-
+	private final EncryptionType ENCRYPTION_TYPE;
+	private final byte[] ENCRYPTION_KEY;
+	private final DataReceiver MY_RECEIVER;
+	
 	private int read = 0;
 	private long readLength = 0;
 	private long totalLength = 0;
@@ -25,11 +29,17 @@ public class ConnectionHandler implements Runnable {
 	private	OutputStream transmissionOutput = null;
 	private boolean isCanceled = false;
 	
-	public ConnectionHandler(InputStream in, NetworkEnvironmentSettings settings, DataReceiverAdapter adapter, long id) {
+	public DataReceiverConnection(InputStream in, EncryptionType encryptionType, 
+			byte[] encryptionKey, DataReceiverAdapter adapter, DataReceiver myReceiver) {
 		this.INPUT = in;
-		this.SETTINGS = settings;
+		this.ENCRYPTION_TYPE = encryptionType;
 		this.ADAPTER = adapter;
-		this.TRANSMISSION_ID = id;
+		this.ENCRYPTION_KEY = encryptionKey;
+		this.MY_RECEIVER = myReceiver;
+		
+		synchronized (DataReceiverConnection.class) {
+			this.TRANSMISSION_ID = DataReceiverConnection.nextTransmissionId++;
+		}
 	}
 	
 	private TransmissionEvent createTransmissionEvent() {
@@ -42,27 +52,16 @@ public class ConnectionHandler implements Runnable {
 				resourceName, e, this);
 	}
  
-	public void cancelTransmission() {
-		this.isCanceled = true;
-		
-		try {
-			this.INPUT.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	@Override
-	public void run() {
-
+	public void transmit() throws Exception {
 		InputStream in = null;
 
 		try {
 			
-			if(this.SETTINGS.getEncryptionType() != EncryptionType.NONE) {
+			if(this.ENCRYPTION_TYPE != EncryptionType.NONE) {
 				//Create cipher
-				Cipher c = EncryptionUtils.createCipher(this.SETTINGS.getEncryptionType());
-				SecretKeySpec k = EncryptionUtils.createKey(this.SETTINGS.getEncryptionType(), this.SETTINGS.getEncryptionKey());
+				Cipher c = EncryptionUtils.createCipher(this.ENCRYPTION_TYPE);
+				SecretKeySpec k = EncryptionUtils.createKey(this.ENCRYPTION_TYPE, this.ENCRYPTION_KEY);
 				c.init(Cipher.DECRYPT_MODE, k);	
 				
 				//Create cipher input Stream
@@ -74,24 +73,7 @@ public class ConnectionHandler implements Runnable {
 				in = this.INPUT;
 				
 			}
-			
-			//skip buffer
-			int counter = 0;
-			int max = EncryptionUtils.getTrasmissionPaddingMaxLength();
-			while((read = in.read()) >= 0) {
-				counter++;
-				
-				if(counter > max) {
-					throw new EncryptionKeyMismatchException();
-				}
-				
-				if(read == EncryptionUtils.getTransmissionPaddingEnd()) {
-					System.out.println();
-					break;
-				}
-				
-			}
-			
+						
 			//read header
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			UrlParameterBundle header = null;
@@ -140,14 +122,19 @@ public class ConnectionHandler implements Runnable {
 				e.printStackTrace();		
 
 		} finally {
-			try {
-				this.INPUT.close();
+			this.MY_RECEIVER.transmissionDone(this);
+			
+			this.INPUT.close();
 				
-				if(in != null)
-					in.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			if(in != null)
+				in.close();
 		}
+		
+	}
+
+	@Override
+	public void forceCloseTransmissionStream() throws IOException {
+		this.INPUT.close();
+		
 	}
 }

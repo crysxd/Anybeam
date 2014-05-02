@@ -1,20 +1,20 @@
 package de.hfu.anybeam.networkCore.test;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 
-import de.hfu.anybeam.networkCore.Client;
+import javax.swing.JFileChooser;
+
 import de.hfu.anybeam.networkCore.DataReceiver;
 import de.hfu.anybeam.networkCore.DataReceiverAdapter;
-import de.hfu.anybeam.networkCore.DeviceType;
+import de.hfu.anybeam.networkCore.DataSender;
 import de.hfu.anybeam.networkCore.EncryptionType;
 import de.hfu.anybeam.networkCore.EncryptionUtils;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
 
 public class DataReceiverTest implements DataReceiverAdapter {
@@ -24,51 +24,57 @@ public class DataReceiverTest implements DataReceiverAdapter {
 	}
 	
 	private DataReceiver dr;
+	private File input;
+	private File output;
+	
 	public DataReceiverTest() throws Exception {
-		NetworkEnvironmentSettings s = 
-				new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, 
-						EncryptionType.NONE, 1338, 1337,  EncryptionUtils.generateSecretKey(EncryptionType.NONE));
-//		NetworkEnvironmentSettings s2 = 
-//				new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, 
-//						EncryptionType.AES256, 1338, 1337,  EncryptionUtils.generateSecretKey(EncryptionType.AES256));
+		
+		EncryptionType type = EncryptionType.DES;
+		byte[] key = EncryptionUtils.generateSecretKey(type);
+		int port = 1338;
+		
+		JFileChooser fc = new JFileChooser(new File(System.getProperty("user.home")));
+		fc.showOpenDialog(null);
+		this.input = fc.getSelectedFile();
+		this.output = new File(System.getProperty("user.home") + File.separator + "Downloads" + File.separator + input.getName());
 				
-		dr = new DataReceiver(s, this);
-		
-		Client c = new Client(InetAddress.getLocalHost(), "Client 1", 1338, 
-				"xx:xx:xx:xx:xx:xx:group", System.getProperty("os.name"), "my_group", 0, DeviceType.TYPE_LAPTOP);
-		
-		String in = "Hallo Welt!";
-		c.sendData(new ByteArrayInputStream(in.getBytes()), in.length(), "test.txt", s);
+		dr = new DataReceiver(type, key, port, this);
+		DataSender ds = new DataSender(new FileInputStream(input), input.length(), input.getName(), 
+				type, key, port, InetAddress.getLocalHost());
+		ds.startTransmission();
+
 	}
 
 	@Override
 	public OutputStream transmissionStarted(TransmissionEvent e) {
 		
-		System.out.println("Started transmission");
-		
-//		e.getConnectionHandler().cancelTransmission();
-		
+//		System.out.println(s"Started transmission");
+				
 		try {
-			return new FileOutputStream(new File("/Users/chrwuer/Desktop/transmission.txt"));
+			return new FileOutputStream(this.output);
 		} catch (FileNotFoundException ex) {
 			return System.err;
 		}
+		
+//		return System.out;
 	}
 
 	@Override
 	public void transmissionProgressChanged(TransmissionEvent e) {
-		System.out.println(Math.round(e.getPercentDone()*100) + "%");
+//		System.out.println(Math.round(e.getPercentDone()*100) + "%");
 	}
 
 	@Override
 	public void transmissionDone(TransmissionEvent e) {
-		System.out.println("Transmission done.");
+		System.out.println("\nTransmission done.");
 		try {
 			e.getTransmissionOutput().close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		dr.dispose();
+		 dr.dispose();
+		 
+		System.out.println("OK: " + (this.output.length() == this.input.length()));
 		
 	}
 
@@ -76,6 +82,6 @@ public class DataReceiverTest implements DataReceiverAdapter {
 	public void trassmissionAborted(TransmissionEvent e) {
 		System.out.println("Transmission canceled! " + e.getException());
 		dr.dispose();
-		
+				
 	}
 }

@@ -10,19 +10,19 @@ public class TransmissionEvent {
 	private final long TRASMITTED_LENGTH;
 	private final OutputStream TRANSMISSON_OUTPUT;
 	private final String RESOURCE_NAME;
-	private final ConnectionHandler HANDLER;
+	private final DataReceiverConnection CONNECTION;
 	private final Exception Exception;
 	
 	TransmissionEvent(String senderId,  long transmissionId, long resourceLength, 
 			long transmittedLength, OutputStream transmissionOutput, String resourceName,
-			Exception error, ConnectionHandler handler) {
+			Exception error, DataReceiverConnection handler) {
 		this.SENDER_ID = senderId;
 		this.TRANSMISSON_ID = transmissionId;
 		this.RESOURCE_LENGTH = resourceLength;
 		this.TRASMITTED_LENGTH = transmittedLength;
 		this.TRANSMISSON_OUTPUT = transmissionOutput;
 		this.RESOURCE_NAME = resourceName;
-		this.HANDLER = handler;
+		this.CONNECTION = handler;
 		this.Exception = error;
 	}
 
@@ -50,8 +50,8 @@ public class TransmissionEvent {
 		return this.RESOURCE_NAME;
 	}
 	
-	public ConnectionHandler getConnectionHandler() {
-		return this.HANDLER;
+	public DataReceiverConnection getDataReceiverConnection() {
+		return this.CONNECTION;
 	}
 	
 	public double getPercentDone() {

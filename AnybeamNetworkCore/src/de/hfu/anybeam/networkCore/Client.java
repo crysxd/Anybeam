@@ -1,17 +1,10 @@
 package de.hfu.anybeam.networkCore;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-
-import javax.crypto.Cipher;
-import javax.crypto.CipherOutputStream;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Represents a network Client with all necessary Information.
@@ -170,7 +163,7 @@ public class Client implements Comparable<Client>, Serializable {
 	}
 	
 	public boolean isEncryptionKeyCompatible() {
-		return this.isEncryptionKeyCompatible(NetworkCoreUtils.getNetEnvironmentSettings(this.getGroup()));
+		return this.isEncryptionKeyCompatible(NetworkCoreUtils.getNetworkEnvironmentSettings(this.getGroup()));
 	}
 	
 	public boolean isEncryptionKeyCompatible(NetworkEnvironmentSettings settings) {
@@ -259,12 +252,11 @@ public class Client implements Comparable<Client>, Serializable {
 	
 	public void sendData(InputStream in, long inputStreamSize, String sourceName) 
 			throws Exception {
-		this.sendData(in, inputStreamSize, sourceName, NetworkCoreUtils.getNetEnvironmentSettings(this.getGroup()));
+		this.sendData(in, inputStreamSize, sourceName, NetworkCoreUtils.getNetworkEnvironmentSettings(this.getGroup()));
 	}
 	
 	public void sendData(InputStream in, long inputStreamSize, String sourceName, NetworkEnvironmentSettings settings) 
 			throws Exception {
-	
 		
 		if(settings == null)
 			throw new IllegalArgumentException("The given NetworkEnvironmentSettings are null. "
@@ -273,53 +265,8 @@ public class Client implements Comparable<Client>, Serializable {
 					+ "NetworkEnvironmentSettings invoking sendData(InputStream, inputStreamSize, sourceName, "
 					+ "NetworkEnvironmentSettings). ");
 		
-		//connect
-		Socket soc = new Socket();
-		soc.connect(new InetSocketAddress(this.getAddress(), this.getDataPort()));
-		
-		OutputStream out = null;
-		try {
-			
-			if(settings.getEncryptionType() != EncryptionType.NONE) {
-				//Create cipher
-				Cipher c = EncryptionUtils.createCipher(settings.getEncryptionType());
-				SecretKeySpec k = EncryptionUtils.createKey(settings.getEncryptionType(), settings.getEncryptionKey());
-				c.init(Cipher.ENCRYPT_MODE, k);
-				
-				//create writers
-				out = new CipherOutputStream(soc.getOutputStream(), c);
-			
-			} else {
-				//No encryption...just use socket output stream
-				out = soc.getOutputStream();
-			}
-			
-			//Write padding
-			out.write(EncryptionUtils.generateTransmissionPadding());
-			
-			//Write header
-			out.write(new UrlParameterBundle().put("NAME", sourceName)
-					.put("LENGTH", inputStreamSize).put("ID", this.getId()).
-					generateHeaderString().getBytes());
-			out.write('\n');
-			
-			//copy
-			int read = 0;
-			byte[] buffer = new byte[1024];
-			while((read = in.read(buffer)) > 0) {
-				out.write(buffer, 0, read);
-			}
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-			
-		} finally {
-			if(out != null)
-				out.close();
-			
-			if(soc != null)
-				soc.close();
-		}
+		new DataSender(in, inputStreamSize, sourceName, settings.getEncryptionType(), settings.getEncryptionKey(), this.getDataPort(), this.getAddress())
+			.startTransmission();;
 
 	}
 

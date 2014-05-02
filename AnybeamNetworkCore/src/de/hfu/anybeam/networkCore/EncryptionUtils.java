@@ -48,8 +48,8 @@ public class EncryptionUtils {
 	public static Cipher createCipher(EncryptionType type) throws NoSuchAlgorithmException, NoSuchPaddingException {
 		switch(type) {
 		case AES128: 
-		case AES256: return Cipher.getInstance("AES/ECB/NoPadding");
-		case DES: return Cipher.getInstance("DES/ECB/NoPadding");
+		case AES256: return Cipher.getInstance("AES/ECB/PKCS5Padding");
+		case DES: return Cipher.getInstance("DES/ECB/PKCS5Padding");
 		default: return null;
 		}
 	}

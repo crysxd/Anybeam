@@ -32,7 +32,7 @@ public class NetworkCoreUtils {
 		return NetworkCoreUtils.getNetworkEnvironment(group);
 	}
 	
-	public static NetworkEnvironmentSettings getNetEnvironmentSettings(String group) {
+	public static NetworkEnvironmentSettings getNetworkEnvironmentSettings(String group) {
 		return NetworkCoreUtils.ENVIRONMENT_SETTINGS.get(group.toUpperCase());
 	}
 
