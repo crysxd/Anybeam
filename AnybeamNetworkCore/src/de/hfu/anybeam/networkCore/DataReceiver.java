@@ -56,8 +56,7 @@ public class DataReceiver implements Runnable {
 						soc.getInputStream(), 
 						this.ENCRYPTION_TYPE,
 						this.ENCRYPTION_KEY,
-						this.ADAPTER, 
-						this);
+						this.ADAPTER);
 				ch.startTransmission();
 				this.ONGOING_TRANSMISSONS.add(ch);
 				

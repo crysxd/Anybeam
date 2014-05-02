@@ -2,10 +2,8 @@ package de.hfu.anybeam.networkCore;
 
 import java.io.OutputStream;
 
-public interface DataReceiverAdapter {
+public interface DataReceiverAdapter extends AbstractTransmissionAdapter {
 	
-	public OutputStream transmissionStarted(TransmissionEvent e);
-	public void transmissionProgressChanged(TransmissionEvent e);
-	public void transmissionDone(TransmissionEvent e);
-	public void trassmissionAborted(TransmissionEvent e);
+	public OutputStream downloadStarted(TransmissionEvent e, String clientId);
+	public void closeOutputStream(TransmissionEvent e, OutputStream out);
 }

@@ -19,11 +19,10 @@ public class DataSender extends AbstractTransmission {
 	private final byte[] ENCRYPTION_KEY;
 	private final EncryptionType ENCRYPTION_TYPE;
 	private final InputStream INPUT;
-	private final long INPUT_LENGTH;
-	private final String INPUT_NAME;
 	private final String ID;
 	
 	private OutputStream outputStream;
+	private Socket socket;
 
 	public DataSender(InputStream inputStream, long inputStreamLength, String inputName, 
 			EncryptionType encryptionType, byte[] encryptionKey, 
@@ -31,82 +30,78 @@ public class DataSender extends AbstractTransmission {
 
 		this(inputStream, inputStreamLength, inputName, encryptionType, encryptionKey, receiverPort, receiverAddress, null);
 	}
+	
+	public DataSender(InputStream inputStream, long inputStreamLength, String inputName, 
+			EncryptionType encryptionType, byte[] encryptionKey, 
+			int receiverPort, InetAddress receiverAddress, AbstractTransmissionAdapter adapter) {
+
+		this(inputStream, inputStreamLength, inputName, encryptionType, encryptionKey, receiverPort, receiverAddress, adapter, null);
+	}
 
 	public DataSender(InputStream inputStream, long inputStreamLength, String inputName, 
 			EncryptionType encryptionType, byte[] encryptionKey, 
-			int receiverPort, InetAddress receiverAddress, String id) {
-
+			int receiverPort, InetAddress receiverAddress, AbstractTransmissionAdapter adapter, String senderClientId) {
+		super(adapter);
+		
 		this.RECEIVER_ADDRESS = receiverAddress;
 		this.RECEIVER_PORT = receiverPort;
 		this.ENCRYPTION_KEY = encryptionKey;
 		this.ENCRYPTION_TYPE = encryptionType;
 		this.INPUT = inputStream;
-		this.INPUT_LENGTH = inputStreamLength;
-		this.INPUT_NAME = inputName;
-		this.ID = id;
+		this.ID = senderClientId;
+		
+		this.setTotalLength(inputStreamLength);
+		this.setResourceName(inputName);
 	}
 
 	@Override
 	public void transmit() throws Exception {
-		Socket soc = null;
+		//connect
+		this.socket = new Socket();
+		this.socket.connect(new InetSocketAddress(this.RECEIVER_ADDRESS, this.RECEIVER_PORT));  
 
-		try {
-			//connect
-			soc = new Socket();
-			soc.connect(new InetSocketAddress(this.RECEIVER_ADDRESS, this.RECEIVER_PORT));  
+		if(this.ENCRYPTION_TYPE != EncryptionType.NONE) {
+			//Create cipher
+			Cipher c = EncryptionUtils.createCipher(this.ENCRYPTION_TYPE);
+			SecretKeySpec k = EncryptionUtils.createKey(this.ENCRYPTION_TYPE, this.ENCRYPTION_KEY);
+			c.init(Cipher.ENCRYPT_MODE, k);
 
-			if(this.ENCRYPTION_TYPE != EncryptionType.NONE) {
-				//Create cipher
-				Cipher c = EncryptionUtils.createCipher(this.ENCRYPTION_TYPE);
-				SecretKeySpec k = EncryptionUtils.createKey(this.ENCRYPTION_TYPE, this.ENCRYPTION_KEY);
-				c.init(Cipher.ENCRYPT_MODE, k);
+			//create writers
+			this.outputStream = new CipherOutputStream(this.socket.getOutputStream(), c);
 
-				//create writers
-				this.outputStream = new CipherOutputStream(soc.getOutputStream(), c);
+		} else {
+			//No encryption...just use socket output stream
+			this.outputStream = this.socket.getOutputStream();
+		}
 
-			} else {
-				//No encryption...just use socket output stream
-				this.outputStream = soc.getOutputStream();
-			}
+		//Write header
+		UrlParameterBundle header = new UrlParameterBundle().put("NAME", this.getResourceName())
+				.put("LENGTH", this.getTotalLength());
 
-			//Write header
-			UrlParameterBundle header = new UrlParameterBundle()
-			.put("NAME", this.INPUT_NAME)
-			.put("LENGTH", this.INPUT_LENGTH);
+		if(this.ID != null)
+			header.put("ID", this.ID);
 
-			if(this.ID != null)
-				header.put("ID", this.ID);
+		this.outputStream.write(header.generateHeaderString().getBytes());
+		this.outputStream.write('\n');
 
-			this.outputStream.write(header.generateHeaderString().getBytes());
-			this.outputStream.write('\n');
-
-			//copy
-			int read = 0;
-			byte[] buffer = new byte[1024];
-			while((read = this.INPUT.read(buffer)) >= 0) {
-				this.outputStream.write(buffer, 0, read);
-			}
-			
-			this.outputStream.flush();
-
-		} catch(Exception e) {
-			e.printStackTrace();
-
-		} finally {
-			
-			if(this.outputStream != null)
-				this.outputStream.close();
-
-			if(soc != null)
-				soc.close();
+		//copy
+		int read = 0;
+		byte[] buffer = new byte[1024];
+		while((read = this.INPUT.read(buffer)) >= 0) {
+			this.outputStream.write(buffer, 0, read);
+			this.increaseTransmittedLength(read);
 		}
 		
+		this.outputStream.flush();
 	}
 
 	@Override
 	public void forceCloseTransmissionStream() throws IOException {
 		if(this.outputStream != null)
 			this.outputStream.close();
+		
+		if(this.socket != null)
+			this.socket.close();
 		
 	}
 }
