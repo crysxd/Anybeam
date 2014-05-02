@@ -163,12 +163,16 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Log.i("parent", parent.getCount() + "Elemente");
-				Client c = (Client) clientList.getItemAtPosition(position);
 
-				FragmentManager fm = getFragmentManager();
-				DeviceInfoFragment devInfo = DeviceInfoFragment.newInstance(c);
-				devInfo.show(fm, "fragment_device_info");
+				try {					
+					Client c = (Client) clientList.getItemAtPosition(position);
+					
+					FragmentManager fm = getFragmentManager();
+					DeviceInfoFragment devInfo = DeviceInfoFragment.newInstance(c);
+					devInfo.show(fm, "fragment_device_info");
+				} catch (IndexOutOfBoundsException e) {
+					Log.w("ClientList", "ClientList is Empty");
+				}
 
 				return true;
 			}
@@ -179,7 +183,12 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Log.i("MyError", "clicked");
+				try {					
+					Client c = (Client) clientList.getItemAtPosition(position);
+					Log.i("Client", c.toString());
+				} catch (IndexOutOfBoundsException e) {
+					Log.w("ClientList", "ClientList is Empty");
+				}
 			}
 		});
 	}
