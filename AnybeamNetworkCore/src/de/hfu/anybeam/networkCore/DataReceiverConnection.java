@@ -72,9 +72,15 @@ class DataReceiverConnection extends AbstractTransmission {
 
 		//copy
 		byte[] buffer = new byte[1024];
+		int transmittedInCurrentInterval = 0;
 		while((read = this.transmissionInput.read(buffer)) > 0) {
 			transmissionOutput.write(buffer, 0, read);
-			this.increaseTransmittedLength(read);
+			transmittedInCurrentInterval += read;
+			
+			if(transmittedInCurrentInterval > 10000) {
+				this.increaseTransmittedLength(transmittedInCurrentInterval);
+				transmittedInCurrentInterval = 0;
+			}
 
 		}
 

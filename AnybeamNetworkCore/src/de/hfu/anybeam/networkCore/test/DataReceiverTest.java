@@ -37,6 +37,7 @@ public class DataReceiverTest extends JFrame implements DataReceiverAdapter {
 	private File input;
 	private File output;
 	private JProgressBar pb;
+	private JLabel lb;
 	
 	public DataReceiverTest() throws Exception {
 		
@@ -64,11 +65,13 @@ public class DataReceiverTest extends JFrame implements DataReceiverAdapter {
 		this.getRootPane().setBorder(new EmptyBorder(10, 10, 10, 10));
 		
 		JPanel helper = new JPanel(new BorderLayout());
-		this.pb = new JProgressBar(0, 100);
+		this.pb = new JProgressBar(0, 10000);
 		this.pb.setValue(0);
 		helper.add(pb, BorderLayout.CENTER);	
-		helper.add(new JLabel(this.input.getName()), BorderLayout.SOUTH);
+		this.lb = new JLabel(this.input.getName());
+		helper.add(lb, BorderLayout.SOUTH);
 		this.add(helper, BorderLayout.CENTER);
+		
 		try {
 			Icon ico = new JFileChooser().getIcon(this.input)
 ;			JLabel iconLabel = new JLabel();
@@ -88,12 +91,15 @@ public class DataReceiverTest extends JFrame implements DataReceiverAdapter {
 		this.setVisible(true);
 	}
 	
-	private void setPercentageDisplay(double percent) {
-		this.pb.setValue((int)(percent*100));
+	private void setPercentageDisplay(TransmissionEvent e) {
+		this.pb.setValue((int)(e.getPercentDone()*10000));
+		String text = String.format("%s - %.2fMB/s", e.getResourceName(), e.getAverageSpeed()/1000000.);
+		this.lb.setText(text);
 	}
 	
 	private void terminateView() {
 		this.setVisible(false);
+		System.exit(0);
 	}
 
 	@Override
@@ -118,7 +124,7 @@ public class DataReceiverTest extends JFrame implements DataReceiverAdapter {
 	@Override
 	public void transmissionProgressChanged(TransmissionEvent e) {		
 		if(!(e.getTransmissionHandler() instanceof DataSender)) {
-			this.setPercentageDisplay(e.getPercentDone());
+			this.setPercentageDisplay(e);
 		}
 	}
 

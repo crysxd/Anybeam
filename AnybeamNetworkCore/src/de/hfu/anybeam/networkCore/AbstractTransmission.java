@@ -13,9 +13,10 @@ public abstract class AbstractTransmission extends Thread {
 	private long totalLength = -1;
 	private long readLength = 0;
 	private String resourceName = "unknown";
-	private long onePercent = 0;
-	private long lastProgressUpdate = 0;
 	private boolean isCanceled = false;
+	private long lastTransmittedLengthIncrease = 0;
+	private long lastProgressUpdate = 0;
+	private final AverageList SPEED_AVERGAE = new AverageList(15);
 	
 	public AbstractTransmission(AbstractTransmissionAdapter adapter) {
 		this.ADAPTER = adapter;
@@ -28,6 +29,7 @@ public abstract class AbstractTransmission extends Thread {
 	@Override
 	public void run() {
 		try {
+			this.lastTransmittedLengthIncrease = System.nanoTime();
 			this.transmit();
 			if(this.ADAPTER != null)
 				this.ADAPTER.transmissionDone(this.createTransmissionEvent(null));
@@ -72,16 +74,11 @@ public abstract class AbstractTransmission extends Thread {
 	}
 	
 	protected TransmissionEvent createTransmissionEvent(Exception e) {
-		return new TransmissionEvent(this.getTransmissionId(), totalLength, readLength, resourceName, e, this);
+		return new TransmissionEvent(this.getTransmissionId(), totalLength, readLength, resourceName, e, this.SPEED_AVERGAE.getAverage(), this);
 	}
 	
 	public void setTotalLength(long totalLength) {
 		this.totalLength = totalLength;
-		
-		if(totalLength > 0)
-			this.onePercent = Math.round(this.getTotalLength()/100);
-		else
-			this.onePercent = -1;
 	}
 	
 	protected long getTotalLength() {
@@ -95,23 +92,26 @@ public abstract class AbstractTransmission extends Thread {
 	protected AbstractTransmissionAdapter getAdapter() {
 		return this.ADAPTER;
 	}
-
-	protected void setTransmittedLength(long readLength) {
-		this.readLength = readLength;
-
-		if(this.ADAPTER != null && this.totalLength > 0 && this.onePercent > 0 && lastProgressUpdate + onePercent <= this.readLength) {
-			lastProgressUpdate = this.getTransmittedLength();
-
-			this.ADAPTER.transmissionProgressChanged(this.createTransmissionEvent(null));
-		}
-
-	}
 	
 	protected void increaseTransmittedLength(long readLengthIncrease) {
 		if(readLength < 0)
 			readLength = 0;
 		
-		this.setTransmittedLength(this.getTransmittedLength() + readLengthIncrease);
+		this.readLength += readLengthIncrease;
+		
+		long time = System.nanoTime();
+		double timeDif = (time - this.lastTransmittedLengthIncrease) / 1000000000.;//timeDif in s
+		double volume = readLengthIncrease;
+		double speed = (volume / timeDif);// Byte/ss
+		
+		this.lastTransmittedLengthIncrease = time;
+		this.SPEED_AVERGAE.add(speed);
+		
+		if(this.ADAPTER != null && (this.lastProgressUpdate == 0 || time - this.lastProgressUpdate > 500000000)) {
+			this.lastProgressUpdate = time;
+			this.ADAPTER.transmissionProgressChanged(this.createTransmissionEvent(null));
+		}
+		
 	}
 
 	public String getResourceName() {

@@ -85,11 +85,17 @@ public class DataSender extends AbstractTransmission {
 		this.outputStream.write('\n');
 
 		//copy
-		int read = 0;
+		int read = 0, transmittedInCurrentInterval = 0;
 		byte[] buffer = new byte[1024];
 		while((read = this.INPUT.read(buffer)) >= 0) {
 			this.outputStream.write(buffer, 0, read);
-			this.increaseTransmittedLength(read);
+			transmittedInCurrentInterval += read;
+
+			if(transmittedInCurrentInterval > 10000) {
+				this.increaseTransmittedLength(transmittedInCurrentInterval);
+				transmittedInCurrentInterval = 0;
+			}
+
 		}
 		
 		this.outputStream.flush();

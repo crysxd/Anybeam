@@ -8,16 +8,18 @@ public class TransmissionEvent {
 	private final long TRASMITTED_LENGTH;
 	private final String RESOURCE_NAME;
 	private final AbstractTransmission TRANSMISSION_HANDLER;
-	private final Exception Exception;
+	private final Exception EXCEPTION;
+	private final double AVERAGE_SPEED;
 	
 	TransmissionEvent(long transmissionId, long resourceLength, long transmittedLength, 
-			String resourceName, Exception error, AbstractTransmission handler) {
+			String resourceName, Exception error, double averageSpeed, AbstractTransmission handler) {
 		this.TRANSMISSON_ID = transmissionId;
 		this.TOTAL_LENGTH = resourceLength;
 		this.TRASMITTED_LENGTH = transmittedLength;
 		this.RESOURCE_NAME = resourceName;
 		this.TRANSMISSION_HANDLER = handler;
-		this.Exception = error;
+		this.AVERAGE_SPEED = averageSpeed;
+		this.EXCEPTION = error;
 	}
 
 	public long getTransmissionId() {
@@ -45,10 +47,15 @@ public class TransmissionEvent {
 	}
 	
 	public Exception getException() {
-		return this.Exception;
+		return this.EXCEPTION;
 	}
 	
 	public boolean isIndeterminate() {
 		return this.getTotalLength() < 0;
+	}
+	
+	public double getAverageSpeed() {
+		return AVERAGE_SPEED;
+		
 	}
 }
