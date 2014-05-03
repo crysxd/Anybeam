@@ -10,21 +10,18 @@ import java.net.InetAddress;
  * Represents a network Client with all necessary Information.
  * @author chrwuer
  * @since 1.0
- * @version 1.0
  */
 public class Client implements Comparable<Client>, Serializable {
 	
 	private static final long serialVersionUID = -5823296242806470526L;
-	
-	//The InetAddress of this client
-	private final InetAddress ADDRESS;
-	private final String NAME;
-	private final int DATA_PORT;
-	private final String ID;
-	private final String OS_NAME;
-	private final DeviceType DEVICE_TYPE;
-	private final String GROUP;
-	private final int encryptionKeyChecksum;
+	private InetAddress address;
+	private String name;
+	private int dataPort;
+	private String id;
+	private String osName;
+	private DeviceType deviceType;
+	private String group;
+	private int encryptionKeyChecksum;
 	
 	/**
 	 * Creates a new {@link Client} instance with the given Information.
@@ -66,7 +63,7 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @return The client's {@link InetAddress}
 	 */
 	public InetAddress getAddress() {
-		return ADDRESS;
+		return address;
 	}
 	
 	/**
@@ -74,7 +71,7 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param address The new {@link InetAddress} for the client
 	 */
 	public void setAddress(InetAddress address) {
-		this.ADDRESS = address;
+		this.address = address;
 	}
 	
 	/**
@@ -82,15 +79,15 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @return The client's name.
 	 */
 	public String getName() {
-		return NAME;
+		return name;
 	}
 	
 	/**                                                              
 	 * Sets the client's name.         
-	 * @param ADDRESS The new name for the client     
+	 * @param address The new name for the client     
 	 */                                                              
 	public void setName(String name) {
-		this.NAME = name;
+		this.name = name;
 	}
 	
 	/**
@@ -98,15 +95,15 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @return The port on which the client is listening for incoming data transmissions
 	 */
 	public void setDataPort(int dataPort) {
-		this.DATA_PORT = dataPort;
+		this.dataPort = dataPort;
 	}
 	
 	/**                                                              
 	 * Sets the port on which the client is listening for incoming data transmissions.                        
-	 * @param ADDRESS The new port on which the client is listening for incoming data transmissions   
+	 * @param address The new port on which the client is listening for incoming data transmissions   
 	 */                                                              
 	public int getDataPort() {
-		return this.DATA_PORT;
+		return this.dataPort;
 	}
 	
 	/**
@@ -114,15 +111,15 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @return The client's id
 	 */
 	public void setId(String id) {
-		this.ID = id;
+		this.id = id;
 	}
 	
 	/**                                                              
 	 * Sets the client's id.                        
-	 * @param ADDRESS The new id for the client     
+	 * @param address The new id for the client     
 	 */                                                              
 	public String getId() {
-		return this.ID;
+		return this.id;
 	}
 	
 	/**
@@ -130,31 +127,31 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @return The client's id
 	 */
 	public void setOsName(String osName) {
-		this.OS_NAME = osName;
+		this.osName = osName;
 	}
 	
 	/**                                                              
 	 * Sets the client's id.                        
-	 * @param ADDRESS The new id for the client     
+	 * @param address The new id for the client     
 	 */                                                              
 	public String getOsName() {
-		return this.OS_NAME;
+		return this.osName;
 	}
 	
 	public void setDeviceType(DeviceType deviceType) {
-		this.DEVICE_TYPE = deviceType;
+		this.deviceType = deviceType;
 	}
 	
 	public DeviceType getDeviceType() {
-		return this.DEVICE_TYPE;
+		return this.deviceType;
 	}
 	
 	public String getGroup() {
-		return GROUP;
+		return group;
 	}
 
 	public void setGroup(String group) {
-		this.GROUP = group;
+		this.group = group;
 	}
 
 	public int getEncryptionKeyChecksum() {
