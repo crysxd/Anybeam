@@ -309,8 +309,7 @@ public class NetworkEnvironment {
 	private UrlParameterBundle createDefaultHeaderBundle() {
 		return new UrlParameterBundle().put("VERSION", this.getVersion()).put("GROUP", this.getGroupName())
 				.put("ID", this.getID()).put("DEVICE_NAME", this.getDeviceName()).put("PORT", this.getDataPort())
-				.put("OS_NAME", this.getOsName()).put("DEVICE_TYPE", this.getDeviceType())
-				.put("KEY_CHECKSUM", this.SETTINGS.getEncryptionKeyChecksum());
+				.put("OS_NAME", this.getOsName()).put("DEVICE_TYPE", this.getDeviceType());
 	}
 
 	byte[] createRegisterAnswerPayload() {
@@ -337,7 +336,7 @@ public class NetworkEnvironment {
 			if(b.get("METHOD").equals("REGISTER") || b.get("METHOD").equals("ANSWER")) {
 				this.addClient(b.get("ID"), new Client(
 						address, b.get("DEVICE_NAME"), b.getInt("PORT"), b.get("ID"), 
-						b.get("OS_NAME"), this.getGroupName(), b.getInt("KEY_CHECKSUM"), b.get("DEVICE_TYPE")));
+						b.get("OS_NAME"), this.getGroupName(), b.get("DEVICE_TYPE")));
 				
 				return !b.get("METHOD").equals("ANSWER");
 

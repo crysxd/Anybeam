@@ -10,52 +10,67 @@ import java.net.InetAddress;
  * Represents a network Client with all necessary Information.
  * @author chrwuer
  * @since 1.0
+ * @version 1.0
  */
 public class Client implements Comparable<Client>, Serializable {
 	
 	private static final long serialVersionUID = -5823296242806470526L;
-	private InetAddress address;
-	private String name;
-	private int dataPort;
-	private String id;
-	private String osName;
-	private DeviceType deviceType;
-	private String group;
-	private int encryptionKeyChecksum;
+	
+	//The InetAddress of this client
+	private InetAddress ADDRESS;
+	
+	//The name of this client
+	private String NAME;
+	
+	//The data port of this client
+	private int DATA_PORT;
+	
+	//The id of this client
+	private String ID;
+	
+	//The name of the client's os
+	private String OS_NAME;
+	
+	//The device type of the client
+	private DeviceType DEVEICE_TYPE;
+	
+	//the group of the client
+	private String GROUP_NAME;
 	
 	/**
 	 * Creates a new {@link Client} instance with the given Information.
-	 * @param a The client's {@link InetAddress}
-	 * @param n The client's name
-	 * @param dataPort The port on which the client is listening for incoming data tranmissions
-	 * @param id The client's id
+	 * @param address the client's {@link InetAddress}
+	 * @param name the client's name
+	 * @param dataPort the port on which the client is listening for incoming data tranmissions
+	 * @param id the client's id (from {@link NetworkEnvironmentSettings}
+	 * @param osName the name of the client's operating system
+	 * @param groupName the name of the client's group
+	 * @param deviceType a String representing the client's {@link DeviceType}
 	 */
-	public Client(InetAddress a, String n, int dataPort, String id, String osName, String group, int encryptionKeyChecksum, String deviceType) {
-		this.setAddress(a);
-		this.setName(n);
-		this.setId(id);
-		this.setDataPort(dataPort);
-		this.setOsName(osName);
-		this.setGroup(group);
-		this.setEncryptionKeyChecksum(encryptionKeyChecksum);
-
-		try {
-			this.setDeviceType(DeviceType.valueOf(deviceType));
-		} catch(Exception e) {
-			e.printStackTrace();
-			this.setDeviceType(DeviceType.TYPE_UNKNOWN);
-		}
+	public Client(InetAddress address, String name, int dataPort, String id, 
+			String osName, String groupName, String deviceType) {
+		this(address, name, dataPort, id, osName, groupName, DeviceType.valueOf(deviceType));
 	}
 	
-	public Client(InetAddress a, String n, int dataPort, String id, String osName, String group,int encryptionKeyChecksum, DeviceType deviceType) {
-		this.setAddress(a);
-		this.setName(n);
-		this.setId(id);
-		this.setDataPort(dataPort);
-		this.setOsName(osName);
-		this.setDeviceType(deviceType);
-		this.setGroup(group);
-		this.setEncryptionKeyChecksum(encryptionKeyChecksum);
+	/**
+	 * Creates a new {@link Client} instance with the given Information.
+	 * @param address the client's {@link InetAddress}
+	 * @param name the client's name
+	 * @param dataPort the port on which the client is listening for incoming data tranmissions
+	 * @param id the client's id (from {@link NetworkEnvironmentSettings}
+	 * @param osName the name of the client's operating system
+	 * @param groupName the name of the client's group
+	 * @param deviceType the client's {@link DeviceType}
+	 */
+	public Client(InetAddress address, String name, int dataPort, String id, 
+			String osName, String groupName, DeviceType deviceType) {
+		this.ADDRESS = address;
+		this.NAME = name;
+		this.ID = id;
+		this.DATA_PORT = dataPort;
+		this.OS_NAME = osName;
+		this.GROUP_NAME = groupName;
+		this.DEVEICE_TYPE = deviceType;
 	}
 	
 	/**
@@ -63,15 +78,7 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @return The client's {@link InetAddress}
 	 */
 	public InetAddress getAddress() {
-		return address;
-	}
-	
-	/**
-	 * Sets the client's {@link InetAddress}.
-	 * @param address The new {@link InetAddress} for the client
-	 */
-	public void setAddress(InetAddress address) {
-		this.address = address;
+		return ADDRESS;
 	}
 	
 	/**
@@ -79,94 +86,88 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @return The client's name.
 	 */
 	public String getName() {
-		return name;
+		return NAME;
 	}
 	
 	/**                                                              
-	 * Sets the client's name.         
-	 * @param address The new name for the client     
-	 */                                                              
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	/**
-	 * Returns the port on which the client is listening for incoming data transmissions.
-	 * @return The port on which the client is listening for incoming data transmissions
-	 */
-	public void setDataPort(int dataPort) {
-		this.dataPort = dataPort;
-	}
-	
-	/**                                                              
-	 * Sets the port on which the client is listening for incoming data transmissions.                        
-	 * @param address The new port on which the client is listening for incoming data transmissions   
+	 * Returns the port on which the client is listening for incoming data transmissions.                        
+	 * @return the port on which the client is listening for incoming data transmissions   
 	 */                                                              
 	public int getDataPort() {
-		return this.dataPort;
-	}
-	
-	/**
-	 * Returns the client's id.
-	 * @return The client's id
-	 */
-	public void setId(String id) {
-		this.id = id;
+		return this.DATA_PORT;
 	}
 	
 	/**                                                              
-	 * Sets the client's id.                        
-	 * @param address The new id for the client     
+	 * Returns the client's id.                        
+	 * @return the client's id
 	 */                                                              
 	public String getId() {
-		return this.id;
-	}
-	
-	/**
-	 * Returns the client's id.
-	 * @return The client's id
-	 */
-	public void setOsName(String osName) {
-		this.osName = osName;
+		return this.ID;
 	}
 	
 	/**                                                              
-	 * Sets the client's id.                        
-	 * @param address The new id for the client     
+	 * Returns the name of the client's os.                        
+	 * @return the name of the client's os    
 	 */                                                              
 	public String getOsName() {
-		return this.osName;
+		return this.OS_NAME;
 	}
-	
-	public void setDeviceType(DeviceType deviceType) {
-		this.deviceType = deviceType;
-	}
-	
+
+	/**
+	 * Returns the client's {@link DeviceType}.
+	 * @return  the client's {@link DeviceType}.
+	 */
 	public DeviceType getDeviceType() {
-		return this.deviceType;
+		return this.DEVEICE_TYPE;
 	}
 	
+	/**
+	 * Returns the client's group name.
+	 * @return the client's group name.
+	 */
 	public String getGroup() {
-		return group;
+		return GROUP_NAME;
 	}
 
-	public void setGroup(String group) {
-		this.group = group;
-	}
-
-	public int getEncryptionKeyChecksum() {
-		return encryptionKeyChecksum;
-	}
-
-	public void setEncryptionKeyChecksum(int encryptionKeyChecksum) {
-		this.encryptionKeyChecksum = encryptionKeyChecksum;
+	/**
+	 * Sends the data from the stream to the client.
+	 * @param inputStream the {@link InputStream} to send the data from
+	 * @throws Exception
+	 */
+	public void sendData(InputStream inputStream) throws Exception {
+		this.sendData(inputStream, -1);
 	}
 	
-	public boolean isEncryptionKeyCompatible() {
-		return this.isEncryptionKeyCompatible(NetworkCoreUtils.getNetworkEnvironmentSettings(this.getGroup()));
+	/**
+	 * Sends the data from the stream to the client.
+	 * @param inputStream the {@link InputStream} to send the data from
+	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
+	 * @throws Exception
+	 */
+	public void sendData(InputStream inputStream, int inputStreamLength) throws Exception {
+		this.sendData(inputStream, inputStreamLength, "unknown");
 	}
 	
-	public boolean isEncryptionKeyCompatible(NetworkEnvironmentSettings settings) {
+	/**
+	 * Sends the data from the stream to the client.
+	 * @param inputStream the {@link InputStream} to send the data from
+	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
+	 * @param sourceName the name of the source represented by inputStream e.g. the filename
+	 * @throws Exception
+	 */
+	public void sendData(InputStream inputStream, int inputStreamLength, String sourceName) throws Exception {
+		this.sendData(inputStream, inputStreamLength, sourceName, NetworkCoreUtils.getNetworkEnvironmentSettings(this.getGroup()));
+	}
+	
+	/**
+	 * Sends the data from the stream to the client.
+	 * @param inputStream the {@link InputStream} to send the data from
+	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
+	 * @param sourceName the name of the source represented by inputStream e.g. the filename
+	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
+	 * @throws Exception
+	 */
+	public void sendData(InputStream inputStream, long inputStreamLength, String sourceName, NetworkEnvironmentSettings settings) throws Exception {
 		if(settings == null)
 			throw new IllegalArgumentException("The given NetworkEnvironmentSettings are null. "
 					+ "This can happen if the corresponding NetworkEnvironment for this Client's group "
@@ -174,12 +175,26 @@ public class Client implements Comparable<Client>, Serializable {
 					+ "NetworkEnvironmentSettings invoking sendData(InputStream, inputStreamSize, sourceName, "
 					+ "NetworkEnvironmentSettings). ");
 		
-		return settings.getEncryptionKeyChecksum() == this.getEncryptionKeyChecksum();
+		this.sendData(inputStream, inputStreamLength, sourceName, settings.getEncryptionType(), settings.getEncryptionKey());
 	}
-
+	
 	/**
-	 * Copys all values from the given source {@link Client}.
-	 * @param source The {@link Client} to copy all values from.
+	 * Sends the data from the stream to the client.
+	 * @param inputStream the {@link InputStream} to send the data from
+	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
+	 * @param sourceName the name of the source represented by inputStream e.g. the filename
+	 * @param encryptionType the {@link EncryptionType} to be used 
+	 * @param encryptionKey the key to encrypt the data or null if no encryption is used
+	 * @throws Exception
+	 */
+	public void sendData(InputStream inputStream, long inputStreamLength, String sourceName, EncryptionType encryptionType, byte[] encryptionKey) throws Exception {
+		new DataSender(inputStream, inputStreamLength, sourceName, encryptionType, encryptionKey, this.getDataPort(), this.getAddress())
+			.startTransmission();
+	}
+	
+	/**
+	 * Copies all values from the given source {@link Client}.
+	 * @param source the {@link Client} to copy all values from.
 	 */
 	public void copy(Client source) {
 		try {
@@ -248,26 +263,6 @@ public class Client implements Comparable<Client>, Serializable {
 	@Override
 	public int compareTo(Client o) {
 		return this.getName().compareTo(o.getName());
-	}
-	
-	public void sendData(InputStream in, long inputStreamSize, String sourceName) 
-			throws Exception {
-		this.sendData(in, inputStreamSize, sourceName, NetworkCoreUtils.getNetworkEnvironmentSettings(this.getGroup()));
-	}
-	
-	public void sendData(InputStream in, long inputStreamSize, String sourceName, NetworkEnvironmentSettings settings) 
-			throws Exception {
-		
-		if(settings == null)
-			throw new IllegalArgumentException("The given NetworkEnvironmentSettings are null. "
-					+ "This can happen if the corresponding NetworkEnvironment for this Client's group "
-					+ "is not registered at NetworkCoreUtils. In this case you can provide a individual set of "
-					+ "NetworkEnvironmentSettings invoking sendData(InputStream, inputStreamSize, sourceName, "
-					+ "NetworkEnvironmentSettings). ");
-		
-		new DataSender(in, inputStreamSize, sourceName, settings.getEncryptionType(), settings.getEncryptionKey(), this.getDataPort(), this.getAddress())
-			.startTransmission();;
-
 	}
 
 }

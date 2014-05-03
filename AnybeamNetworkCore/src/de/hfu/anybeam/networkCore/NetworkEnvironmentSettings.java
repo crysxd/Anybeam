@@ -15,7 +15,6 @@ public class NetworkEnvironmentSettings {
 	private final String LOCAL_ID;
 	private final String GROUP_NAME;
 	private final byte[] ENCRPTION_KEY;
-	private final int ENCRYPTION_KEY_CHECKSUM;
 	
 	public NetworkEnvironmentSettings(String groupName, String deviceName, DeviceType deviceType,  
 			EncryptionType encryptionType,int dataPort, int braocastPort, byte[] encryptionKey) {
@@ -34,7 +33,6 @@ public class NetworkEnvironmentSettings {
 		this.BROADCAST_PORT = braocastPort;
 		this.LOCAL_ID = this.generateId();
 		this.ENCRPTION_KEY = encryptionKey;
-		this.ENCRYPTION_KEY_CHECKSUM = EncryptionUtils.getKeyChecksum(this.ENCRPTION_KEY);
 	}
 	
 	private String generateId() {
@@ -111,10 +109,6 @@ public class NetworkEnvironmentSettings {
 	
 	public byte[] getEncryptionKey() {
 		return this.ENCRPTION_KEY;
-	}
-	
-	public int getEncryptionKeyChecksum() {
-		return this.ENCRYPTION_KEY_CHECKSUM;
 	}
 
 }

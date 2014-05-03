@@ -19,24 +19,13 @@
         android:scaleType="fitCenter"
         android:src="@drawable/ic_device_laptop" />
 
-    <ImageView
-        android:id="@+id/ivWarningIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_alignBottom="@+id/ivDeviceType"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/ivDeviceType"
-        android:contentDescription="@string/device_icon"
-        android:scaleType="center"
-        android:src="@drawable/ic_action_warning" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/ivDeviceType"
         android:layout_alignTop="@+id/ivDeviceType"
-        android:layout_toLeftOf="@+id/ivWarningIcon"
         android:layout_toRightOf="@+id/ivDeviceType"
+        android:layout_alignParentRight="true"
         android:gravity="center"
         android:orientation="vertical" >
 
@@ -47,6 +36,14 @@
             android:text="@string/replaceMe"
             android:textColor="@color/black" 
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/replaceMe"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
     </LinearLayout>
 
 </RelativeLayout>
