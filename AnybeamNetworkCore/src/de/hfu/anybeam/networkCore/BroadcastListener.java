@@ -17,7 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
  * @since 1.0
  * @version 1.0
  */
-public class BroadcastListener implements Runnable {
+class BroadcastListener implements Runnable {
 
 	//The NetworEnvironment wich owns this BroadcastListener instance
 	private final NetworkEnvironment MY_ENVIRONMENT;

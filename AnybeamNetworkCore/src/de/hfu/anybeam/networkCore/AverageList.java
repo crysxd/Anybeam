@@ -9,7 +9,7 @@ import java.util.Vector;
  * @since 1.0
  * @version 1.0
  */
-public class AverageList extends Vector<Double> {
+class AverageList extends Vector<Double> {
 	
 	private static final long serialVersionUID = 7801680903484273521L;
 	

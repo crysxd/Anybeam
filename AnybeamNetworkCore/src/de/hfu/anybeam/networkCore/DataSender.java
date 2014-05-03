@@ -11,19 +11,48 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Class to send a InputStream to a remote {@link DataReceiver}.
+ * @author chrwuer
+ * @since 1.0
+ * @version 1.0
+ */
 public class DataSender extends AbstractTransmission {
 
-	
+	//The receiver's InetAddress
 	private final InetAddress RECEIVER_ADDRESS;
+	
+	//The receiver's data port
 	private final int RECEIVER_PORT;
+	
+	//The encrpytion key that will be used
 	private final byte[] ENCRYPTION_KEY;
+	
+	//The EncryptionType that will be used
 	private final EncryptionType ENCRYPTION_TYPE;
+	
+	//The stream that will be transmitted
 	private final InputStream INPUT;
+	
+	//the client id of this device
 	private final String ID;
 	
+	//The OutputStream in which will be written
 	private OutputStream outputStream;
+	
+	//The Socket of the connection to the receiver
 	private Socket socket;
 
+	/**
+	 * Creates a new {@link DataSender} instance.
+	 * @param inputStream the {@link InputStream} to send
+	 * @param inputStreamLength the length of inputStream or -1 if the stream is endless
+	 * @param inputName the name of the resource represented by inputStream, e.g. the filename
+	 * @param encryptionType the {@link EncryptionType} that will be used
+	 * @param encryptionKey the encryption key that will be used
+	 * @param receiverPort the port on which the receiver is waiting
+	 * @param receiverAddress the {@link InetAddress} of the receiver
+	 */
 	public DataSender(InputStream inputStream, long inputStreamLength, String inputName, 
 			EncryptionType encryptionType, byte[] encryptionKey, 
 			int receiverPort, InetAddress receiverAddress) {
@@ -31,6 +60,17 @@ public class DataSender extends AbstractTransmission {
 		this(inputStream, inputStreamLength, inputName, encryptionType, encryptionKey, receiverPort, receiverAddress, null);
 	}
 	
+	/**
+	 * Creates a new {@link DataSender} instance.
+	 * @param inputStream the {@link InputStream} to send
+	 * @param inputStreamLength the length of inputStream or -1 if the stream is endless
+	 * @param inputName the name of the resource represented by inputStream, e.g. the filename
+	 * @param encryptionType the {@link EncryptionType} that will be used
+	 * @param encryptionKey the encryption key that will be used
+	 * @param receiverPort the port on which the receiver is waiting
+	 * @param receiverAddress the {@link InetAddress} of the receiver
+	 * @param adapter the {@link AbstractTransmissionAdapter} to be notified about progress updates
+	 */
 	public DataSender(InputStream inputStream, long inputStreamLength, String inputName, 
 			EncryptionType encryptionType, byte[] encryptionKey, 
 			int receiverPort, InetAddress receiverAddress, AbstractTransmissionAdapter adapter) {
@@ -38,6 +78,18 @@ public class DataSender extends AbstractTransmission {
 		this(inputStream, inputStreamLength, inputName, encryptionType, encryptionKey, receiverPort, receiverAddress, adapter, null);
 	}
 
+	/**
+	 * Creates a new {@link DataSender} instance.
+	 * @param inputStream the {@link InputStream} to send
+	 * @param inputStreamLength the length of inputStream or -1 if the stream is endless
+	 * @param inputName the name of the resource represented by inputStream, e.g. the filename
+	 * @param encryptionType the {@link EncryptionType} that will be used
+	 * @param encryptionKey the encryption key that will be used
+	 * @param receiverPort the port on which the receiver is waiting
+	 * @param receiverAddress the {@link InetAddress} of the receiver
+	 * @param adapter the {@link AbstractTransmissionAdapter} to be notified about progress updates
+	 * @param senderClientId this device's client id to send to the receiver to identify this device
+	 */
 	public DataSender(InputStream inputStream, long inputStreamLength, String inputName, 
 			EncryptionType encryptionType, byte[] encryptionKey, 
 			int receiverPort, InetAddress receiverAddress, AbstractTransmissionAdapter adapter, String senderClientId) {
@@ -60,6 +112,7 @@ public class DataSender extends AbstractTransmission {
 		this.socket = new Socket();
 		this.socket.connect(new InetSocketAddress(this.RECEIVER_ADDRESS, this.RECEIVER_PORT));  
 
+		//Create encryption stream if necessary
 		if(this.ENCRYPTION_TYPE != EncryptionType.NONE) {
 			//Create cipher
 			Cipher c = EncryptionUtils.createCipher(this.ENCRYPTION_TYPE);
