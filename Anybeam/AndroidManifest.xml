@@ -43,6 +43,10 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+        <activity 
+            android:name="de.hfu.anybeam.android.SettingsActivity"
+            android:label="@string/settings_title">
+        </activity>
     </application>
 
 </manifest>

@@ -10,40 +10,33 @@
     <ImageView
         android:id="@+id/ivDeviceType"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="12dp"
+        android:layout_centerVertical="true"
         android:contentDescription="@string/device_icon"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_device_laptop" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tvDeviceName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ivDeviceType"
         android:layout_alignTop="@+id/ivDeviceType"
+        android:layout_marginLeft="16dp"
         android:layout_toRightOf="@+id/ivDeviceType"
-        android:layout_alignParentRight="true"
         android:gravity="center"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:text="@string/replaceMe"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/black" />
 
-        <TextView
-            android:id="@+id/tvDeviceName"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/replaceMe"
-            android:textColor="@color/black" 
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/replaceMe"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvDeviceInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvDeviceName"
+        android:layout_below="@+id/tvDeviceName"
+        android:text="@string/replaceMe"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

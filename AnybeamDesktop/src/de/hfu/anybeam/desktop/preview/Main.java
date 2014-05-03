@@ -17,6 +17,7 @@ import javax.swing.UIManager;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
+import de.hfu.anybeam.networkCore.EncryptionUtils;
 import de.hfu.anybeam.networkCore.NetworkCoreUtils;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
@@ -42,15 +43,14 @@ public class Main extends JFrame implements NetworkEnvironmentListener, ActionLi
 	public Main() {
 		super("NetworkCore Test");
 		
-		NetworkEnvironmentSettings set = 
-				new NetworkEnvironmentSettings(this.GROUP_NAME, "Desktop Test", DeviceType.TYPE_LAPTOP,
-						EncryptionType.AES256, 1338, 1337, new byte[]{});
+		NetworkEnvironmentSettings set = new NetworkEnvironmentSettings(this.GROUP_NAME, "MacBook Pro", DeviceType.TYPE_LAPTOP, 
+				EncryptionType.AES128, 1338, 1337, EncryptionUtils.generateSecretKeyFromPassword("anybeamRockt1137", EncryptionType.AES128));
 		
 		
 		this.setLayout(new BorderLayout());
 		try {
 			NetworkCoreUtils.createNetworkEnvironment(set).addNetworkEnvironmentListener(this);;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		

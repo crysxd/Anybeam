@@ -1,11 +1,5 @@
 package de.hfu.anybeam.android;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import de.hfu.anybeam.android.R;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
@@ -17,7 +11,6 @@ import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,14 +22,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity implements NetworkEnvironmentListener {
 
 
 	private final String GROUP_NAME = "my_group";
-	private NetworkEnvironmentSettings SETTINGS = new NetworkEnvironmentSettings(this.GROUP_NAME, "MacBook Pro", DeviceType.TYPE_LAPTOP, 
-			EncryptionType.AES128, 1338, 1337, EncryptionUtils.generateSecretKeyFromPassword("anybeamRockt1137", EncryptionType.AES128));;
+	private NetworkEnvironmentSettings SETTINGS = new NetworkEnvironmentSettings(GROUP_NAME, Build.MODEL, DeviceType.TYPE_SMARPHONE, 
+			EncryptionType.AES128, 1338, 1337, EncryptionUtils.generateSecretKeyFromPassword("anybeamRockt1137", EncryptionType.AES128));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +65,8 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		if(item.getItemId() == R.id.action_settings) {
-			Toast.makeText(this, "Setting", Toast.LENGTH_LONG).show();
+			Intent settingsActivity = new Intent(getBaseContext(), SettingsActivity.class);
+			startActivity(settingsActivity);
 			return true;
 		}
 
