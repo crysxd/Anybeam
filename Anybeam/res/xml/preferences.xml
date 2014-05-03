@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android">
-  
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Group Settings" >
+        <EditTextPreference
+            android:summary="Change your group Name"
+            android:title="Group Name" />
+        <EditTextPreference
+            android:summary="Set port at which the device sends and listens to broadcasts"
+            android:title="Broadcast Port" />
+        <EditTextPreference
+            android:summary="Set the group encryption password"
+            android:title="Group Password" />
+
+        <ListPreference
+            android:entryValues="@array/encyption_types"
+            android:summary="Choose which encryption type should be used"
+            android:title="Encryption type" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Client Settings" >
+        <EditTextPreference android:title="Client Name" />
+        <EditTextPreference
+            android:summary="Set port at which the device recieves data"
+            android:title="Data Port" />
+
+        <ListPreference
+            android:entryValues="@array/device_type"
+            android:title="Device Type" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="App Preferences" >
+        <CheckBoxPreference
+            android:summary="Share clipboard between devices"
+            android:title="Auto Clipboard" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Über" >
+        <Preference
+            android:enabled="false"
+            android:summary="Erstellt von Christian Würthner und Jan-Henrik Preuß"
+            android:selectable="false"
+            android:title="Any Beam" />
+
+        <PreferenceScreen android:title="Icons" >
+            <Preference
+                android:summary="Some Text about our beautiful icons :D"
+                android:title="Icons" />
+        </PreferenceScreen>
+    </PreferenceCategory>
 
 </PreferenceScreen>

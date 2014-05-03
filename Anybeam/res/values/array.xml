@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="encyption_types">
+        <item >No Encyption</item>
+        <item >DES</item>
+        <item >AES 128</item>
+        <item >AES 256</item>
+    </string-array>
+    
+   <string-array name="device_type">
+        <item >Smartphone</item>
+        <item >Tablet</item>
+        <item >Laptop</item>
+        <item >Desktop</item>
+    </string-array>
+    
+</resources>
