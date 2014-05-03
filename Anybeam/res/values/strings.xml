@@ -15,7 +15,7 @@
     <string name="os">OS:</string>
     <string name="noclients">Keine Clients gefunden</string>
     <string name="click_to_share">Tap to share clipboard</string>
-    <string name="main_instruction">Use the share button in other apps to share data</string>
+    <string name="main_instruction">Use the shareicon button in other apps to share data</string>
     
 
 </resources>
