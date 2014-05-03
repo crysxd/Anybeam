@@ -2,20 +2,11 @@ package de.hfu.anybeam.android;
 
 import java.util.ArrayList;
 
-import de.hfu.anybeam.android.R;
-import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
-import de.hfu.anybeam.networkCore.Client;
-import de.hfu.anybeam.networkCore.DeviceType;
-import de.hfu.anybeam.networkCore.EncryptionType;
-import de.hfu.anybeam.networkCore.EncryptionUtils;
-import de.hfu.anybeam.networkCore.NetworkCoreUtils;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,26 +17,21 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
+import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
+import de.hfu.anybeam.networkCore.Client;
+import de.hfu.anybeam.networkCore.DeviceType;
+import de.hfu.anybeam.networkCore.EncryptionType;
+import de.hfu.anybeam.networkCore.EncryptionUtils;
+import de.hfu.anybeam.networkCore.NetworkCoreUtils;
+import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
+import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 
 public class MainActivity extends Activity implements NetworkEnvironmentListener {
 
 	private ListView clientList;
 	private final String GROUP_NAME = "my_group";
-	private final NetworkEnvironmentSettings SETTINGS;
-	
-	public MainActivity() {
-		NetworkEnvironmentSettings set = null;
-		try {
-			set = new NetworkEnvironmentSettings("my_group", Build.MODEL, DeviceType.TYPE_SMARPHONE, 
-					EncryptionType.AES128, 1338, 1337,  EncryptionUtils.generateSecretKey(EncryptionType.AES128), "Android");
-		} catch(Exception e) {
-			e.printStackTrace();
-			set = new NetworkEnvironmentSettings("my_group", Build.MODEL, DeviceType.TYPE_SMARPHONE, 
-					EncryptionType.AES128, 1338, 1337,  new byte[0], "Android");
-		}
-		
-		this.SETTINGS = set;
-	}
+	private final NetworkEnvironmentSettings SETTINGS = new NetworkEnvironmentSettings("my_group", Build.MODEL, DeviceType.TYPE_SMARPHONE, 
+			EncryptionType.AES128, 1338, 1337, EncryptionUtils.generateSecretKeyFromPassword("anybeamRockt1137", EncryptionType.AES128));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

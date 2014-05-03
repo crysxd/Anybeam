@@ -1,6 +1,5 @@
 package de.hfu.anybeam.networkCore;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +10,7 @@ public class NetworkCoreUtils {
 	private final static Map<String, NetworkEnvironmentSettings> ENVIRONMENT_SETTINGS = 
 			new HashMap<String, NetworkEnvironmentSettings>();
 
-	public static NetworkEnvironment createNetworkEnvironment(NetworkEnvironmentSettings settings) throws IOException {
+	public static NetworkEnvironment createNetworkEnvironment(NetworkEnvironmentSettings settings) throws Exception {
 		
 		String group = settings.getGroupName().toUpperCase();
 

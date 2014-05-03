@@ -25,7 +25,7 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 		
 		NetworkEnvironmentSettings settings = 
 				new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, 
-						EncryptionType.DES, 1338, 1337, EncryptionUtils.generateSecretKey(EncryptionType.DES));
+						EncryptionType.AES128, 1338, 1337, EncryptionUtils.generateSecretKeyFromPassword("anybeamRockt1137", EncryptionType.AES128));
 		try {
 			int max = 1000000;
 			

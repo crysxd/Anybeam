@@ -1,7 +1,8 @@
 package de.hfu.anybeam.networkCore;
 
-import java.io.ByteArrayOutputStream;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -34,6 +35,17 @@ public class EncryptionUtils {
 		return -1;
 	}
 	
+	public static int getKeyLengthByte(EncryptionType type) {
+		switch(type) {
+		case AES128: return 16;
+		case AES256: return 32;
+		case DES: return 8;
+		case NONE: return 0;
+		}
+	
+		return -1;
+	}
+	
 	public static byte[] generateSecretKey(EncryptionType type) throws Exception {
 		if(type == EncryptionType.NONE)
 			return new byte[0];
@@ -45,6 +57,23 @@ public class EncryptionUtils {
 		return secretKey.getEncoded();
 	}
 	
+	public static byte[] generateSecretKeyFromPassword(String password, EncryptionType type) {
+		if(type == EncryptionType.NONE)
+			return new byte[0];
+		
+		byte secretKey[] = null;
+		try {
+			MessageDigest sha = MessageDigest.getInstance("SHA-1");
+			secretKey = sha.digest(password.getBytes());
+			secretKey = Arrays.copyOf(secretKey, EncryptionUtils.getKeyLengthByte(type));
+			
+		} catch (NoSuchAlgorithmException e) {
+		}
+		
+		return secretKey;
+	}
+	
+	
 	public static Cipher createCipher(EncryptionType type) throws NoSuchAlgorithmException, NoSuchPaddingException {
 		switch(type) {
 		case AES128: 
@@ -54,31 +83,12 @@ public class EncryptionUtils {
 		}
 	}
 	
+	
 	public static SecretKeySpec createKey(EncryptionType type, byte[] rawKeyData) {
 		if(type == EncryptionType.NONE)
 			return null;
 		
 		return new SecretKeySpec(rawKeyData, EncryptionUtils.getEncryptionName(type));
-	}
-	
-	public static byte[] generateTransmissionPadding() throws Exception {
-		byte[] encryptionKey = EncryptionUtils.generateSecretKey(EncryptionType.AES256);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-		for(int i=0; i<encryptionKey.length*Math.random(); i++) {
-			
-			while(i<encryptionKey.length && encryptionKey[i] == EncryptionUtils.getTransmissionPaddingEnd())
-				i++;
-			
-			bos.write(encryptionKey[i]);
-		}
-		
-		bos.write(EncryptionUtils.getTransmissionPaddingEnd());
-		return bos.toByteArray();
-	}
-	
-	public static byte getTransmissionPaddingEnd() {
-		return '>';
 	}
 	
 	public static int getTrasmissionPaddingMaxLength() {

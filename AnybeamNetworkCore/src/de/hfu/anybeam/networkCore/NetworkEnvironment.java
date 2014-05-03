@@ -26,7 +26,7 @@ public class NetworkEnvironment {
 
 	private Future<?> clientSearchTask;
 
-	NetworkEnvironment(NetworkEnvironmentSettings settings) throws IOException {
+	NetworkEnvironment(NetworkEnvironmentSettings settings) throws Exception {
 		this.SETTINGS = settings;
 		
 		this.BROADCAST_LISTENER = new BroadcastListener(this);
@@ -69,6 +69,10 @@ public class NetworkEnvironment {
 	
 	public NetworkEnvironmentSettings getNetworkEnvironmentSettings() {
 		return this.SETTINGS;
+	}
+	
+	void execute(Runnable r) {
+		this.THREAD_EXECUTOR.execute(r);
 	}
 	
 	public void dispose() throws Exception {
@@ -224,7 +228,7 @@ public class NetworkEnvironment {
 		UrlParameterBundle b = this.createDefaultHeaderBundle();
 		b.put("METHOD", "REGISTER");
 
-		NetworkBroadcast nc = new NetworkBroadcast(this.getBroadcastPort(), b.generateHeaderString().getBytes());
+		NetworkBroadcast nc = new NetworkBroadcast(this, b.generateHeaderString().getBytes());
 		this.THREAD_EXECUTOR.execute(nc);
 	}
 
@@ -232,7 +236,7 @@ public class NetworkEnvironment {
 		UrlParameterBundle b = this.createDefaultHeaderBundle();
 		b.put("METHOD", "UNREGISTER");
 
-		NetworkBroadcast nc = new NetworkBroadcast(this.getBroadcastPort(), b.generateHeaderString().getBytes());
+		NetworkBroadcast nc = new NetworkBroadcast(this, b.generateHeaderString().getBytes());
 		nc.run();
 	}
 
