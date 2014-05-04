@@ -7,13 +7,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Spannable;
-import android.text.SpannableStringBuilder;
+import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,11 +41,8 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		
 		loadSettings();
 
-		TextView tv = (TextView) this.findViewById(R.id.tvInstructionText);
-		CharSequence text = this.getResources().getString(R.string.main_instruction);
-		text = this.addSmileySpans(text);
-		tv.setText(text);
-		
+		this.includeShareIcon((TextView) this.findViewById(R.id.tvInstructionText));
+				
 		if (NetworkEnvironment.getNetworkEnvironment(SETTINGS.getGroupName()) == null) {
 			try {
 				NetworkEnvironment.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
@@ -115,16 +111,19 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		startActivity(clipboardIntent);
 	}
 
-	private CharSequence addSmileySpans(CharSequence text) {
-		//smilyRegexMap = new HashMap<Integer, String>();
-
+	private void includeShareIcon(TextView tv) {
 		String indicator = "shareicon";
-		SpannableStringBuilder builder = new SpannableStringBuilder(text);
-		Bitmap smiley = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_action_share);
-		int start = text.toString().indexOf(indicator);
-		builder.setSpan(new ImageSpan(smiley, ImageSpan.ALIGN_BASELINE), start,start+indicator.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-		return builder;
+		
+        SpannableString ss = new SpannableString(tv.getText()); 
+        Drawable d = getResources().getDrawable(R.drawable.ic_action_share); 
+        d.setBounds(0, tv.getBaseline(), tv.getLineHeight(), tv.getLineHeight());
+        
+        ImageSpan span = new ImageSpan(d); 
+        
+		int start = tv.getText().toString().indexOf(indicator);
+        ss.setSpan(span, start, start+indicator.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE); 
+        
+        tv.setText(ss); 
 	}
 
 	@Override
