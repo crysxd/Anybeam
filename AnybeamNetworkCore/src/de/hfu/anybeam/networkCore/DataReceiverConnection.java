@@ -58,7 +58,7 @@ class DataReceiverConnection extends AbstractTransmission {
 		if(this.ENCRYPTION_TYPE != EncryptionType.NONE) {
 			//Create cipher
 			Cipher c = this.ENCRYPTION_TYPE.createCipher();
-			SecretKeySpec k = this.ENCRYPTION_TYPE.createKey(this.ENCRYPTION_KEY);
+			SecretKeySpec k = this.ENCRYPTION_TYPE.getSecretKeySpec(this.ENCRYPTION_KEY);
 			c.init(Cipher.DECRYPT_MODE, k);	
 			
 			//Create cipher input Stream

@@ -22,7 +22,6 @@ import de.hfu.anybeam.networkCore.DataReceiver;
 import de.hfu.anybeam.networkCore.DataReceiverAdapter;
 import de.hfu.anybeam.networkCore.DataSender;
 import de.hfu.anybeam.networkCore.EncryptionType;
-import de.hfu.anybeam.networkCore.EncryptionUtils;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
 
 public class DataReceiverTest extends JFrame implements DataReceiverAdapter {
@@ -42,7 +41,7 @@ public class DataReceiverTest extends JFrame implements DataReceiverAdapter {
 	public DataReceiverTest() throws Exception {
 		
 		EncryptionType type = EncryptionType.DES;
-		byte[] key = type.generateSecretKey();
+		byte[] key = type.getRandomSecretKey();
 		int port = 1338;
 		
 		JFileChooser fc = new JFileChooser(new File(System.getProperty("user.home")));

@@ -1,5 +1,7 @@
 package de.hfu.anybeam.networkCore.test;
 
+import java.util.Arrays;
+
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
@@ -21,28 +23,26 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 	private NetworkEnvironment currentNe;
 		
 	private NetworkEnvironmentTest() throws Exception {
+				
+		EncryptionType type = EncryptionType.DES;
 		
-		EncryptionType type = EncryptionType.AES256;
-		byte[] key =  type.generateSecretKeyFromPassword("anybeamRockt1137");
-		System.out.println(new String(key));
-		NetworkEnvironmentSettings settings = 
-				new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, 
-						type, 1338, 1337, key);
+		String pass = "anybeamRockt1137";
+		byte[] key =  type.getSecretKeyFromPassword(pass);
+		String humanKey = type.getHumanReadableKey(key);
+		byte[] restoredKey = type.getSecretKeyFromHumanReadableKey(humanKey);
 		
+		System.out.println("Password:        " + pass);
+		System.out.println("Generated key:   " + new String(key));
+		System.out.println("Human readable:  " + humanKey);
+		System.out.println("Restored key:    " + new String(restoredKey));
+		System.out.println("Restore success: " + Arrays.equals(key, restoredKey));
 		
+		NetworkEnvironmentSettings settings = new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, type, 1338, 1337, key);
+
 		try {
-			int max = 1000000;
-			
-			System.out.println("Starting, " + max + " iterations left.");
-//			for(int i=1; i<=max+1; i++) {
-				this.currentNe = NetworkCoreUtils.createNetworkEnvironment(settings);
-				currentNe.addNetworkEnvironmentListener(this);
-//				Thread.sleep(1000);
-//				currentNe.dispose();
-//				System.out.println("Iteration " + (i+1) + " of " + max + " done.");
-//			}
-			
-//			System.exit(0);	
+			this.currentNe = NetworkCoreUtils.createNetworkEnvironment(settings);
+			currentNe.addNetworkEnvironmentListener(this);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
