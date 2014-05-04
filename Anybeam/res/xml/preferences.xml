@@ -57,11 +57,11 @@
             android:summary="Share clipboard between devices"
             android:title="Auto Clipboard" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Über" >
+    <PreferenceCategory android:title="About" >
         <Preference
             android:enabled="false"
             android:selectable="false"
-            android:summary="Erstellt von Christian Würthner und Jan-Henrik Preuß"
+            android:summary="Creadet and developed by Christian Würthner und Jan-Henrik Preuß Furtwangen university 2014"
             android:title="Any Beam" />
 
         <PreferenceScreen android:title="Icons" >

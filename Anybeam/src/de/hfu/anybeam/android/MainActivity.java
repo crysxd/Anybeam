@@ -63,16 +63,24 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		}
 		
 
+		SecureRandom random = new SecureRandom();
+		String newPassword = new BigInteger(130, random).toString(32);
 		if (prefs.getString("group_password", null) == null) {
-			SecureRandom random = new SecureRandom();
-			editor.putString("group_password", new BigInteger(130, random).toString(32));
+			editor.putString("group_password", newPassword);
 			
 		}
 		
 		editor.commit();
-
-		SETTINGS = new NetworkEnvironmentSettings(GROUP_NAME, Build.MODEL, DeviceType.TYPE_SMARPHONE, 
-				EncryptionType.AES256, 1338, 1337, EncryptionType.AES256.getSecretKeyFromPassword("anybeamRockt1137"));
+		
+		//TODO: Extract default values
+		SETTINGS = new NetworkEnvironmentSettings(
+				prefs.getString("group_name", "my_group"), 
+				prefs.getString("client_name", "Android"), 
+				DeviceType.TYPE_SMARPHONE, 
+				EncryptionType.AES256, 
+				Integer.parseInt(prefs.getString("port_data", "1338")), 
+				Integer.parseInt(prefs.getString("port_broadcast", "1337")), 
+				EncryptionType.AES256.getSecretKeyFromPassword(prefs.getString("group_password", newPassword)));
 	}
 
 	@Override
@@ -107,7 +115,8 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
         clipboardIntent.setType("text/plain");
         clipboardIntent.setAction(Intent.ACTION_SEND);
         clipboardIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Clipboard");
-        clipboardIntent.putExtra(android.content.Intent.EXTRA_TEXT, ClipboardUtils.readFromClipboard(getBaseContext()));
+        clipboardIntent.putExtra(android.content.Intent.EXTRA_TEXT, 
+        		ClipboardUtils.readFromClipboard(getBaseContext()));
         startActivity(clipboardIntent);
             
 	}
