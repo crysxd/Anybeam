@@ -1,5 +1,8 @@
 package de.hfu.anybeam.networkCore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Allows automated editing of {@link NetworkEnvironmentSettings} objects and automatically applies the new settings.
  * @author chrwuer
@@ -8,6 +11,7 @@ package de.hfu.anybeam.networkCore;
  */
 public class NetworkEnvironmentSettingsEditor {
 
+	//The NetworkEnvironmentSettings which should be edited
 	private NetworkEnvironmentSettings SETTINGS_TO_EDIT;
 
 	//The port on which data is transmitted
@@ -31,12 +35,19 @@ public class NetworkEnvironmentSettingsEditor {
 	//the group name
 	private String groupName;
 
-
+	/**
+	 * Creates a new {@link NetworkEnvironmentSettingsEditor} for the {@link NetworkEnvironmentSettings} of the given group.
+	 * @param groupName the name of the group which {@link NetworkEnvironmentSettings} should be edited
+	 */
 	public NetworkEnvironmentSettingsEditor(String groupName) {
 		this(NetworkEnvironment.getNetworkEnvironment(groupName).getNetworkEnvironmentSettings());
 		
 	}
 
+	/**
+	 * Creates a new {@link NetworkEnvironmentSettingsEditor} for the given {@link NetworkEnvironmentSettings}
+	 * @param settingToEdit the {@link NetworkEnvironmentSettings} which should be edited
+	 */
 	public NetworkEnvironmentSettingsEditor(NetworkEnvironmentSettings settingToEdit) {
 		this.SETTINGS_TO_EDIT = settingToEdit;
 		this.dataPort = this.SETTINGS_TO_EDIT.getDataPort();
@@ -49,17 +60,67 @@ public class NetworkEnvironmentSettingsEditor {
 
 	}
 
-	public void apply(boolean applyInBackground) throws Exception {
-		//dispose old NetworkEnvironment
-		NetworkEnvironment en = NetworkEnvironment.getNetworkEnvironment(this.SETTINGS_TO_EDIT.getGroupName());
-		if(en != null)
-			en.dispose();
+	/**
+	 * Applies the changes and restarts the {@link NetworkEnvironment}
+	 * @param applyInBackground flag indicating if the restart should be done in background
+	 */
+	public void apply(boolean applyInBackground) {
+		Runnable r = new Runnable() {
+			
+			@Override
+			public void run() {
+				//get current NetworkEnvironment
+				NetworkEnvironment en = NetworkEnvironment.getNetworkEnvironment(
+						NetworkEnvironmentSettingsEditor.this.SETTINGS_TO_EDIT.getGroupName());
+				List<NetworkEnvironmentListener> listeners;
+				
+				//dispose and save listeners
+				if(en != null) {
+					listeners = en.getAllNetworkEnvironmentListeners();
+					try {
+						en.dispose();
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+						
+					}
+				} else {
+					//null? use empty list
+					listeners = new ArrayList<NetworkEnvironmentListener>();
+				}
+				
+				//create new Settings
+				NetworkEnvironmentSettings settings = new NetworkEnvironmentSettings(
+						NetworkEnvironmentSettingsEditor.this.getGroupName(),
+						NetworkEnvironmentSettingsEditor.this.getDeviceName(), 
+						NetworkEnvironmentSettingsEditor.this.getDeviceType(), 
+						NetworkEnvironmentSettingsEditor.this.getEncryptionType(), 
+						NetworkEnvironmentSettingsEditor.this.getDataPort(), 
+						NetworkEnvironmentSettingsEditor.this.getBroadcastPort(), 
+						NetworkEnvironmentSettingsEditor.this.SETTINGS_TO_EDIT.getEncryptionKey(), 
+						NetworkEnvironmentSettingsEditor.this.getOsName());
+				
+				//create new environment
+				try {
+					en = NetworkEnvironment.createNetworkEnvironment(settings);
+					en.addAllNetworkEnvironmentListeners(listeners);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+				}
+			}
+		};
 		
-		NetworkEnvironmentSettings settings = new NetworkEnvironmentSettings(this.getGroupName(), this.getDeviceName(), 
-				this.getDeviceType(), this.getEncryptionType(), this.getDataPort(), this.getBroadcastPort(), 
-				this.SETTINGS_TO_EDIT.getEncryptionKey(), this.getOsName());
-		
-		NetworkEnvironment.createNetworkEnvironment(settings);
+		//Start runnable, synchron or asynchron
+		if(applyInBackground) {
+			new Thread(r).start();
+			
+		} else {
+			r.run();
+			
+		}
+
 	}
 
 	public int getDataPort() {

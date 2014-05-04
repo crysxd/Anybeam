@@ -165,7 +165,6 @@ public class NetworkEnvironment {
 	 * Returns a {@link List} containing all {@link Client}s currently available on this {@link NetworkEnvironment}.
 	 * @return a {@link List} containing all {@link Client}s currently available on this {@link NetworkEnvironment}
 	 */
-
 	public List<Client> getClientList() {
 		List<Client> l;
 		
@@ -187,7 +186,6 @@ public class NetworkEnvironment {
 		return l;
 	}
 
-	
 	/**
 	 * Adds the given {@link NetworkEnvironmentListener} to this {@link NetworkEnvironment}
 	 * @param l the {@link NetworkEnvironmentListener} to add
@@ -200,7 +198,6 @@ public class NetworkEnvironment {
 	 * Removes the given {@link NetworkEnvironmentListener} from this {@link NetworkEnvironment}
 	 * @param l the {@link NetworkEnvironmentListener} to remove
 	 */
-
 	public void removeNetworkEnvironmentListener(NetworkEnvironmentListener l) {
 		this.LISTENERS.remove(l);
 	}
@@ -209,7 +206,6 @@ public class NetworkEnvironment {
 	 * Returns the number of {@link NetworkEnvironmentListener} currently installed on this {@link NetworkEnvironment}.
 	 * @return the number of {@link NetworkEnvironmentListener} currently installed on this {@link NetworkEnvironment}
 	 */
-
 	public int getNetworkEnvironmentListenerCount() {
 		return this.LISTENERS.size();
 	}
@@ -225,6 +221,22 @@ public class NetworkEnvironment {
 	}
 	
 	/**
+	 * Returns a {@link List} containing all {@link NetworkEnvironmentListener}s currently installed on this {@link NetworkEnvironment}.
+	 * @return a {@link List} containing all {@link NetworkEnvironmentListener}s currently installed on this {@link NetworkEnvironment}
+	 */
+	public List<NetworkEnvironmentListener> getAllNetworkEnvironmentListeners() {
+		return new ArrayList<NetworkEnvironmentListener>(this.LISTENERS);
+	}
+	
+	/**
+	 * Adds all {@link NetworkEnvironmentListener}s contained in the given {@link List}.
+	 * @param listeners all {@link NetworkEnvironmentListener} that sould be added
+	 */
+	public void addAllNetworkEnvironmentListeners(List<NetworkEnvironmentListener> listeners) {
+		this.LISTENERS.addAll(listeners);
+	}
+	
+	/**
 	 * Removes all {@link NetworkEnvironmentListener}s currently installed on this {@link NetworkEnvironment}.
 	 */
 	public void removeAllNetworkEnvironmentListener() {
@@ -235,7 +247,6 @@ public class NetworkEnvironment {
 	 * Returns the number of currently available {@link Client}s.
 	 * @return the number of currently available {@link Client}s
 	 */
-
 	public int getClientCount() {
 
 		int size = -1;
@@ -250,7 +261,6 @@ public class NetworkEnvironment {
 		return size;
 	}
 
-	
 	/**
 	 * Returns the {@link Client} with the given id or null if no {@link Client} has the requested id.
 	 * @param id the id of the requested {@link Client}
@@ -278,13 +288,11 @@ public class NetworkEnvironment {
 		}
 	}
 
-
 	/**
 	 * Starts a active, infinite search for {@link Client}s in the local network. Remember to cancel it, especially on mobile devices!
 	 * @see #startClientSearch(long, TimeUnit)
 	 * @see #startClientSearch(long, TimeUnit, long, TimeUnit)
 	 */
-
 	public void startClientSearch() {
 		this.startClientSearch(Long.MAX_VALUE, TimeUnit.DAYS);
 	}
@@ -400,7 +408,6 @@ public class NetworkEnvironment {
 	/**
 	 * Cancels the active client search. Does nothing if no search is active.
 	 */
-
 	public void cancelClientSearch() {
 		try {
 			//lock
@@ -431,7 +438,6 @@ public class NetworkEnvironment {
 	 * Sends a register signal into the network.
 	 * @throws IOException
 	 */
-
 	private void registerOnNetwork() throws IOException {
 		//Get default header and put the method
 		UrlParameterBundle b = this.createDefaultHeaderBundle();
@@ -446,7 +452,6 @@ public class NetworkEnvironment {
 	 * Sends a unregister signal into the network.
 	 * @throws Exception
 	 */
-
 	private void unregisterOnNetwork() throws Exception {
 		//Get default header and put the method
 		UrlParameterBundle b = this.createDefaultHeaderBundle();
@@ -462,7 +467,6 @@ public class NetworkEnvironment {
 	 * @param id the id of the {@link Client} to add
 	 * @param c the {@link Client} to add
 	 */
-
 	private void addClient(String id, Client c) {
 		try {
 			//lock
@@ -501,7 +505,6 @@ public class NetworkEnvironment {
 	 * Removes the given {@link Client} from the list of reachable {@link Client}s.
 	 * @param id the id of the {@link Client} to delete
 	 */
-
 	private void removeClient(String id) {
 
 		try {
@@ -531,7 +534,6 @@ public class NetworkEnvironment {
 	/**
 	 * Removes all {@link Client}s from the list of reachable {@link Client}s.
 	 */
-
 	public void clearClientList() {
 		try {
 			//lock
@@ -555,7 +557,6 @@ public class NetworkEnvironment {
 	 * Creates a default header containing all necessary information but the message method.
 	 * @return a default header containing all necessary information but the message method
 	 */
-
 	private UrlParameterBundle createDefaultHeaderBundle() {
 		return new UrlParameterBundle()
 			.put(NetworkEnvironment.HEADER_FIELD_VERSION, 	 	NetworkEnvironment.VERSION)
@@ -648,7 +649,6 @@ public class NetworkEnvironment {
 	 * @param methodName the name of the method that should be invoked
 	 * @throws Exception
 	 */
-
 	public void dispatchEvent(String methodName) throws Exception {
 		this.dispatchEvent(methodName, new Class[]{});
 	}
@@ -660,7 +660,6 @@ public class NetworkEnvironment {
 	 * @param parameters the parameter values
 	 * @throws Exception
 	 */
-
 	public void dispatchEvent(String methodName, Class<?>[] parameterTypes, final Object... parameters) throws Exception {
 		final Method M = NetworkEnvironmentListener.class.getMethod(methodName, parameterTypes);
 		final Object[] PARAMETERS = parameters;
