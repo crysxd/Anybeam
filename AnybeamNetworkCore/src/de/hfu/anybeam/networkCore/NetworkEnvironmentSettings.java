@@ -3,15 +3,12 @@ package de.hfu.anybeam.networkCore;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
 import java.util.Enumeration;
-
-import sun.tools.tree.NewInstanceExpression;
 
 /**
  * A class containing all necessary settings for an {@link NetworkEnvironment}
