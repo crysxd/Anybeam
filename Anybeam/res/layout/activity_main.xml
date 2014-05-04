@@ -12,7 +12,8 @@
         android:layout_alignParentRight="true"
         android:gravity="center"
         android:text="@string/main_instruction"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/grey" />
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -28,8 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:orientation="vertical" 
-            android:paddingBottom="80dp">
+            android:orientation="vertical"
+            android:paddingBottom="80dp" >
 
             <ImageView
                 android:id="@+id/ivClipboard"
@@ -47,7 +48,7 @@
                 android:gravity="center"
                 android:text="@string/click_to_share"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/anybeam_gray" />
+                android:textColor="@color/grey" />
         </LinearLayout>
     </FrameLayout>
 
