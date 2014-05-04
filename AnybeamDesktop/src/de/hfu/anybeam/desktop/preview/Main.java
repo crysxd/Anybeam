@@ -16,7 +16,11 @@ import javax.swing.UIManager;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
+<<<<<<< HEAD
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
+=======
+import de.hfu.anybeam.networkCore.NetworkCoreUtils;
+>>>>>>> FETCH_HEAD
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 
@@ -41,15 +45,24 @@ public class Main extends JFrame implements NetworkEnvironmentListener, ActionLi
 	public Main() {
 		super("NetworkCore Test");
 		
+<<<<<<< HEAD
 		EncryptionType type = EncryptionType.AES256;
 		String pass = "anybeamRockt1137";
 		byte[] key =  type.getSecretKeyFromPassword(pass);
 		NetworkEnvironmentSettings set = new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, type, 1338, 1337, key);
+=======
+		NetworkEnvironmentSettings set = new NetworkEnvironmentSettings(this.GROUP_NAME, "MacBook Pro", DeviceType.TYPE_LAPTOP, 
+				EncryptionType.AES256, 1338, 1337, EncryptionType.AES256.getSecretKeyFromPassword("anybeamRockt1137"));
+>>>>>>> FETCH_HEAD
 		
 		
 		this.setLayout(new BorderLayout());
 		try {
+<<<<<<< HEAD
 			NetworkEnvironment.createNetworkEnvironment(set).addNetworkEnvironmentListener(this);;
+=======
+			NetworkCoreUtils.createNetworkEnvironment(set).addNetworkEnvironmentListener(this);
+>>>>>>> FETCH_HEAD
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

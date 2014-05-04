@@ -5,19 +5,23 @@
         android:key="group_settings"
         android:title="Group Settings" >
         <EditTextPreference
+            android:defaultValue="my_group"
             android:key="group_name"
             android:summary="Change your group Name"
-            android:title="Group Name" android:defaultValue="my_group"/>
+            android:title="Group Name" />
         <EditTextPreference
+            android:defaultValue="1337"
             android:key="port_broadcast"
             android:summary="Set port at which the device sends and listens to broadcasts"
-            android:title="Broadcast Port" android:defaultValue="1337"/>
+            android:inputType="numberDecimal"
+            android:title="Broadcast Port" />
         <EditTextPreference
             android:key="group_password"
             android:summary="Set the group encryption password"
-            android:title="Group Password" android:defaultValue="dtaaaaaaaaaaaaaaaaaaaaaaaa"/>
+            android:title="Group Password" />
 
         <ListPreference
+            android:defaultValue="AES 128"
             android:entries="@array/encyption_type"
             android:entryValues="@array/encyption_type"
             android:key="group_encryption_type"
@@ -29,14 +33,16 @@
         android:title="Client Settings" >
         <EditTextPreference
             android:key="client_name"
-            android:title="Client Name" android:defaultValue="Build.MODEL"/>
+            android:title="Client Name" />
         <EditTextPreference
+            android:defaultValue="1338"
             android:key="port_data"
             android:summary="Set port at which the device recieves data"
-            android:title="Data Port" android:defaultValue="1338"/>
+            android:inputType="numberDecimal"
+            android:title="Data Port" />
 
         <ListPreference
-            android:defaultValue="AES128"
+            android:defaultValue="Smartphone"
             android:entries="@array/device_type"
             android:entryValues="@array/device_type"
             android:key="client_type"
@@ -46,9 +52,10 @@
         android:key="general_settings"
         android:title="General Preferences" >
         <CheckBoxPreference
+            android:defaultValue="true"
             android:key="gen_auto_clipboard"
             android:summary="Share clipboard between devices"
-            android:title="Auto Clipboard" android:defaultValue="true"/>
+            android:title="Auto Clipboard" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Über" >
         <Preference
