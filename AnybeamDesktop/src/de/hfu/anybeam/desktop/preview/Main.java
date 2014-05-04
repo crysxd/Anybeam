@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -17,7 +16,6 @@ import javax.swing.UIManager;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
-import de.hfu.anybeam.networkCore.EncryptionUtils;
 import de.hfu.anybeam.networkCore.NetworkCoreUtils;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
@@ -44,12 +42,12 @@ public class Main extends JFrame implements NetworkEnvironmentListener, ActionLi
 		super("NetworkCore Test");
 		
 		NetworkEnvironmentSettings set = new NetworkEnvironmentSettings(this.GROUP_NAME, "MacBook Pro", DeviceType.TYPE_LAPTOP, 
-				EncryptionType.AES128, 1338, 1337, EncryptionUtils.generateSecretKeyFromPassword("anybeamRockt1137", EncryptionType.AES128));
+				EncryptionType.AES256, 1338, 1337, EncryptionType.AES256.getSecretKeyFromPassword("anybeamRockt1137"));
 		
 		
 		this.setLayout(new BorderLayout());
 		try {
-			NetworkCoreUtils.createNetworkEnvironment(set).addNetworkEnvironmentListener(this);;
+			NetworkCoreUtils.createNetworkEnvironment(set).addNetworkEnvironmentListener(this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

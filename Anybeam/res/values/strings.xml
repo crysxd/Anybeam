@@ -4,6 +4,7 @@
     <string name="app_name">Anybeam</string>
     <string name="share_title">Anybeam - Share</string>
     <string name="action_settings">Settings</string>
+    <string name="action_settings_remove">Reset Settings</string>
     <string name="action_refresh">Reload client list</string>
     <string name="replaceMe">Replace Me</string>
     <string name="device_icon">Device Icon</string>

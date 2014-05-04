@@ -30,7 +30,8 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	
 	private ListView clientList;
 	private final String GROUP_NAME = "my_group";
-	private NetworkEnvironmentSettings SETTINGS;
+	private NetworkEnvironmentSettings SETTINGS = new NetworkEnvironmentSettings(GROUP_NAME, Build.MODEL, DeviceType.TYPE_SMARPHONE, 
+			EncryptionType.AES256, 1338, 1337, EncryptionType.AES256.getSecretKeyFromPassword("anybeamRockt1137"));
 	
 	private Intent intent;
 	
@@ -38,17 +39,14 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		NetworkEnvironmentSettings set = null;
-		try {
-			set = new NetworkEnvironmentSettings(GROUP_NAME, Build.MODEL, DeviceType.TYPE_SMARPHONE, 
-					EncryptionType.AES256, 1338, 1337, EncryptionType.AES256.getSecretKeyFromPassword("anybeamRockt1137"));
-		} catch(Exception e) {
-			e.printStackTrace();
-			set = new NetworkEnvironmentSettings("my_group", Build.MODEL, DeviceType.TYPE_SMARPHONE, 
-					EncryptionType.AES128, 1338, 1337,  new byte[0], "Android");
+		if (NetworkCoreUtils.getNetworkEnvironment(SETTINGS.getGroupName()) == null) {
+			try {
+				NetworkCoreUtils.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
 		}
-		this.SETTINGS = set;
-		
+			
 		intent = getIntent();
 	    String action = intent.getAction();
 	    String type = intent.getType();
@@ -109,19 +107,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 		
 		return super.onOptionsItemSelected(item);
 	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		try {
-			NetworkCoreUtils.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
-			this.updateView();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
+		
 	private void updateView() {
 		this.runOnUiThread(new Runnable() {
 

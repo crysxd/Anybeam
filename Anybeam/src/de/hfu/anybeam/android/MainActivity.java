@@ -1,7 +1,12 @@
 package de.hfu.anybeam.android;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -24,30 +29,54 @@ import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 
 public class MainActivity extends Activity implements NetworkEnvironmentListener {
 
+	
+	private static final String GROUP_NAME = "my_group";
+	private NetworkEnvironmentSettings SETTINGS;
 
-	private final String GROUP_NAME = "my_group";
-	private NetworkEnvironmentSettings SETTINGS = new NetworkEnvironmentSettings(GROUP_NAME, Build.MODEL, DeviceType.TYPE_SMARPHONE, 
-			EncryptionType.AES256, 1338, 1337, EncryptionType.AES256.getSecretKeyFromPassword("anybeamRockt1137"));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_main);
+		
+		
+		loadSettings();
 
 		TextView tv = (TextView) this.findViewById(R.id.tvInstructionText);
 		CharSequence text = this.getResources().getString(R.string.main_instruction);
 		text = this.addSmileySpans(text);
 		tv.setText(text);
 		
-		try {
-			NetworkCoreUtils.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (NetworkCoreUtils.getNetworkEnvironment(SETTINGS.getGroupName()) == null) {
+			try {
+				NetworkCoreUtils.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+		}				
+	}
+
+	@SuppressLint("TrulyRandom")
+	private void loadSettings() {
+		PreferenceManager.setDefaultValues(getBaseContext(), R.xml.preferences, false);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		SharedPreferences.Editor editor = prefs.edit();
+		
+		if (prefs.getString("client_name", null) == null) {
+			editor.putString("client_name", Build.MODEL);
 		}
 		
-		PreferenceManager.setDefaultValues(getBaseContext(), R.xml.preferences, true);
-				
+
+		if (prefs.getString("group_password", null) == null) {
+			SecureRandom random = new SecureRandom();
+			editor.putString("group_password", new BigInteger(130, random).toString(32));
+			
+		}
+		
+		editor.commit();
+
+		SETTINGS = new NetworkEnvironmentSettings(GROUP_NAME, Build.MODEL, DeviceType.TYPE_SMARPHONE, 
+				EncryptionType.AES256, 1338, 1337, EncryptionType.AES256.getSecretKeyFromPassword("anybeamRockt1137"));
 	}
 
 	@Override
@@ -65,11 +94,19 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 			startActivity(settingsActivity);
 			return true;
 		}
+		if (item.getItemId() == R.id.action_settings_remove) {
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+			SharedPreferences.Editor editor = pref.edit();
+			editor.clear();
+			editor.commit();
+			
+			loadSettings();
+		}
 
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void shareClipboard(View v) {
+	public void shareClipboard(View v) {	
 		Intent clipboardIntent = new Intent(this, de.hfu.anybeam.android.SendActivity.class);
 		clipboardIntent.setType("text/plain");
 		clipboardIntent.setAction(Intent.ACTION_SEND);
