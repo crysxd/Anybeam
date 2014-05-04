@@ -22,7 +22,7 @@ import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
-import de.hfu.anybeam.networkCore.NetworkCoreUtils;
+import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 
@@ -39,9 +39,9 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if (NetworkCoreUtils.getNetworkEnvironment(SETTINGS.getGroupName()) == null) {
+		if (NetworkEnvironment.getNetworkEnvironment(SETTINGS.getGroupName()) == null) {
 			try {
-				NetworkCoreUtils.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
+				NetworkEnvironment.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}			
@@ -101,7 +101,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 		if(item.getItemId() == R.id.action_refresh) {
-			NetworkCoreUtils.getNetworkEnvironment(this.GROUP_NAME).startClientSearch();
+			NetworkEnvironment.getNetworkEnvironment(this.GROUP_NAME).startClientSearch();
 			return true;
 		}
 		
@@ -113,7 +113,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 
 			@Override
 			public void run() {
-				ArrayList<Client> l = new ArrayList<Client> (NetworkCoreUtils.getNetworkEnvironment(SendActivity.this.GROUP_NAME).getClientList());
+				ArrayList<Client> l = new ArrayList<Client> (NetworkEnvironment.getNetworkEnvironment(SendActivity.this.GROUP_NAME).getClientList());
 				setListAdapter(new ClientAdapter(getApplicationContext(), l));
 			}
 		}); 

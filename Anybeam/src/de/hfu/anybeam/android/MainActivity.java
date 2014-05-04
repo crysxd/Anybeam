@@ -23,7 +23,7 @@ import android.widget.TextView;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
-import de.hfu.anybeam.networkCore.NetworkCoreUtils;
+import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 
@@ -47,9 +47,9 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		text = this.addSmileySpans(text);
 		tv.setText(text);
 		
-		if (NetworkCoreUtils.getNetworkEnvironment(SETTINGS.getGroupName()) == null) {
+		if (NetworkEnvironment.getNetworkEnvironment(SETTINGS.getGroupName()) == null) {
 			try {
-				NetworkCoreUtils.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
+				NetworkEnvironment.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}			
