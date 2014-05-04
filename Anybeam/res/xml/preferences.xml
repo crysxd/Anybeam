@@ -1,42 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="Group Settings" >
+    <PreferenceCategory
+        android:key="group_settings"
+        android:title="Group Settings" >
         <EditTextPreference
+            android:key="group_name"
             android:summary="Change your group Name"
-            android:title="Group Name" />
+            android:title="Group Name" android:defaultValue="my_group"/>
         <EditTextPreference
+            android:key="port_broadcast"
             android:summary="Set port at which the device sends and listens to broadcasts"
-            android:title="Broadcast Port" />
+            android:title="Broadcast Port" android:defaultValue="1337"/>
         <EditTextPreference
+            android:key="group_password"
             android:summary="Set the group encryption password"
-            android:title="Group Password" />
+            android:title="Group Password" android:defaultValue="dtaaaaaaaaaaaaaaaaaaaaaaaa"/>
 
         <ListPreference
-            android:entryValues="@array/encyption_types"
+            android:entries="@array/encyption_type"
+            android:entryValues="@array/encyption_type"
+            android:key="group_encryption_type"
             android:summary="Choose which encryption type should be used"
             android:title="Encryption type" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Client Settings" >
-        <EditTextPreference android:title="Client Name" />
+    <PreferenceCategory
+        android:key="client_settings"
+        android:title="Client Settings" >
         <EditTextPreference
+            android:key="client_name"
+            android:title="Client Name" android:defaultValue="Build.MODEL"/>
+        <EditTextPreference
+            android:key="port_data"
             android:summary="Set port at which the device recieves data"
-            android:title="Data Port" />
+            android:title="Data Port" android:defaultValue="1338"/>
 
         <ListPreference
+            android:defaultValue="AES128"
+            android:entries="@array/device_type"
             android:entryValues="@array/device_type"
+            android:key="client_type"
             android:title="Device Type" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="App Preferences" >
+    <PreferenceCategory
+        android:key="general_settings"
+        android:title="General Preferences" >
         <CheckBoxPreference
+            android:key="gen_auto_clipboard"
             android:summary="Share clipboard between devices"
-            android:title="Auto Clipboard" />
+            android:title="Auto Clipboard" android:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="Über" >
         <Preference
             android:enabled="false"
-            android:summary="Erstellt von Christian Würthner und Jan-Henrik Preuß"
             android:selectable="false"
+            android:summary="Erstellt von Christian Würthner und Jan-Henrik Preuß"
             android:title="Any Beam" />
 
         <PreferenceScreen android:title="Icons" >

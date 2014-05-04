@@ -6,11 +6,11 @@ import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
 import de.hfu.anybeam.networkCore.EncryptionUtils;
 import de.hfu.anybeam.networkCore.NetworkCoreUtils;
-import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -37,7 +37,7 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 
 		setContentView(R.layout.activity_main);
 
-		TextView tv = (TextView) this.findViewById(R.id.textView2);
+		TextView tv = (TextView) this.findViewById(R.id.tvInstructionText);
 		CharSequence text = this.getResources().getString(R.string.main_instruction);
 		text = this.addSmileySpans(text);
 		tv.setText(text);
@@ -48,6 +48,8 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 			e.printStackTrace();
 		}
 		
+		PreferenceManager.setDefaultValues(getBaseContext(), R.xml.preferences, true);
+				
 	}
 
 	@Override
