@@ -5,7 +5,6 @@ import java.util.Arrays;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
-import de.hfu.anybeam.networkCore.NetworkCoreUtils;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
@@ -24,7 +23,7 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 		
 	private NetworkEnvironmentTest() throws Exception {
 				
-		EncryptionType type = EncryptionType.DES;
+		EncryptionType type = EncryptionType.AES256;
 		
 		String pass = "anybeamRockt1137";
 		byte[] key =  type.getSecretKeyFromPassword(pass);
@@ -40,7 +39,7 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 		NetworkEnvironmentSettings settings = new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, type, 1338, 1337, key);
 
 		try {
-			this.currentNe = NetworkCoreUtils.createNetworkEnvironment(settings);
+			this.currentNe = NetworkEnvironment.createNetworkEnvironment(settings);
 			currentNe.addNetworkEnvironmentListener(this);
 
 		} catch (Exception e) {

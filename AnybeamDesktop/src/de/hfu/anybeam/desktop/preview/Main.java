@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -17,8 +16,7 @@ import javax.swing.UIManager;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
-import de.hfu.anybeam.networkCore.EncryptionUtils;
-import de.hfu.anybeam.networkCore.NetworkCoreUtils;
+import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 
@@ -43,13 +41,15 @@ public class Main extends JFrame implements NetworkEnvironmentListener, ActionLi
 	public Main() {
 		super("NetworkCore Test");
 		
-		NetworkEnvironmentSettings set = new NetworkEnvironmentSettings(this.GROUP_NAME, "MacBook Pro", DeviceType.TYPE_LAPTOP, 
-				EncryptionType.AES128, 1338, 1337, EncryptionUtils.generateSecretKeyFromPassword("anybeamRockt1137", EncryptionType.AES128));
+		EncryptionType type = EncryptionType.AES256;
+		String pass = "anybeamRockt1137";
+		byte[] key =  type.getSecretKeyFromPassword(pass);
+		NetworkEnvironmentSettings set = new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, type, 1338, 1337, key);
 		
 		
 		this.setLayout(new BorderLayout());
 		try {
-			NetworkCoreUtils.createNetworkEnvironment(set).addNetworkEnvironmentListener(this);;
+			NetworkEnvironment.createNetworkEnvironment(set).addNetworkEnvironmentListener(this);;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -68,7 +68,7 @@ public class Main extends JFrame implements NetworkEnvironmentListener, ActionLi
 			@Override
 			public void run() {
 				try {
-					NetworkCoreUtils.getNetworkEnvironment(Main.this.GROUP_NAME).dispose();
+					NetworkEnvironment.getNetworkEnvironment(Main.this.GROUP_NAME).dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -80,7 +80,7 @@ public class Main extends JFrame implements NetworkEnvironmentListener, ActionLi
 	public void updateTable() {
 		DefaultListModel model = new DefaultListModel();
 
-		List<Client> clients = NetworkCoreUtils.getNetworkEnvironment(this.GROUP_NAME).getClientList();
+		List<Client> clients = NetworkEnvironment.getNetworkEnvironment(this.GROUP_NAME).getClientList();
 
 		for(int i=0; i<clients.size(); i++) {
 			model.add(i, clients.get(i).getName());
@@ -138,7 +138,7 @@ public class Main extends JFrame implements NetworkEnvironmentListener, ActionLi
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		NetworkCoreUtils.getNetworkEnvironment(this.GROUP_NAME).startClientSearch();
+		NetworkEnvironment.getNetworkEnvironment(this.GROUP_NAME).startClientSearch();
 		
 	}
 }

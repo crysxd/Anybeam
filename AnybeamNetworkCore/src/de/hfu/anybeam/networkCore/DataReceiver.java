@@ -43,7 +43,7 @@ public class DataReceiver implements Runnable {
 	 * @throws IOException
 	 */
 	public DataReceiver(String groupName, DataReceiverAdapter adapter) throws IOException {
-		this(NetworkCoreUtils.getNetworkEnvironmentSettings(groupName), adapter);
+		this(NetworkEnvironment.getNetworkEnvironment(groupName).getNetworkEnvironmentSettings(), adapter);
 	}
 	
 	/**

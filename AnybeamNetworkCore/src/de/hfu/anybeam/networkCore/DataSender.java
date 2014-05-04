@@ -134,7 +134,7 @@ public class DataSender extends AbstractTransmission {
 		if(this.ID != null)
 			header.put("ID", this.ID);
 
-		this.outputStream.write(header.generateHeaderString().getBytes());
+		this.outputStream.write(header.generateUrlString().getBytes());
 		this.outputStream.write('\n');
 
 		//copy

@@ -156,7 +156,8 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @throws Exception
 	 */
 	public void sendData(InputStream inputStream, int inputStreamLength, String sourceName) throws Exception {
-		this.sendData(inputStream, inputStreamLength, sourceName, NetworkCoreUtils.getNetworkEnvironmentSettings(this.getGroup()));
+		this.sendData(inputStream, inputStreamLength, sourceName, 
+				NetworkEnvironment.getNetworkEnvironment(this.getGroup()).getNetworkEnvironmentSettings());
 	}
 	
 	/**

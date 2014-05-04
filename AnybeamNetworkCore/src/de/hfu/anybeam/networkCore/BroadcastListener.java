@@ -43,7 +43,8 @@ class BroadcastListener implements Runnable {
 		this.MY_ENVIRONMENT = owner;
 		
 		//Create DatagramSocket
-		this.DATA_SOCKET = new DatagramSocket(this.MY_ENVIRONMENT.getBroadcastPort(), InetAddress.getByName("0.0.0.0")); 
+		this.DATA_SOCKET = new DatagramSocket(this.MY_ENVIRONMENT.getNetworkEnvironmentSettings().getBroadcastPort(),
+				InetAddress.getByName("0.0.0.0")); 
 		
 		//Get Encryption key and type
 		EncryptionType type = this.MY_ENVIRONMENT.getNetworkEnvironmentSettings().getEncryptionType();
@@ -178,7 +179,7 @@ class BroadcastListener implements Runnable {
 					ss = new DatagramSocket();
 					DatagramPacket p = new DatagramPacket(encryptedPayload, encryptedPayload.length);
 					p.setAddress(this.SENDER);
-					p.setPort(BroadcastListener.this.MY_ENVIRONMENT.getBroadcastPort());
+					p.setPort(BroadcastListener.this.MY_ENVIRONMENT.getNetworkEnvironmentSettings().getBroadcastPort());
 					p.setData(encryptedPayload);
 
 					//send data
