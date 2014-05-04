@@ -1,8 +1,17 @@
 package de.hfu.anybeam.networkCore;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
 import java.util.Enumeration;
+
+import sun.tools.tree.NewInstanceExpression;
 
 /**
  * A class containing all necessary settings for an {@link NetworkEnvironment}
@@ -38,6 +47,39 @@ public class NetworkEnvironmentSettings {
 	
 	//the encrpytion key used
 	private final byte[] ENCRPTION_KEY;
+	
+	/**
+	 * Creates a new {@link NetworkEnvironmentSettings} instance using the saved information in the {@link InputStream}.
+	 * The {@link InputStream} is not closed. Please close the give {@link InputStream} after invoking this constructor.
+	 * @param savedInstace a {@link InputStream} containing a saved instance, e.g. a {@link FileInputStream} to a save file
+	 * @throws Exception
+	 * @see {@link #save(OutputStream)}
+	 */
+	public NetworkEnvironmentSettings(InputStream savedInstace) throws Exception {
+		//Create StringBuilder and Reader
+		StringBuilder builder = new StringBuilder();
+		BufferedReader br = new BufferedReader(new InputStreamReader(savedInstace));
+		
+		//Read stream
+		String line = null;
+		while((line = br.readLine()) != null)
+			builder.append(line);
+		
+		//create bundle
+		UrlParameterBundle bundle = new UrlParameterBundle(builder.toString());
+		
+		//restore settings
+		this.BROADCAST_PORT = bundle.getInteger("BROADCAST_PORT");
+		this.DATA_PORT = bundle.getInteger("BROADCAST_PORT");
+		this.DEVICE_NAME = bundle.get("DEVICE_NAME");
+		this.DEVICE_TYPE = DeviceType.valueOf(bundle.get("BROADCAST_PORT"));
+		this.GROUP_NAME = bundle.get("GROUP_NAME");
+		this.LOCAL_ID = bundle.get("LOCAL_ID");
+		this.OS_NAME = bundle.get("OS_NAME");
+		this.ENCRYPTION_TYPE = EncryptionType.valueOf(bundle.get("ENCRYPTION_TYPE"));
+		this.ENCRPTION_KEY = this.ENCRYPTION_TYPE.getSecretKeyFromHumanReadableKey(bundle.get("ENCRPTION_KEY"));
+
+	}
 	
 	/**
 	 * Creates a new {@link NetworkEnvironmentSettings} instance guessing the operating system (will use 'Linux' for Android).
@@ -77,6 +119,33 @@ public class NetworkEnvironmentSettings {
 		this.BROADCAST_PORT = braocastPort;
 		this.LOCAL_ID = this.generateId();
 		this.ENCRPTION_KEY = encryptionKey;
+	}
+	
+	/**
+	 * Saves this {@link NetworkEnvironmentSettings} instance to the {@link OutputStream}.
+	 * The given {@link OutputStream} is never closed, please close the {@link OutputStream} after invoking this method if necessary.
+	 * @param out a {@link OutputStream} to a resource which saves the data, e.g. a {@link FileOutputStream} to a save file.
+	 * @throws Exception
+	 * @see {@link #NetworkEnvironmentSettings(InputStream)}
+	 */
+	public void save(OutputStream out) throws Exception {
+		//create empty bundle
+		UrlParameterBundle bundle = new UrlParameterBundle();
+		
+		//store settings
+		bundle.put("GROUP_NAME", this.GROUP_NAME);
+		bundle.put("DEVICE_NAME", this.DEVICE_NAME);
+		bundle.put("DEVICE_TYPE", this.DEVICE_TYPE);
+		bundle.put("ENCRYPTION_TYPE", this.ENCRYPTION_TYPE);
+		bundle.put("OS_NAME", this.OS_NAME);
+		bundle.put("DATA_PORT", this.DATA_PORT);
+		bundle.put("BROADCAST_PORT", this.BROADCAST_PORT);
+		bundle.put("LOCAL_ID", this.LOCAL_ID);
+		bundle.put("ENCRPTION_KEY", this.ENCRYPTION_TYPE.getHumanReadableKey(this.ENCRPTION_KEY));
+		
+		//save
+		out.write(bundle.generateUrlString().getBytes());
+		out.flush();
 	}
 	
 	/**

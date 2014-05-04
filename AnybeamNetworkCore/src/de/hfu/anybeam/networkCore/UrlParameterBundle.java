@@ -39,6 +39,17 @@ public class UrlParameterBundle {
 	}
 	
 	/**
+	 * Returns a map containing all parameters of this {@link UrlParameterBundle}.
+	 * @return a map containing all parameters of this {@link UrlParameterBundle}
+	 */
+	public Map<String, String> getMap() {
+		//Copy and return
+		Map<String, String> map = new HashMap<String, String>();
+		map.putAll(this.DATA);
+		return map;
+	}
+	
+	/**
 	 * Adds a parameter.
 	 * @param key the key identifying the value
 	 * @param value the value. Keep in mind that all values are stored as {@link String}.
