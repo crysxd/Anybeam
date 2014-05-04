@@ -115,8 +115,8 @@ public class DataSender extends AbstractTransmission {
 		//Create encryption stream if necessary
 		if(this.ENCRYPTION_TYPE != EncryptionType.NONE) {
 			//Create cipher
-			Cipher c = EncryptionUtils.createCipher(this.ENCRYPTION_TYPE);
-			SecretKeySpec k = EncryptionUtils.createKey(this.ENCRYPTION_TYPE, this.ENCRYPTION_KEY);
+			Cipher c = this.ENCRYPTION_TYPE.createCipher();
+			SecretKeySpec k = this.ENCRYPTION_TYPE.createKey(this.ENCRYPTION_KEY);
 			c.init(Cipher.ENCRYPT_MODE, k);
 
 			//create writers

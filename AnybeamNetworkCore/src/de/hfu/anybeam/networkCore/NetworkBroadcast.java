@@ -47,10 +47,10 @@ public class NetworkBroadcast implements Runnable {
 				//Get Encryption key and type
 				EncryptionType type = this.MY_ENVIRONMENT.getNetworkEnvironmentSettings().getEncryptionType();
 				byte[] key = this.MY_ENVIRONMENT.getNetworkEnvironmentSettings().getEncryptionKey();
-				SecretKeySpec k = EncryptionUtils.createKey(type, key);
+				SecretKeySpec k = type.createKey(key);
 
 				//Create encryption cipher
-				Cipher c = EncryptionUtils.createCipher(type);
+				Cipher c = type.createCipher();
 				c.init(Cipher.ENCRYPT_MODE, k);
 
 				//ecrypt

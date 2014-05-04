@@ -48,14 +48,14 @@ class BroadcastListener implements Runnable {
 		//Get Encryption key and type
 		EncryptionType type = this.MY_ENVIRONMENT.getNetworkEnvironmentSettings().getEncryptionType();
 		byte[] key = this.MY_ENVIRONMENT.getNetworkEnvironmentSettings().getEncryptionKey();
-		SecretKeySpec k = EncryptionUtils.createKey(type, key);
+		SecretKeySpec k = type.createKey(key);
 		
 		//Create encryption cipher
-		this.ENCRYPT_CIPHER = EncryptionUtils.createCipher(type);
+		this.ENCRYPT_CIPHER = type.createCipher();
 		this.ENCRYPT_CIPHER.init(Cipher.ENCRYPT_MODE, k);
 
 		//Create decryption cipher
-		this.DECRYPT_CIPHER = EncryptionUtils.createCipher(type);
+		this.DECRYPT_CIPHER = type.createCipher();
 		this.DECRYPT_CIPHER.init(Cipher.DECRYPT_MODE, k);
 
 	}

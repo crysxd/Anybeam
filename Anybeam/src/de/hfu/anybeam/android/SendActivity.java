@@ -41,8 +41,8 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 		
 		NetworkEnvironmentSettings set = null;
 		try {
-			set = new NetworkEnvironmentSettings("my_group", Build.MODEL, DeviceType.TYPE_SMARPHONE, 
-					EncryptionType.AES128, 1338, 1337,  EncryptionUtils.generateSecretKey(EncryptionType.AES128), "Android");
+			set = new NetworkEnvironmentSettings(GROUP_NAME, Build.MODEL, DeviceType.TYPE_SMARPHONE, 
+					EncryptionType.AES256, 1338, 1337, EncryptionType.AES256.generateSecretKeyFromPassword("anybeamRockt1137"));
 		} catch(Exception e) {
 			e.printStackTrace();
 			set = new NetworkEnvironmentSettings("my_group", Build.MODEL, DeviceType.TYPE_SMARPHONE, 

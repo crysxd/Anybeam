@@ -42,7 +42,7 @@ public class DataReceiverTest extends JFrame implements DataReceiverAdapter {
 	public DataReceiverTest() throws Exception {
 		
 		EncryptionType type = EncryptionType.DES;
-		byte[] key = EncryptionUtils.generateSecretKey(type);
+		byte[] key = type.generateSecretKey();
 		int port = 1338;
 		
 		JFileChooser fc = new JFileChooser(new File(System.getProperty("user.home")));

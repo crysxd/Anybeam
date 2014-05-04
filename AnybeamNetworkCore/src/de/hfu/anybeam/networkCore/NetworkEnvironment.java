@@ -10,6 +10,7 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
@@ -160,6 +161,18 @@ public class NetworkEnvironment {
 	}
 
 	public void startClientSearch() {
+		this.startClientSearch(Long.MAX_VALUE, TimeUnit.DAYS);
+	}
+	
+	public void startClientSearch(long howLong, TimeUnit unit) {
+		this.startClientSearch(howLong, unit, 500, TimeUnit.MILLISECONDS);
+	}
+		
+	public void startClientSearch(long howLong, TimeUnit unitHowLong, long pause, TimeUnit unitPause) {
+		
+		final long END_TIME = System.currentTimeMillis() + TimeUnit.MILLISECONDS.convert(howLong, unitHowLong);
+		final long PAUSE = TimeUnit.MILLISECONDS.convert(pause, unitPause);
+		
 		try {
 			this.LOCK.writeLock().lock();
 
@@ -175,30 +188,34 @@ public class NetworkEnvironment {
 
 						NetworkEnvironment.this.clearClientList();
 
-						for(int i=0; i<20; i++) {
-
-							if(Thread.interrupted()) {
-								return;
-							}
+						while(!Thread.interrupted() && System.currentTimeMillis()  < END_TIME) {
 
 							try {
 								NetworkEnvironment.this.registerOnNetwork();
-								Thread.sleep(500);
+								Thread.sleep(PAUSE);
 
 							} catch (InterruptedException e) {
 								return;
 
 							} catch (Exception e) {
-								
+								e.printStackTrace();
 							}
 						}
 
-
-						NetworkEnvironment.this.dispatchEvent("clientSearchDone");
+						
 					} catch (Exception e) {
+						e.printStackTrace();
 						
 					} finally {
 						NetworkEnvironment.this.clientSearchTask = null;
+						
+						try {
+							NetworkEnvironment.this.dispatchEvent("clientSearchDone");
+
+						} catch(Exception e) {
+							e.printStackTrace();
+							
+						}
 
 					}
 				}

@@ -29,7 +29,7 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 
 	private final String GROUP_NAME = "my_group";
 	private NetworkEnvironmentSettings SETTINGS = new NetworkEnvironmentSettings(GROUP_NAME, Build.MODEL, DeviceType.TYPE_SMARPHONE, 
-			EncryptionType.AES128, 1338, 1337, EncryptionUtils.generateSecretKeyFromPassword("anybeamRockt1137", EncryptionType.AES128));
+			EncryptionType.AES256, 1338, 1337, EncryptionType.AES256.generateSecretKeyFromPassword("anybeamRockt1137"));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
