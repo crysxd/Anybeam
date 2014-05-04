@@ -19,36 +19,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import de.hfu.anybeam.networkCore.Client;
-import de.hfu.anybeam.networkCore.DeviceType;
-import de.hfu.anybeam.networkCore.EncryptionType;
-import de.hfu.anybeam.networkCore.NetworkEnvironment;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 
-public class MainActivity extends Activity implements NetworkEnvironmentListener {
-
-	
-	private static final String GROUP_NAME = "my_group";
-	private NetworkEnvironmentSettings SETTINGS;
-
+public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		
+
+
 		loadSettings();
 
 		this.includeShareIcon((TextView) this.findViewById(R.id.tvInstructionText));
-				
-		if (NetworkEnvironment.getNetworkEnvironment(SETTINGS.getGroupName()) == null) {
-			try {
-				NetworkEnvironment.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
+
+
+		try {
+			NetworkEnvironmentManager.getNetworkEnvironment(this);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+
 		}				
 	}
 
@@ -57,30 +47,30 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		PreferenceManager.setDefaultValues(getBaseContext(), R.xml.preferences, false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 		SharedPreferences.Editor editor = prefs.edit();
-		
+
 		if (prefs.getString("client_name", null) == null) {
 			editor.putString("client_name", Build.MODEL);
 		}
-		
+
 
 		SecureRandom random = new SecureRandom();
 		String newPassword = new BigInteger(130, random).toString(32);
 		if (prefs.getString("group_password", null) == null) {
 			editor.putString("group_password", newPassword);
-			
+
 		}
-		
+
 		editor.commit();
-		
+
 		//TODO: Extract default values
-		SETTINGS = new NetworkEnvironmentSettings(
-				prefs.getString("group_name", "my_group"), 
-				prefs.getString("client_name", "Android"), 
-				DeviceType.TYPE_SMARPHONE, 
-				EncryptionType.AES256, 
-				Integer.parseInt(prefs.getString("port_data", "1338")), 
-				Integer.parseInt(prefs.getString("port_broadcast", "1337")), 
-				EncryptionType.AES256.getSecretKeyFromPassword(prefs.getString("group_password", newPassword)));
+//		SETTINGS = new NetworkEnvironmentSettings(
+//				prefs.getString("group_name", "my_group"), 
+//				prefs.getString("client_name", "Android"), 
+//				DeviceType.TYPE_SMARPHONE, 
+//				EncryptionType.AES256, 
+//				Integer.parseInt(prefs.getString("port_data", "1338")), 
+//				Integer.parseInt(prefs.getString("port_broadcast", "1337")), 
+//				EncryptionType.AES256.getSecretKeyFromPassword(prefs.getString("group_password", newPassword)));
 	}
 
 	@Override
@@ -103,7 +93,7 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 			SharedPreferences.Editor editor = pref.edit();
 			editor.clear();
 			editor.commit();
-			
+
 			loadSettings();
 		}
 
@@ -111,64 +101,28 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 	}
 
 	public void shareClipboard(View v) {
-        Intent clipboardIntent = new Intent(this, de.hfu.anybeam.android.SendActivity.class);
-        clipboardIntent.setType("text/plain");
-        clipboardIntent.setAction(Intent.ACTION_SEND);
-        clipboardIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Clipboard");
-        clipboardIntent.putExtra(android.content.Intent.EXTRA_TEXT, 
-        		ClipboardUtils.readFromClipboard(getBaseContext()));
-        startActivity(clipboardIntent);
-            
+		Intent clipboardIntent = new Intent(this, de.hfu.anybeam.android.SendActivity.class);
+		clipboardIntent.setType("text/plain");
+		clipboardIntent.setAction(Intent.ACTION_SEND);
+		clipboardIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Clipboard");
+		clipboardIntent.putExtra(android.content.Intent.EXTRA_TEXT, 
+				ClipboardUtils.readFromClipboard(getBaseContext()));
+		startActivity(clipboardIntent);
+
 	}
 
 	private void includeShareIcon(TextView tv) {
 		String indicator = "shareicon";
-		
-        SpannableString ss = new SpannableString(tv.getText()); 
-        Drawable d = getResources().getDrawable(R.drawable.ic_action_share); 
-        d.setBounds(0, tv.getBaseline(), tv.getLineHeight(), tv.getLineHeight());
-        
-        ImageSpan span = new ImageSpan(d); 
-        
+
+		SpannableString ss = new SpannableString(tv.getText()); 
+		Drawable d = getResources().getDrawable(R.drawable.ic_action_share); 
+		d.setBounds(0, tv.getBaseline(), tv.getLineHeight(), tv.getLineHeight());
+
+		ImageSpan span = new ImageSpan(d); 
+
 		int start = tv.getText().toString().indexOf(indicator);
-        ss.setSpan(span, start, start+indicator.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE); 
-        
-        tv.setText(ss); 
-	}
+		ss.setSpan(span, start, start+indicator.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE); 
 
-	@Override
-	public void clientFound(Client c) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void clientUpdated(Client c) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void clientLost(Client c) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void clientListCleared() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void clientSearchStarted() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void clientSearchDone() {
-		// TODO Auto-generated method stub
-
+		tv.setText(ss); 
 	}
 }

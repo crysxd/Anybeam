@@ -122,6 +122,18 @@ public class NetworkEnvironmentSettingsEditor {
 		}
 
 	}
+	
+	public void applyAll(NetworkEnvironmentSettings settings, boolean applyInBackground) {
+		this.setDataPort(settings.getDataPort());
+		this.setBroadcastPort(settings.getBroadcastPort());
+		this.setDeviceName(settings.getDeviceName());
+		this.setDeviceType(settings.getDeviceType());
+		this.setEncryptionType(settings.getEncryptionType());
+		this.setGroupName(settings.getGroupName());
+		this.setOsName(settings.getOsName());
+		
+		this.apply(applyInBackground);
+	}
 
 	public int getDataPort() {
 		return dataPort;

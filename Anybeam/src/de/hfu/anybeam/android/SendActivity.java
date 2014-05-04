@@ -39,13 +39,13 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if (NetworkEnvironment.getNetworkEnvironment(SETTINGS.getGroupName()) == null) {
-			try {
-				NetworkEnvironment.createNetworkEnvironment(this.SETTINGS).addNetworkEnvironmentListener(this);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
-		}
+		try {
+			NetworkEnvironmentManager.getNetworkEnvironment(this).addNetworkEnvironmentListener(this);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}	
 			
 		intent = getIntent();
 	    String action = intent.getAction();
@@ -101,7 +101,11 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 		if(item.getItemId() == R.id.action_refresh) {
-			NetworkEnvironment.getNetworkEnvironment(this.GROUP_NAME).startClientSearch();
+			try {
+				NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).startClientSearch();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			return true;
 		}
 		
@@ -113,8 +117,14 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 
 			@Override
 			public void run() {
-				ArrayList<Client> l = new ArrayList<Client> (NetworkEnvironment.getNetworkEnvironment(SendActivity.this.GROUP_NAME).getClientList());
-				setListAdapter(new ClientAdapter(getApplicationContext(), l));
+				try {
+					ArrayList<Client> l = new ArrayList<Client> (NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).getClientList());
+					setListAdapter(new ClientAdapter(getApplicationContext(), l));
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+				}
 			}
 		}); 
 	}
