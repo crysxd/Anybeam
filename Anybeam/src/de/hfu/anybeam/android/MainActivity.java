@@ -102,13 +102,14 @@ public class MainActivity extends Activity implements NetworkEnvironmentListener
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void shareClipboard(View v) {	
-		Intent clipboardIntent = new Intent(this, de.hfu.anybeam.android.SendActivity.class);
-		clipboardIntent.setType("text/plain");
-		clipboardIntent.setAction(Intent.ACTION_SEND);
-		clipboardIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Clipboard");
-		clipboardIntent.putExtra(android.content.Intent.EXTRA_TEXT, "todo");
-		startActivity(clipboardIntent);
+	public void shareClipboard(View v) {
+        Intent clipboardIntent = new Intent(this, de.hfu.anybeam.android.SendActivity.class);
+        clipboardIntent.setType("text/plain");
+        clipboardIntent.setAction(Intent.ACTION_SEND);
+        clipboardIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Clipboard");
+        clipboardIntent.putExtra(android.content.Intent.EXTRA_TEXT, ClipboardUtils.readFromClipboard(getBaseContext()));
+        startActivity(clipboardIntent);
+            
 	}
 
 	private void includeShareIcon(TextView tv) {
