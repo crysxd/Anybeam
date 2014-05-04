@@ -1,20 +1,12 @@
 package de.hfu.anybeam.android;
 
-import de.hfu.anybeam.android.R;
-import de.hfu.anybeam.networkCore.Client;
-import de.hfu.anybeam.networkCore.DeviceType;
-import de.hfu.anybeam.networkCore.EncryptionType;
-import de.hfu.anybeam.networkCore.EncryptionUtils;
-import de.hfu.anybeam.networkCore.NetworkCoreUtils;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
-import android.os.Build;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
@@ -23,6 +15,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import de.hfu.anybeam.networkCore.Client;
+import de.hfu.anybeam.networkCore.DeviceType;
+import de.hfu.anybeam.networkCore.EncryptionType;
+import de.hfu.anybeam.networkCore.NetworkCoreUtils;
+import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
+import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 
 public class MainActivity extends Activity implements NetworkEnvironmentListener {
 
