@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
@@ -22,30 +21,54 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 
 	private static NetworkEnvironment networkEnvironment;
 	private static List<NetworkEnvironmentListener> listeners;
-	
+	private static WifiManager wifi;
+
 	public synchronized static NetworkEnvironment getNetworkEnvironment(Context c) throws Exception {
+
+		if(!getWifiManager(c).isWifiEnabled()) {
+			disposeNetworkEnvironment();
+			throw new Exception("Wifi is not available!");
+		}
+
 		if(networkEnvironment == null) {
 			networkEnvironment = new NetworkEnvironment(NetworkEnvironmentManager.loadNetworkEnvironmentSettings(c));
-			
+
 			if(listeners != null) {
 				networkEnvironment.addAllNetworkEnvironmentListeners(listeners);
 			} 
-			Log.d("NetworkEnvironmentManager", "create NetworkEnvironment");
 		}
-		
+
 		return networkEnvironment;
 	}
-	
+
+	private static WifiManager getWifiManager(Context c) {
+		if(wifi == null)
+			wifi = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+
+		return wifi;
+	}
+
 	public synchronized static void addNetworkEnvironmentListener(NetworkEnvironmentListener listenerToAdd) {
 		if(listeners == null)
 			listeners = new ArrayList<NetworkEnvironmentListener>();
-		
-		listeners.add(listenerToAdd);
-		
+
+		if(!listeners.contains(listenerToAdd))
+			listeners.add(listenerToAdd);
+
 		if(networkEnvironment != null)
 			networkEnvironment.addNetworkEnvironmentListener(listenerToAdd);
+
 	}
-	
+
+	public synchronized static void removeNetworkEnvironmentListener(NetworkEnvironmentListener listenerToRemove) {
+		if(listeners != null)
+			listeners.remove(listenerToRemove);
+
+		if(networkEnvironment != null)
+			networkEnvironment.removeNetworkEnvironmentListener(listenerToRemove);
+
+	}
+
 	public synchronized static void disposeNetworkEnvironment() throws Exception {
 		if(networkEnvironment != null) {
 			new Thread() {
@@ -53,29 +76,28 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 					try {
 						synchronized (NetworkEnvironmentManager.class) {
 							networkEnvironment.dispose();
-							Log.d("NetworkEnvironmentManager", "dipose NetworkEnvironment");
 							networkEnvironment = null;
 						}
-						
-						
+
+
 					} catch(Exception e) {
 						e.printStackTrace();
-						
+
 					}
 				}
 			}.start();
 		}
 	}
-	
+
 	private static NetworkEnvironmentSettings loadNetworkEnvironmentSettings(Context c) {
 		PreferenceManager.setDefaultValues(c.getApplicationContext(), R.xml.preferences, false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
 		SharedPreferences.Editor editor = prefs.edit();
-		
+
 		if (prefs.getString("client_name", null) == null) {
 			editor.putString("client_name", Build.MODEL);
 		}
-		
+
 		editor.commit();
 		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
 				prefs.getString("client_name", "Android"), 
@@ -84,36 +106,31 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 				Integer.parseInt(prefs.getString("port_data", "1338")), 
 				Integer.parseInt(prefs.getString("port_broadcast", "1337")), 
 				EncryptionType.AES256.getSecretKeyFromPassword(prefs.getString("group_password", "halloWelt123")));
-		
+
 		return s;
 	}
-	
-	
+
 	public synchronized static void updateNetworkEnvironment(Context c) throws Exception {
 		NetworkEnvironmentSettingsEditor editor = new NetworkEnvironmentSettingsEditor(
-				NetworkEnvironmentManager.getNetworkEnvironment(c).getNetworkEnvironmentSettings());
-		NetworkEnvironmentSettings newSettings = NetworkEnvironmentManager.loadNetworkEnvironmentSettings(c);
+				getNetworkEnvironment(c).getNetworkEnvironmentSettings());
+		NetworkEnvironmentSettings newSettings = loadNetworkEnvironmentSettings(c);
 
 		networkEnvironment = editor.applyAll(newSettings, networkEnvironment);
 	}
-	
-	
+
 	@Override
 	public void onReceive(Context context, Intent intent) {     
-		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		Log.d("NetworkEnvironmentManager", "Wifi state changed");
-
 		try {
-			switch(wifi.getWifiState()) {
+			switch(getWifiManager(context).getWifiState()) {
 			case WifiManager.WIFI_STATE_DISABLED:
-			case WifiManager.WIFI_STATE_DISABLING: NetworkEnvironmentManager.disposeNetworkEnvironment(); break;
-			case WifiManager.WIFI_STATE_ENABLED: NetworkEnvironmentManager.getNetworkEnvironment(context); break;
+			case WifiManager.WIFI_STATE_DISABLING: disposeNetworkEnvironment(); break;
+			case WifiManager.WIFI_STATE_ENABLED: getNetworkEnvironment(context); break;
 			}
-		
+			
 		} catch(Exception e) {
 			e.printStackTrace();
-			
+	
 		}
-		
+
 	}	
 }

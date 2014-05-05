@@ -6,9 +6,7 @@ import android.app.FragmentManager;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,11 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
 import de.hfu.anybeam.networkCore.Client;
-import de.hfu.anybeam.networkCore.DeviceType;
-import de.hfu.anybeam.networkCore.EncryptionType;
-import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 
 public class SendActivity extends ListActivity implements NetworkEnvironmentListener {
 	
@@ -72,8 +66,8 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 		super.onPause();
 		
 		try {
+			NetworkEnvironmentManager.removeNetworkEnvironmentListener(this);
 			NetworkEnvironmentManager.getNetworkEnvironment(this).cancelClientSearch();
-
 		} catch(Exception e) {
 			e.printStackTrace();
 			
@@ -130,7 +124,6 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 			@Override
 			public void run() {
 				try {
-					Log.d("DEBUG", "updateView()");
 					ArrayList<Client> l = new ArrayList<Client> (NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).getClientList());
 					setListAdapter(new ClientAdapter(getApplicationContext(), l));
 
@@ -164,13 +157,11 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 
 	@Override
 	public void clientSearchStarted() {
-		Log.d("DEBUG", "client search started");
 		
 	}
 
 	@Override
 	public void clientSearchDone() {
-		Log.d("DEBUG", "client search done");
 		
 	}
 		

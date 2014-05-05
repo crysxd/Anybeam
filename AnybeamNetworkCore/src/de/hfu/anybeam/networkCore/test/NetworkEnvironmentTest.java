@@ -31,9 +31,9 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 		byte[] restoredKey = type.getSecretKeyFromHumanReadableKey(humanKey);
 		
 		System.out.println("Password:        " + pass);
-		System.out.println("Generated key:   " + new String(key));
+//		System.out.println("Generated key:   " + new String(key));
 		System.out.println("Human readable:  " + humanKey);
-		System.out.println("Restored key:    " + new String(restoredKey));
+//		System.out.println("Restored key:    " + new String(restoredKey));
 		System.out.println("Restore success: " + Arrays.equals(key, restoredKey));
 		
 		NetworkEnvironmentSettings settings = new NetworkEnvironmentSettings("MacBook Pro", DeviceType.TYPE_LAPTOP, type, 1338, 1337, key);
@@ -69,15 +69,6 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 	public void clientUpdated(Client c) {
 		System.out.println("\tClient updated: " + c);
 		
-	}
-	
-	public static String generateTestKey(int bit) {
-		StringBuilder key = new StringBuilder();
-		for(int i=0; i<bit/8; i++) {
-			key.append('x');
-		}
-		
-		return key.toString();
 	}
 
 	@Override
