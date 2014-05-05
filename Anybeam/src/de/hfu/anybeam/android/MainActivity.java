@@ -112,7 +112,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void includeShareIcon(TextView tv) {
-		String indicator = "shareicon";
+		String indicator = "share";
 
 		SpannableString ss = new SpannableString(tv.getText()); 
 		Drawable d = getResources().getDrawable(R.drawable.ic_action_share); 

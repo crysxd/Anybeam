@@ -4,6 +4,11 @@
     <PreferenceCategory
         android:key="group_settings"
         android:title="Group Settings" >
+        <Preference
+            android:enabled="false"
+            android:selectable="false"
+            android:summary="Please note that all group settings must be equal on all your devices." />
+
         <EditTextPreference
             android:defaultValue="my_group"
             android:key="group_name"
@@ -11,9 +16,9 @@
             android:title="Group Name" />
         <EditTextPreference
             android:defaultValue="1337"
+            android:inputType="numberDecimal"
             android:key="port_broadcast"
             android:summary="Set port at which the device sends and listens to broadcasts"
-            android:inputType="numberDecimal"
             android:title="Broadcast Port" />
         <EditTextPreference
             android:key="group_password"
@@ -36,9 +41,9 @@
             android:title="Client Name" />
         <EditTextPreference
             android:defaultValue="1338"
+            android:inputType="numberDecimal"
             android:key="port_data"
             android:summary="Set port at which the device recieves data"
-            android:inputType="numberDecimal"
             android:title="Data Port" />
 
         <ListPreference

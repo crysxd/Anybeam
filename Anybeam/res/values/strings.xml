@@ -14,8 +14,8 @@
     <string name="id">ID:</string>
     <string name="os">OS:</string>
     <string name="noclients">No Clients Found</string>
-    <string name="click_to_share">Tap to share clipboard</string>
-    <string name="main_instruction">Use the shareicon button in other apps to share data</string>
+    <string name="click_to_share">Tap to beam clipboard</string>
+    <string name="main_instruction">Use the share button in other apps to beam data</string>
     <string name="settings_title">Settings</string>
     
 

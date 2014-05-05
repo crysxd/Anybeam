@@ -157,6 +157,8 @@ class BroadcastListener implements Runnable {
 				
 			}
 					
+			System.out.println(message);
+			
 			//Inform the NetworkEnvironment about the message, if returned true answer
 			if(BroadcastListener.this.MY_ENVIRONMENT.potentialClientFound(message, this.SENDER)) {
 				

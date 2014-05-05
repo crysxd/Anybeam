@@ -29,9 +29,6 @@ import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 public class SendActivity extends ListActivity implements NetworkEnvironmentListener {
 	
 	private ListView clientList;
-	private final String GROUP_NAME = "my_group";
-	private NetworkEnvironmentSettings SETTINGS = new NetworkEnvironmentSettings(GROUP_NAME, Build.MODEL, DeviceType.TYPE_SMARPHONE, 
-			EncryptionType.AES256, 1338, 1337, EncryptionType.AES256.getSecretKeyFromPassword("anybeamRockt1137"));
 	
 	private Intent intent;
 	
@@ -40,8 +37,8 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 		super.onCreate(savedInstanceState);
 		
 		try {
-			NetworkEnvironmentManager.getNetworkEnvironment(this).addNetworkEnvironmentListener(this);
-			
+			NetworkEnvironmentManager.addNetworkEnvironmentListener(this);
+			NetworkEnvironmentManager.getNetworkEnvironment(this).startClientSearch();
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -67,6 +64,19 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 		
 		this.setListener();
 		this.updateView();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		try {
+			NetworkEnvironmentManager.getNetworkEnvironment(this).cancelClientSearch();
+
+		} catch(Exception e) {
+			e.printStackTrace();
+			
+		}
 	}
 	
 	public void handleSendText(Intent intent) {
@@ -104,6 +114,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 			try {
 				NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).startClientSearch();
 			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return true;

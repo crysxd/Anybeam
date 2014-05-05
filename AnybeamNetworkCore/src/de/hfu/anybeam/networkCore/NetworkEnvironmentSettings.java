@@ -39,9 +39,6 @@ public class NetworkEnvironmentSettings {
 	//the id of the local device
 	private final String LOCAL_ID;
 	
-	//the group name
-	private final String GROUP_NAME;
-	
 	//the encrpytion key used
 	private final byte[] ENCRPTION_KEY;
 	
@@ -70,7 +67,6 @@ public class NetworkEnvironmentSettings {
 		this.DATA_PORT = bundle.getInteger("BROADCAST_PORT");
 		this.DEVICE_NAME = bundle.get("DEVICE_NAME");
 		this.DEVICE_TYPE = DeviceType.valueOf(bundle.get("BROADCAST_PORT"));
-		this.GROUP_NAME = bundle.get("GROUP_NAME");
 		this.LOCAL_ID = bundle.get("LOCAL_ID");
 		this.OS_NAME = bundle.get("OS_NAME");
 		this.ENCRYPTION_TYPE = EncryptionType.valueOf(bundle.get("ENCRYPTION_TYPE"));
@@ -88,9 +84,9 @@ public class NetworkEnvironmentSettings {
 	 * @param braocastPort the port for broadcast messages
 	 * @param encryptionKey the encryption key used
 	 */
-	public NetworkEnvironmentSettings(String groupName, String deviceName, DeviceType deviceType,  
+	public NetworkEnvironmentSettings(String deviceName, DeviceType deviceType,  
 			EncryptionType encryptionType,int dataPort, int braocastPort, byte[] encryptionKey) {
-		this(groupName, deviceName, deviceType, encryptionType, dataPort, 
+		this(deviceName, deviceType, encryptionType, dataPort, 
 				braocastPort, encryptionKey, System.getProperty("os.name"));
 	}
 
@@ -105,9 +101,8 @@ public class NetworkEnvironmentSettings {
 	 * @param encryptionKey the encryption key used
 	 * @param osName the name of the operating system
 	 */
-	public NetworkEnvironmentSettings( String groupName, String deviceName, DeviceType deviceType,
+	public NetworkEnvironmentSettings(String deviceName, DeviceType deviceType,
 			EncryptionType encryptionType, int dataPort, int braocastPort, byte[] encryptionKey, String osName) {
-		this.GROUP_NAME = groupName.toUpperCase();
 		this.DEVICE_NAME = deviceName;
 		this.DEVICE_TYPE = deviceType;
 		this.ENCRYPTION_TYPE = encryptionType;
@@ -130,7 +125,6 @@ public class NetworkEnvironmentSettings {
 		UrlParameterBundle bundle = new UrlParameterBundle();
 		
 		//store settings
-		bundle.put("GROUP_NAME", this.GROUP_NAME);
 		bundle.put("DEVICE_NAME", this.DEVICE_NAME);
 		bundle.put("DEVICE_TYPE", this.DEVICE_TYPE);
 		bundle.put("ENCRYPTION_TYPE", this.ENCRYPTION_TYPE);
@@ -174,8 +168,8 @@ public class NetworkEnvironmentSettings {
 						id.append(String.format("%h:", buf.getInt()));
 					}
 
-					//Append the group name
-					id.append(this.GROUP_NAME);
+					//Delete last :
+					id.deleteCharAt(id.length()-1);
 
 					//done. stop iterating over interfaces
 					break;
@@ -240,14 +234,6 @@ public class NetworkEnvironmentSettings {
 	 */
 	public String getLocalId() {
 		return LOCAL_ID;
-	}
-	
-	/**
-	 * Returns the group name.
-	 * @return the group name
-	 */
-	public String getGroupName() {
-		return GROUP_NAME;
 	}
 
 	/**

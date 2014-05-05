@@ -1,5 +1,6 @@
 package de.hfu.anybeam.android;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.BroadcastReceiver;
@@ -19,21 +20,30 @@ import de.hfu.anybeam.networkCore.NetworkEnvironmentSettingsEditor;
 
 public class NetworkEnvironmentManager extends BroadcastReceiver {
 
-	public static NetworkEnvironment networkEnvironment;
-	public static List<NetworkEnvironmentListener> buffer;
+	private static NetworkEnvironment networkEnvironment;
+	private static List<NetworkEnvironmentListener> listeners;
 	
 	public synchronized static NetworkEnvironment getNetworkEnvironment(Context c) throws Exception {
 		if(networkEnvironment == null) {
-			networkEnvironment = NetworkEnvironment.createNetworkEnvironment(NetworkEnvironmentManager.loadNetworkEnvironmentSettings(c));
+			networkEnvironment = new NetworkEnvironment(NetworkEnvironmentManager.loadNetworkEnvironmentSettings(c));
 			
-			if(buffer != null) {
-				networkEnvironment.addAllNetworkEnvironmentListeners(buffer);
-			}
-			
+			if(listeners != null) {
+				networkEnvironment.addAllNetworkEnvironmentListeners(listeners);
+			} 
 			Log.d("NetworkEnvironmentManager", "create NetworkEnvironment");
 		}
 		
 		return networkEnvironment;
+	}
+	
+	public synchronized static void addNetworkEnvironmentListener(NetworkEnvironmentListener listenerToAdd) {
+		if(listeners == null)
+			listeners = new ArrayList<NetworkEnvironmentListener>();
+		
+		listeners.add(listenerToAdd);
+		
+		if(networkEnvironment != null)
+			networkEnvironment.addNetworkEnvironmentListener(listenerToAdd);
 	}
 	
 	public synchronized static void disposeNetworkEnvironment() throws Exception {
@@ -43,7 +53,6 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 					try {
 						synchronized (NetworkEnvironmentManager.class) {
 							networkEnvironment.dispose();
-							buffer = networkEnvironment.getAllNetworkEnvironmentListeners();
 							Log.d("NetworkEnvironmentManager", "dipose NetworkEnvironment");
 							networkEnvironment = null;
 						}
@@ -69,7 +78,6 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		
 		editor.commit();
 		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
-				prefs.getString("group_name", "my_group"), 
 				prefs.getString("client_name", "Android"), 
 				DeviceType.TYPE_SMARPHONE, 
 				EncryptionType.AES256, 
@@ -85,10 +93,8 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		NetworkEnvironmentSettingsEditor editor = new NetworkEnvironmentSettingsEditor(
 				NetworkEnvironmentManager.getNetworkEnvironment(c).getNetworkEnvironmentSettings());
 		NetworkEnvironmentSettings newSettings = NetworkEnvironmentManager.loadNetworkEnvironmentSettings(c);
-		String groupName = newSettings.getGroupName();
 
-		editor.applyAll(newSettings, false);
-		networkEnvironment = NetworkEnvironment.getNetworkEnvironment(groupName);
+		networkEnvironment = editor.applyAll(newSettings, networkEnvironment);
 	}
 	
 	

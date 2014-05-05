@@ -36,10 +36,10 @@ public class NetworkEnvironmentTest implements NetworkEnvironmentListener {
 		System.out.println("Restored key:    " + new String(restoredKey));
 		System.out.println("Restore success: " + Arrays.equals(key, restoredKey));
 		
-		NetworkEnvironmentSettings settings = new NetworkEnvironmentSettings("my_group", "MacBook Pro", DeviceType.TYPE_LAPTOP, type, 1338, 1337, key);
+		NetworkEnvironmentSettings settings = new NetworkEnvironmentSettings("MacBook Pro", DeviceType.TYPE_LAPTOP, type, 1338, 1337, key);
 
 		try {
-			this.currentNe = NetworkEnvironment.createNetworkEnvironment(settings);
+			this.currentNe = new NetworkEnvironment(settings);
 			currentNe.addNetworkEnvironmentListener(this);
 
 		} catch (Exception e) {

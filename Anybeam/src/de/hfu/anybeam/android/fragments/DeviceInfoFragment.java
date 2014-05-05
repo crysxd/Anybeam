@@ -26,7 +26,7 @@ public class DeviceInfoFragment extends DialogFragment{
         Bundle args = new Bundle();
         args.putString("title", c.getName());
         args.putString("address", c.getAddress().toString());
-        args.putString("group", c.getGroup());
+//        args.putString("group", c.getGroup());
         args.putString("os", c.getOsName());
         args.putInt("deviceType", DeviceIconUtils.getIconForDeviceType(c.getDeviceType()));
         
@@ -60,7 +60,7 @@ public class DeviceInfoFragment extends DialogFragment{
 
         tvAddress.setText(getArguments().getString("address", "Unknown"));
         tvId.setText(getArguments().getString("id", "Unknown"));
-        tvGroup.setText(getArguments().getString("group", "Unknown"));
+//        tvGroup.setText(getArguments().getString("group", "Unknown"));
         tvOs.setText(getArguments().getString("os", "Unknown"));
 
         return view;

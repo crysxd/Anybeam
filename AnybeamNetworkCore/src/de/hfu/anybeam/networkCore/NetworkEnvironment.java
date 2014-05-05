@@ -20,9 +20,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @version 1.0
  */
 public class NetworkEnvironment {
-
-	//A HashMap containing all NetworkEnvironments
-	private final static Map<String, NetworkEnvironment> ENVIRONMENTS = new HashMap<String, NetworkEnvironment>();
 		
 	//The current protocol version
 	public static final double VERSION 				= 0.17;
@@ -34,7 +31,6 @@ public class NetworkEnvironment {
 	private static String HEADER_FIELD_DEVICE_NAME 	= "DEVICE_NAME";
 	private static String HEADER_FIELD_DEVICE_TYPE 	= "DEVICE_TYPE";
 	private static String HEADER_FIELD_DATA_PORT 	= "DATA_PORT";
-	private static String HEADER_FIELD_GROUP_NAME 	= "GROUP_NAME";
 	
 	//All methods used
 	private static String HEADER_FIELD_METHOD 		= "METHOD";
@@ -64,50 +60,11 @@ public class NetworkEnvironment {
 	private Future<?> clientSearchTask;
 
 	/**
-	 * Creates a new {@link NetworkEnvironment} instance with the given {@link NetworkEnvironmentSettings}.
-	 * @param settings the {@link NetworkEnvironmentSettings} to use.
-	 * @return the newly created instance
-	 * @throws Exception
-	 */
-	public static NetworkEnvironment createNetworkEnvironment(NetworkEnvironmentSettings settings) throws Exception {
-		
-		//Ensure the group name is upper case
-		String group = settings.getGroupName().toUpperCase();
-
-		//check if an illegal character is used
-		if(group.contains(":")) {
-			throw new IllegalArgumentException("The group name contains the illegal char ':'.");
-		}
-
-		//if an instance already exists throw an error
-		if(NetworkEnvironment.getNetworkEnvironment(group) != null) {
-			throw new IllegalArgumentException("An NetworkEnvironment with the given group already exists! " +
-					"You must dipose the existing instace before creating a new one." +
-					"(Hint: use getNetworkEnvironment(...) to get the existing instance)");
-		}
-
-		//create a new NetworkEnvironment and save it
-		NetworkEnvironment.ENVIRONMENTS.put(group, new NetworkEnvironment(settings));
-
-		//return the newly created instance
-		return NetworkEnvironment.getNetworkEnvironment(group);
-	}
-	
-	/**
-	 * Returns the {@link NetworkEnvironment} with the given group name or null if no {@link NetworkEnvironment} with the given group name exists
-	 * @param group the group name of the requested {@link NetworkEnvironment}
-	 * @return the {@link NetworkEnvironment} or null if no {@link NetworkEnvironment} with the given group name exists
-	 */
-	public static NetworkEnvironment getNetworkEnvironment(String group) {
-		return NetworkEnvironment.ENVIRONMENTS.get(group.toUpperCase());
-	}
-	
-	/**
 	 * Creates a new {@link NetworkEnvironment} instance using the given {@link NetworkEnvironmentSettings}.
 	 * @param settings the {@link NetworkEnvironmentSettings} to use
 	 * @throws Exception
 	 */
-	private NetworkEnvironment(NetworkEnvironmentSettings settings) throws Exception {
+	public NetworkEnvironment(NetworkEnvironmentSettings settings) throws Exception {
 		this.SETTINGS = settings;
 		
 		this.BROADCAST_LISTENER = new BroadcastListener(this);
@@ -141,9 +98,6 @@ public class NetworkEnvironment {
 		try {
 			//lock
 			this.LOCK.writeLock().lock();
-			
-			//dispose on NetworkCoreUtils
-			NetworkEnvironment.ENVIRONMENTS.remove(this.getNetworkEnvironmentSettings().getGroupName().toUpperCase());
 			
 			//Shutdown thread pool
 			this.THREAD_EXECUTOR.shutdownNow();
@@ -560,7 +514,6 @@ public class NetworkEnvironment {
 	private UrlParameterBundle createDefaultHeaderBundle() {
 		return new UrlParameterBundle()
 			.put(NetworkEnvironment.HEADER_FIELD_VERSION, 	 	NetworkEnvironment.VERSION)
-			.put(NetworkEnvironment.HEADER_FIELD_GROUP_NAME, 	this.SETTINGS.getGroupName())
 			.put(NetworkEnvironment.HEADER_FIELD_ID, 			this.SETTINGS.getLocalId())
 			.put(NetworkEnvironment.HEADER_FIELD_DEVICE_NAME, 	this.SETTINGS.getDeviceName())
 			.put(NetworkEnvironment.HEADER_FIELD_DATA_PORT,		this.SETTINGS.getDataPort())
@@ -596,11 +549,6 @@ public class NetworkEnvironment {
 				return false;
 			}
 
-			//If the group does not match -> cancel and don't answer
-			if(!b.get(NetworkEnvironment.HEADER_FIELD_GROUP_NAME).equals(this.SETTINGS.getGroupName())) {
-				return false;
-			}
-
 			//If the id matches the local one (I received my own broadcast) -> cancel and don't answer
 			if(b.get(NetworkEnvironment.HEADER_FIELD_ID).equals(this.SETTINGS.getLocalId())) {
 				return false;
@@ -619,7 +567,6 @@ public class NetworkEnvironment {
 						b.getInteger(NetworkEnvironment.HEADER_FIELD_DATA_PORT), 
 						b.get(NetworkEnvironment.HEADER_FIELD_ID), 
 						b.get(NetworkEnvironment.HEADER_FIELD_OS_NAME), 
-						b.get(NetworkEnvironment.HEADER_FIELD_GROUP_NAME),
 						b.get(NetworkEnvironment.HEADER_FIELD_DEVICE_TYPE)));
 				
 				//Answer if the method was register, but do not answer a answer

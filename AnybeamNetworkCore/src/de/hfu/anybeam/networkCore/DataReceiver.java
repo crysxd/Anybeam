@@ -37,16 +37,6 @@ public class DataReceiver implements Runnable {
 	private final List<DataReceiverConnection> ONGOING_TRANSMISSONS = new Vector<DataReceiverConnection>();
 	
 	/**
-	 * Creates a new {@link DataReceiver} instance using the {@link NetworkEnvironmentSettings} of the group with the given name
-	 * @param groupName the name of the group wich {@link NetworkEnvironmentSettings} will be used
-	 * @param adapter the adapter to be notified about events
-	 * @throws IOException
-	 */
-	public DataReceiver(String groupName, DataReceiverAdapter adapter) throws IOException {
-		this(NetworkEnvironment.getNetworkEnvironment(groupName).getNetworkEnvironmentSettings(), adapter);
-	}
-	
-	/**
 	 * Creates a new {@link DataReceiver} instance using the given {@link NetworkEnvironmentSettings}.
 	 * @param settings the {@link NetworkEnvironmentSettings} to get all encessary information from
 	 * @param adapter the adapter to be notified about events

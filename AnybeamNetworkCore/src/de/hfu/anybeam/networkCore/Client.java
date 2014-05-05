@@ -34,9 +34,6 @@ public class Client implements Comparable<Client>, Serializable {
 	//The device type of the client
 	private DeviceType DEVEICE_TYPE;
 	
-	//the group of the client
-	private String GROUP_NAME;
-	
 	/**
 	 * Creates a new {@link Client} instance with the given Information.
 	 * @param address the client's {@link InetAddress}
@@ -48,8 +45,8 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param deviceType a String representing the client's {@link DeviceType}
 	 */
 	public Client(InetAddress address, String name, int dataPort, String id, 
-			String osName, String groupName, String deviceType) {
-		this(address, name, dataPort, id, osName, groupName, DeviceType.valueOf(deviceType));
+			String osName, String deviceType) {
+		this(address, name, dataPort, id, osName, DeviceType.valueOf(deviceType));
 	}
 	
 	/**
@@ -63,13 +60,12 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param deviceType the client's {@link DeviceType}
 	 */
 	public Client(InetAddress address, String name, int dataPort, String id, 
-			String osName, String groupName, DeviceType deviceType) {
+			String osName, DeviceType deviceType) {
 		this.ADDRESS = address;
 		this.NAME = name;
 		this.ID = id;
 		this.DATA_PORT = dataPort;
 		this.OS_NAME = osName;
-		this.GROUP_NAME = groupName;
 		this.DEVEICE_TYPE = deviceType;
 	}
 	
@@ -120,32 +116,26 @@ public class Client implements Comparable<Client>, Serializable {
 	public DeviceType getDeviceType() {
 		return this.DEVEICE_TYPE;
 	}
-	
-	/**
-	 * Returns the client's group name.
-	 * @return the client's group name.
-	 */
-	public String getGroup() {
-		return GROUP_NAME;
-	}
 
 	/**
 	 * Sends the data from the stream to the client.
 	 * @param inputStream the {@link InputStream} to send the data from
+	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
 	 * @throws Exception
 	 */
-	public void sendData(InputStream inputStream) throws Exception {
-		this.sendData(inputStream, -1);
+	public void sendData(InputStream inputStream, NetworkEnvironmentSettings settings) throws Exception {
+		this.sendData(inputStream, -1, settings);
 	}
 	
 	/**
 	 * Sends the data from the stream to the client.
 	 * @param inputStream the {@link InputStream} to send the data from
 	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
+	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
 	 * @throws Exception
 	 */
-	public void sendData(InputStream inputStream, int inputStreamLength) throws Exception {
-		this.sendData(inputStream, inputStreamLength, "unknown");
+	public void sendData(InputStream inputStream, int inputStreamLength, NetworkEnvironmentSettings settings) throws Exception {
+		this.sendData(inputStream, inputStreamLength, "unknown", settings);
 	}
 	
 	/**
@@ -153,11 +143,11 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param inputStream the {@link InputStream} to send the data from
 	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
 	 * @param sourceName the name of the source represented by inputStream e.g. the filename
+	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
 	 * @throws Exception
 	 */
-	public void sendData(InputStream inputStream, int inputStreamLength, String sourceName) throws Exception {
-		this.sendData(inputStream, inputStreamLength, sourceName, 
-				NetworkEnvironment.getNetworkEnvironment(this.getGroup()).getNetworkEnvironmentSettings());
+	public void sendData(InputStream inputStream, int inputStreamLength, String sourceName, NetworkEnvironmentSettings settings) throws Exception {
+		this.sendData(inputStream, inputStreamLength, sourceName, settings);
 	}
 	
 	/**
