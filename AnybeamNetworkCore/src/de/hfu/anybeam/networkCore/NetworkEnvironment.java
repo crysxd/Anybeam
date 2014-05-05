@@ -243,12 +243,12 @@ public class NetworkEnvironment {
 	}
 
 	/**
-	 * Starts a active, infinite search for {@link Client}s in the local network. Remember to cancel it, especially on mobile devices!
+	 * Starts a active, "infinite" (365 day) search for {@link Client}s in the local network. Remember to cancel it, especially on mobile devices!
 	 * @see #startClientSearch(long, TimeUnit)
 	 * @see #startClientSearch(long, TimeUnit, long, TimeUnit)
 	 */
 	public void startClientSearch() {
-		this.startClientSearch(Long.MAX_VALUE, TimeUnit.DAYS);
+		this.startClientSearch(365, TimeUnit.DAYS);
 	}
 	
 	/**
@@ -300,8 +300,7 @@ public class NetworkEnvironment {
 						NetworkEnvironment.this.dispatchEvent("clientSearchStarted");
 
 						//While not interrupted or end time reached
-						while(!Thread.interrupted() && System.currentTimeMillis()  < END_TIME) {
-
+						while(!Thread.interrupted() && System.currentTimeMillis()  < END_TIME) {	
 							try {
 								//Send signal ans sleep
 								NetworkEnvironment.this.registerOnNetwork();

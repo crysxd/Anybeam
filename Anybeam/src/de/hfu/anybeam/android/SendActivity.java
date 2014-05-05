@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -129,6 +130,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 			@Override
 			public void run() {
 				try {
+					Log.d("DEBUG", "updateView()");
 					ArrayList<Client> l = new ArrayList<Client> (NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).getClientList());
 					setListAdapter(new ClientAdapter(getApplicationContext(), l));
 
@@ -162,13 +164,13 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 
 	@Override
 	public void clientSearchStarted() {
-		// TODO Auto-generated method stub
+		Log.d("DEBUG", "client search started");
 		
 	}
 
 	@Override
 	public void clientSearchDone() {
-		// TODO Auto-generated method stub
+		Log.d("DEBUG", "client search done");
 		
 	}
 		
