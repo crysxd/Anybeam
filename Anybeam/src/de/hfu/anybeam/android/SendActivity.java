@@ -1,6 +1,7 @@
 package de.hfu.anybeam.android;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import android.app.FragmentManager;
 import android.app.ListActivity;
@@ -33,7 +34,8 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 		
 		try {
 			NetworkEnvironmentManager.addNetworkEnvironmentListener(this);
-			NetworkEnvironmentManager.getNetworkEnvironment(this).startClientSearch();
+			NetworkEnvironmentManager.getNetworkEnvironment(this).startClientSearch(365, TimeUnit.DAYS, 3, TimeUnit.SECONDS);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 
