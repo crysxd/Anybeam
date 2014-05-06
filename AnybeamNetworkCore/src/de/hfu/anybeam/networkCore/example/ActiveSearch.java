@@ -12,7 +12,13 @@ import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 public class ActiveSearch implements NetworkEnvironmentListener {
 
 	public static void main(String[] args) {
-
+		try {
+			new ActiveSearch();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
 	}
 
 	public ActiveSearch() throws Exception {
