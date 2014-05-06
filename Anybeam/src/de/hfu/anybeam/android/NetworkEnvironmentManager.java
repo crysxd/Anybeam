@@ -1,8 +1,9 @@
 package de.hfu.anybeam.android;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Random;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -98,17 +99,22 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 			editor.putString("client_name", Build.MODEL);
 		}
 		
+		Random random = new Random();
+		String newPassword = new BigInteger(50, random).toString(32);
+		if (prefs.getString("group_password", null) == null) {
+			editor.putString("group_password", newPassword);
+		}
+		editor.commit();
+
 		EncryptionType type = EncryptionType.valueOf(prefs.getString("group_encryption_type", EncryptionType.AES256.toString()));
 		
-		editor.commit();
-		//TODO Exctract Strings
 		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
-				prefs.getString("client_name", "Android"), 
+				prefs.getString("client_name", c.getString(R.string.default_client_name)), 
 				DeviceType.valueOf(prefs.getString("client_type", DeviceType.TYPE_SMARTPHONE.toString())), 
 				type, 
-				Integer.parseInt(prefs.getString("port_data", "1338")), 
-				Integer.parseInt(prefs.getString("port_broadcast", "1337")), 
-				type.getSecretKeyFromPassword(prefs.getString("group_password", "halloWelt123")));
+				Integer.parseInt(prefs.getString("port_data", c.getString(R.string.default_port_data))), 
+				Integer.parseInt(prefs.getString("port_broadcast", c.getString(R.string.default_port_broadcast))), 
+				type.getSecretKeyFromPassword(prefs.getString("group_password", newPassword)));
 
 		return s;
 	}

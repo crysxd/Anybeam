@@ -117,6 +117,12 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 			return true;
 		}
 		
+		if(item.getItemId() == R.id.action_settings) {
+			Intent settingsActivity = new Intent(getBaseContext(), SettingsActivity.class);
+			startActivity(settingsActivity);
+			return true;
+		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 		

@@ -10,7 +10,7 @@
             android:summary="All group settings must be the same on all your devices." />
 
         <EditTextPreference
-            android:defaultValue="1337"
+            android:defaultValue="@string/default_port_broadcast"
             android:inputType="numberDecimal"
             android:key="port_broadcast"
             android:summary="Set port at which the device sends and listens to broadcasts"
@@ -21,7 +21,7 @@
             android:title="Group Password" />
 
         <ListPreference
-            android:defaultValue="AES128"
+            android:defaultValue="@string/default_encyption_type"
             android:entries="@array/encyption_type"
             android:entryValues="@array/encyption_type_key"
             android:key="group_encryption_type"
@@ -35,14 +35,14 @@
             android:key="client_name"
             android:title="Client Name" />
         <EditTextPreference
-            android:defaultValue="1338"
+            android:defaultValue="@string/default_port_data"
             android:inputType="numberDecimal"
             android:key="port_data"
             android:summary="Set port at which the device recieves data"
             android:title="Data Port" />
 
         <ListPreference
-            android:defaultValue="TYPE_SMARTPHONE"
+            android:defaultValue="@string/default_device_type"
             android:entries="@array/device_type"
             android:entryValues="@array/device_type_key"
             android:key="client_type"
@@ -52,7 +52,7 @@
         android:key="general_settings"
         android:title="General Preferences" >
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="gen_auto_clipboard"
             android:summary="Share clipboard between devices"
             android:title="Auto Clipboard" />

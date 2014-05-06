@@ -1,17 +1,9 @@
 package de.hfu.anybeam.android;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
@@ -52,7 +44,7 @@ public class MainActivity extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					ivClipboard.setColorFilter(R.color.red);					
+					ivClipboard.setColorFilter(R.color.anybeam_gray);					
 					break;
 				case MotionEvent.ACTION_UP:
 					
@@ -64,7 +56,6 @@ public class MainActivity extends Activity {
 				}
 				return false;
 			}
-			
 		};
 		
 		ivClipboard.setOnTouchListener(touchListener);
@@ -94,14 +85,11 @@ public class MainActivity extends Activity {
 			startActivity(settingsActivity);
 			return true;
 		}
-		if (item.getItemId() == R.id.action_settings_remove) {
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-			SharedPreferences.Editor editor = pref.edit();
-			editor.clear();
-			editor.commit();
+		if (item.getItemId() == R.id.action_settings_clipboard_remove) {
+			ClipboardUtils.copyToClipboard(this, "", "");
 		}
-		if (item.getItemId() == R.id.action_settings_clipboard) {
-			ClipboardUtils.copyToClipboard(getBaseContext(), "", "");
+		if (item.getItemId() == R.id.action_settings_clipboard_set) {
+			ClipboardUtils.copyToClipboard(this, "Überschrift", "Das ist ein Test String");
 		}
 
 		return super.onOptionsItemSelected(item);
