@@ -98,15 +98,17 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 			editor.putString("client_name", Build.MODEL);
 		}
 		
+		EncryptionType type = EncryptionType.valueOf(prefs.getString("group_encryption_type", EncryptionType.AES256.toString()));
+		
 		editor.commit();
 		//TODO Exctract Strings
 		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
 				prefs.getString("client_name", "Android"), 
 				DeviceType.valueOf(prefs.getString("client_type", DeviceType.TYPE_SMARTPHONE.toString())), 
-				EncryptionType.valueOf(prefs.getString("group_encryption_type", EncryptionType.AES256.toString())), 
+				type, 
 				Integer.parseInt(prefs.getString("port_data", "1338")), 
 				Integer.parseInt(prefs.getString("port_broadcast", "1337")), 
-				EncryptionType.AES256.getSecretKeyFromPassword(prefs.getString("group_password", "halloWelt123")));
+				type.getSecretKeyFromPassword(prefs.getString("group_password", "halloWelt123")));
 
 		return s;
 	}

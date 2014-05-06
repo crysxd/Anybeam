@@ -31,6 +31,9 @@ public class NetworkEnvironmentSettingsEditor {
 
 	//the name of the os
 	private String osName;
+	
+	//the encryption key
+	private byte[] encryptionKey;
 
 	/**
 	 * Creates a new {@link NetworkEnvironmentSettingsEditor} for the given {@link NetworkEnvironmentSettings}
@@ -44,6 +47,7 @@ public class NetworkEnvironmentSettingsEditor {
 		this.deviceType = this.SETTINGS_TO_EDIT.getDeviceType();
 		this.encryptionType = this.SETTINGS_TO_EDIT.getEncryptionType();
 		this.osName = this.SETTINGS_TO_EDIT.getOsName();
+		this.encryptionKey = this.SETTINGS_TO_EDIT.getEncryptionKey();
 
 	}
 
@@ -79,8 +83,9 @@ public class NetworkEnvironmentSettingsEditor {
 				NetworkEnvironmentSettingsEditor.this.getEncryptionType(), 
 				NetworkEnvironmentSettingsEditor.this.getDataPort(), 
 				NetworkEnvironmentSettingsEditor.this.getBroadcastPort(), 
-				NetworkEnvironmentSettingsEditor.this.SETTINGS_TO_EDIT.getEncryptionKey(), 
-				NetworkEnvironmentSettingsEditor.this.getOsName());
+				NetworkEnvironmentSettingsEditor.this.getEncryptionKey(), 
+				NetworkEnvironmentSettingsEditor.this.getOsName()
+				);
 
 		//create new environment
 		try {
@@ -103,6 +108,7 @@ public class NetworkEnvironmentSettingsEditor {
 		this.setDeviceType(settings.getDeviceType());
 		this.setEncryptionType(settings.getEncryptionType());
 		this.setOsName(settings.getOsName());
+		this.setEncryptionKey(settings.getEncryptionKey());
 
 		return this.apply(applyTo);
 	}
@@ -154,4 +160,13 @@ public class NetworkEnvironmentSettingsEditor {
 	public void setOsName(String osName) {
 		this.osName = osName;
 	}
+
+	public byte[] getEncryptionKey() {
+		return encryptionKey;
+	}
+
+	public void setEncryptionKey(byte[] encryptionKey) {
+		this.encryptionKey = encryptionKey;
+	}
+	
 }
