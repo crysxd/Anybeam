@@ -97,8 +97,9 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		if (prefs.getString("client_name", null) == null) {
 			editor.putString("client_name", Build.MODEL);
 		}
-
+		
 		editor.commit();
+		//TODO Exctract Strings
 		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
 				prefs.getString("client_name", "Android"), 
 				DeviceType.TYPE_SMARPHONE, 

@@ -2,7 +2,6 @@ package de.hfu.anybeam.android;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -13,12 +12,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.format.Time;
 import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -96,19 +97,25 @@ public class MainActivity extends Activity {
 
 			loadSettings();
 		}
+		if (item.getItemId() == R.id.action_settings_clipboard) {
+			ClipboardUtils.copyToClipboard(getBaseContext(), "", "");
+		}
 
 		return super.onOptionsItemSelected(item);
 	}
 
 	public void shareClipboard(View v) {
-		Intent clipboardIntent = new Intent(this, de.hfu.anybeam.android.SendActivity.class);
-		clipboardIntent.setType("text/plain");
-		clipboardIntent.setAction(Intent.ACTION_SEND);
-		clipboardIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Clipboard");
-		clipboardIntent.putExtra(android.content.Intent.EXTRA_TEXT, 
-				ClipboardUtils.readFromClipboard(getBaseContext()));
-		startActivity(clipboardIntent);
-
+		String clipboard = ClipboardUtils.readFromClipboard(getBaseContext());
+		if (clipboard != null) {
+			Intent clipboardIntent = new Intent(this, de.hfu.anybeam.android.SendActivity.class);
+			clipboardIntent.setType("text/plain");
+			clipboardIntent.setAction(Intent.ACTION_SEND);
+			clipboardIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Clipboard");
+			clipboardIntent.putExtra(android.content.Intent.EXTRA_TEXT,	clipboard);
+			startActivity(clipboardIntent); 			
+		} else {
+			Toast.makeText(this, R.string.send_clipboard_error, Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private void includeShareIcon(TextView tv) {

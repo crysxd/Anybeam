@@ -17,6 +17,8 @@
     <string name="click_to_share">Tap to beam clipboard</string>
     <string name="main_instruction">Use the share button in other apps to beam data</string>
     <string name="settings_title">Settings</string>
+    <string name="send_clipboard_error">The clipboard dose not contain text to beam</string>
+    <string name="action_settings_clipboard">Clear Clipboard</string>
     
 
 </resources>
