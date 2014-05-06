@@ -8,7 +8,7 @@ public class DeviceIconUtils {
 	
 	public static int getIconForDeviceType(DeviceType type){
 		switch (type) {
-		case TYPE_SMARPHONE:
+		case TYPE_SMARTPHONE:
 			//Selects Phone Icon
 			return R.drawable.ic_device_phone;
 		case TYPE_TABLET:

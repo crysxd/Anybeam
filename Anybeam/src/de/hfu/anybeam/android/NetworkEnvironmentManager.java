@@ -31,7 +31,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		}
 
 		if(networkEnvironment == null) {
-			networkEnvironment = new NetworkEnvironment(NetworkEnvironmentManager.loadNetworkEnvironmentSettings(c));
+			networkEnvironment = new NetworkEnvironment(loadNetworkEnvironmentSettings(c));
 
 			if(listeners != null) {
 				networkEnvironment.addAllNetworkEnvironmentListeners(listeners);
@@ -89,7 +89,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		}
 	}
 
-	private static NetworkEnvironmentSettings loadNetworkEnvironmentSettings(Context c) {
+	public static NetworkEnvironmentSettings loadNetworkEnvironmentSettings(Context c) {
 		PreferenceManager.setDefaultValues(c.getApplicationContext(), R.xml.preferences, false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
 		SharedPreferences.Editor editor = prefs.edit();
@@ -102,8 +102,8 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		//TODO Exctract Strings
 		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
 				prefs.getString("client_name", "Android"), 
-				DeviceType.TYPE_SMARPHONE, 
-				EncryptionType.AES256, 
+				DeviceType.valueOf(prefs.getString("client_type", DeviceType.TYPE_SMARTPHONE.toString())), 
+				EncryptionType.valueOf(prefs.getString("group_encryption_type", EncryptionType.AES256.toString())), 
 				Integer.parseInt(prefs.getString("port_data", "1338")), 
 				Integer.parseInt(prefs.getString("port_broadcast", "1337")), 
 				EncryptionType.AES256.getSecretKeyFromPassword(prefs.getString("group_password", "halloWelt123")));

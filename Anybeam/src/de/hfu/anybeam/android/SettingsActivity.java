@@ -16,4 +16,14 @@ public class SettingsActivity extends PreferenceActivity {
         		new SettingsFragment()).commit();
         	  PreferenceManager.setDefaultValues(SettingsActivity.this, R.xml.preferences, false);
     }
+    
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	try {
+			NetworkEnvironmentManager.updateNetworkEnvironment(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 }

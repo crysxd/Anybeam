@@ -6,12 +6,26 @@
         <item >AES 128</item>
         <item >AES 256</item>
     </string-array>
+
+    <string-array name="encyption_type_key">
+        <item >NONE</item>
+        <item >DES</item>
+        <item >AES128</item>
+        <item >AES256</item>
+    </string-array>
         
    <string-array name="device_type">
         <item >Smartphone</item>
         <item >Tablet</item>
         <item >Laptop</item>
         <item >Desktop</item>
+    </string-array>
+    
+      <string-array name="device_type_key">
+        <item >TYPE_SMARTPHONE</item>
+        <item >TYPE_TABLET</item>
+        <item >TYPE_DESKTOP</item>
+        <item >TYPE_LAPTOP</item>
     </string-array>
     
 </resources>

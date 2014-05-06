@@ -7,13 +7,8 @@
         <Preference
             android:enabled="false"
             android:selectable="false"
-            android:summary="Please note that all group settings must be equal on all your devices." />
+            android:summary="All group settings must be the same on all your devices." />
 
-        <EditTextPreference
-            android:defaultValue="my_group"
-            android:key="group_name"
-            android:summary="Change your group Name"
-            android:title="Group Name" />
         <EditTextPreference
             android:defaultValue="1337"
             android:inputType="numberDecimal"
@@ -26,9 +21,9 @@
             android:title="Group Password" />
 
         <ListPreference
-            android:defaultValue="AES 128"
+            android:defaultValue="AES128"
             android:entries="@array/encyption_type"
-            android:entryValues="@array/encyption_type"
+            android:entryValues="@array/encyption_type_key"
             android:key="group_encryption_type"
             android:summary="Choose which encryption type should be used"
             android:title="Encryption type" />
@@ -47,9 +42,9 @@
             android:title="Data Port" />
 
         <ListPreference
-            android:defaultValue="Smartphone"
+            android:defaultValue="TYPE_SMARTPHONE"
             android:entries="@array/device_type"
-            android:entryValues="@array/device_type"
+            android:entryValues="@array/device_type_key"
             android:key="client_type"
             android:title="Device Type" />
     </PreferenceCategory>
@@ -72,6 +67,11 @@
         <PreferenceScreen android:title="Icons" >
             <Preference
                 android:summary="Some Text about our beautiful icons :D"
+                android:title="Icons" />
+        </PreferenceScreen>
+        <PreferenceScreen android:title="Legal Notices" >
+            <Preference
+                android:summary="LEGALBAHBAH"
                 android:title="Icons" />
         </PreferenceScreen>
     </PreferenceCategory>

@@ -7,5 +7,5 @@ package de.hfu.anybeam.networkCore;
  * @version 1.0
  */
 public enum DeviceType {
-	TYPE_SMARPHONE, TYPE_TABLET, TYPE_DESKTOP, TYPE_LAPTOP, TYPE_UNKNOWN
+	TYPE_SMARTPHONE, TYPE_TABLET, TYPE_DESKTOP, TYPE_LAPTOP, TYPE_UNKNOWN
 }
