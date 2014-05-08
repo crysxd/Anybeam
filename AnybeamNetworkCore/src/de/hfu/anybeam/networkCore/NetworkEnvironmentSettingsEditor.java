@@ -53,8 +53,8 @@ public class NetworkEnvironmentSettingsEditor {
 
 	/**
 	 * Applies the changes and restarts the {@link NetworkEnvironment}
-	 * @param applyInBackground flag indicating if the restart should be done in background
-	 * @return 
+	 * @param applyTo the {@link NetworkEnvironment} to which the settings should be applied
+	 * @return a updated NetweorkEnvironment. Keep in mind that the original object was replaced
 	 */
 	public NetworkEnvironment apply(NetworkEnvironment applyTo) {
 

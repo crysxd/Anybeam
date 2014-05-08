@@ -41,7 +41,6 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param dataPort the port on which the client is listening for incoming data tranmissions
 	 * @param id the client's id (from {@link NetworkEnvironmentSettings}
 	 * @param osName the name of the client's operating system
-	 * @param groupName the name of the client's group
 	 * @param deviceType a String representing the client's {@link DeviceType}
 	 */
 	public Client(InetAddress address, String name, int dataPort, String id, 
@@ -56,7 +55,6 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param dataPort the port on which the client is listening for incoming data tranmissions
 	 * @param id the client's id (from {@link NetworkEnvironmentSettings}
 	 * @param osName the name of the client's operating system
-	 * @param groupName the name of the client's group
 	 * @param deviceType the client's {@link DeviceType}
 	 */
 	public Client(InetAddress address, String name, int dataPort, String id, 

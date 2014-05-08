@@ -92,6 +92,7 @@ public enum EncryptionType {
 
 	/**
 	 * Generates a random secret key using the password's SHA-1 hash matching the needs of a key this {@link EncryptionType}.
+	 * @param password the password from which the should be created
 	 * @return a random secret key using the password's SHA-1 hash matching the needs of a key this {@link EncryptionType}
 	 */
 	public byte[] getSecretKeyFromPassword(String password) {
