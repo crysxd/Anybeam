@@ -56,10 +56,13 @@ public class ClientAdapter extends ArrayAdapter<Client> {
 				.findViewById(R.id.ivDeviceType);
 		TextView tvDeviceName = (TextView) convertView
 				.findViewById(R.id.tvDeviceName);
+		TextView tvDeviceInfo = (TextView) convertView
+				.findViewById(R.id.tvDeviceInfo);
 
 		// Populate the data into the template view using the data object
 		ivDeviceImage.setImageResource(DeviceIconUtils.getIconForDeviceType(c.getDeviceType()));
 		tvDeviceName.setText(c.getName());
+		tvDeviceInfo.setText(c.getId());
 
 		// Return the completed view to render on screen
 		return convertView;

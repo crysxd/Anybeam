@@ -1,6 +1,9 @@
 package de.hfu.anybeam.android;
 
+import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -90,6 +93,16 @@ public class MainActivity extends Activity {
 		}
 		if (item.getItemId() == R.id.action_settings_clipboard_set) {
 			ClipboardUtils.copyToClipboard(this, "Überschrift", "Das ist ein Test String");
+		}
+		if (item.getItemId() == R.id.action_settings_show) {
+			AlertDialog.Builder b = new AlertDialog.Builder(this);
+			try {
+				NetworkEnvironmentSettings s = NetworkEnvironmentManager.getNetworkEnvironment(this).getNetworkEnvironmentSettings();
+				b.setMessage(s.toString());
+				b.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return super.onOptionsItemSelected(item);

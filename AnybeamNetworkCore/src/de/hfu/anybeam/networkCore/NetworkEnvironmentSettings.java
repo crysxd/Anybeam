@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Enumeration;
 
 /**
@@ -251,5 +252,17 @@ public class NetworkEnvironmentSettings {
 	public byte[] getEncryptionKey() {
 		return this.ENCRPTION_KEY;
 	}
+
+	@Override
+	public String toString() {
+		return "NetworkEnvironmentSettings [DATA_PORT=" + DATA_PORT
+				+ ", BROADCAST_PORT=" + BROADCAST_PORT + ", DEVICE_NAME="
+				+ DEVICE_NAME + ", DEVICE_TYPE=" + DEVICE_TYPE
+				+ ", ENCRYPTION_TYPE=" + ENCRYPTION_TYPE + ", OS_NAME="
+				+ OS_NAME + ", LOCAL_ID=" + LOCAL_ID + ", ENCRPTION_KEY="
+				+ Arrays.toString(ENCRPTION_KEY) + "]";
+	}
+	
+	
 
 }

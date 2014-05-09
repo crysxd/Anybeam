@@ -108,13 +108,24 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 
 		EncryptionType type = EncryptionType.valueOf(prefs.getString("group_encryption_type", EncryptionType.AES256.toString()));
 		
-		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
+/*		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
 				prefs.getString("client_name", c.getString(R.string.default_client_name)), 
 				DeviceType.valueOf(prefs.getString("client_type", DeviceType.TYPE_SMARTPHONE.toString())), 
 				type, 
 				Integer.parseInt(prefs.getString("port_data", c.getString(R.string.default_port_data))), 
 				Integer.parseInt(prefs.getString("port_broadcast", c.getString(R.string.default_port_broadcast))), 
-				type.getSecretKeyFromPassword(prefs.getString("group_password", newPassword)));
+				type.getSecretKeyFromPassword(prefs.getString("group_password", newPassword)));*/
+		
+		EncryptionType et = EncryptionType.AES256;
+		
+		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
+				"Android", //The device name (e.g. Galaxy S5)
+				DeviceType.TYPE_SMARTPHONE,  //The device type: laptop, desktop, smartphone...
+				et, //The encryption to use
+				1338, //The port for data transmissions
+				1337, //The port for brodcasts
+				et.getSecretKeyFromPassword("anybeamRockt1137") //The password to use
+				);
 
 		return s;
 	}
