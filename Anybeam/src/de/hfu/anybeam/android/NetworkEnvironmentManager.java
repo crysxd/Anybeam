@@ -125,7 +125,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		EncryptionType et = EncryptionType.AES256;
 		
 		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
-				"Android", //The device name (e.g. Galaxy S5)
+				prefs.getString("client_name", c.getString(R.string.default_client_name)), //The device name (e.g. Galaxy S5)
 				DeviceType.TYPE_SMARTPHONE,  //The device type: laptop, desktop, smartphone...
 				et, //The encryption to use
 				1338, //The port for data transmissions

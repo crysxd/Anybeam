@@ -57,7 +57,7 @@ public class AndroidDataReceiverAdapter implements DataReceiverAdapter {
 		if(e.getTransmissionId() == this.clipboardTransmissionId) {
 			String text = new String(this.clipboardStream.toByteArray());
 			ClipboardUtils.copyToClipboard(this.myContext, "", text);
-			Toast.makeText(this.myContext, "Put '" + text + "' in clipboard", Toast.LENGTH_LONG);
+			Toast.makeText(this.myContext, "Put '" + text + "' in clipboard", Toast.LENGTH_LONG).show();
 		}
 		
 	}
