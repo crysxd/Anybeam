@@ -132,20 +132,8 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
 	 * @throws Exception
 	 */
-	public void sendData(InputStream inputStream, int inputStreamLength, NetworkEnvironmentSettings settings) throws Exception {
+	public void sendData(InputStream inputStream, long inputStreamLength, NetworkEnvironmentSettings settings) throws Exception {
 		this.sendData(inputStream, inputStreamLength, "unknown", settings);
-	}
-	
-	/**
-	 * Sends the data from the stream to the client.
-	 * @param inputStream the {@link InputStream} to send the data from
-	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
-	 * @param sourceName the name of the source represented by inputStream e.g. the filename
-	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
-	 * @throws Exception
-	 */
-	public void sendData(InputStream inputStream, int inputStreamLength, String sourceName, NetworkEnvironmentSettings settings) throws Exception {
-		this.sendData(inputStream, inputStreamLength, sourceName, settings);
 	}
 	
 	/**
