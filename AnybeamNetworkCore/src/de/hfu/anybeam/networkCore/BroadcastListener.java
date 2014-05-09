@@ -149,6 +149,7 @@ class BroadcastListener implements Runnable {
 				} catch (Exception e) {
 					//If we went here something is wrong with the decryption, properly wrong key
 					//TODO: Inform NetworkEnvironment about wrong encryption to help user find the problem?
+					e.printStackTrace();
 					return;
 				} 
 			
