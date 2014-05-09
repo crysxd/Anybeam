@@ -1,5 +1,6 @@
 package de.hfu.anybeam.android;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -201,9 +202,14 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 					int position, long id) {
 				try {					
 					Client c = (Client) clientList.getItemAtPosition(position);
+					String s =  intent.getStringExtra(Intent.EXTRA_TEXT);
+					c.sendData(new ByteArrayInputStream(s.getBytes()), 
+							NetworkEnvironmentManager.loadNetworkEnvironmentSettings(SendActivity.this));
 					Log.i("Client", c.toString());
 				} catch (IndexOutOfBoundsException e) {
 					Log.w("ClientList", "ClientList is Empty");
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});
