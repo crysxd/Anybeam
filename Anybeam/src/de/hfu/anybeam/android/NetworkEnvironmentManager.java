@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import de.hfu.anybeam.networkCore.DataReceiver;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
@@ -23,9 +25,13 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 	private static NetworkEnvironment networkEnvironment;
 	private static List<NetworkEnvironmentListener> listeners;
 	private static WifiManager wifi;
+	private static DataReceiver dataReceiver;
 
 	public synchronized static NetworkEnvironment getNetworkEnvironment(Context c) throws Exception {
 
+		if(dataReceiver == null)
+			dataReceiver = new DataReceiver(loadNetworkEnvironmentSettings(c), new AndroidDataReceiverAdapter(c));
+		
 		if(!getWifiManager(c).isWifiEnabled()) {
 			disposeNetworkEnvironment();
 			throw new Exception("Wifi is not available!");

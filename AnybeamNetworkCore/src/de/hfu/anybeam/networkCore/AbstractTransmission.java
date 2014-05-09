@@ -14,13 +14,13 @@ import java.io.IOException;
 public abstract class AbstractTransmission extends Thread {
 
 	//A static field to be increased for every instance of AbstratTransmission providing a unique identifier fo each instance
-	private static long nextTransmissionId = 0;
+	private static int nextTransmissionId = 0;
 
 	//The AbstractTransmissionAdapter to be used with this instance
 	private final AbstractTransmissionAdapter ADAPTER;
 
 	//The transmission id, is unique for each instance
-	private final long TRANSMISSION_ID;
+	private final int TRANSMISSION_ID;
 
 	//The total length of the transmission in bytes or -1 if the transmission in infinite
 	private long totalLength = -1;
@@ -127,7 +127,7 @@ public abstract class AbstractTransmission extends Thread {
 	 * Returns an id unique for every instance of {@link AbstractTransmission}
 	 * @return a unique id for every instance of {@link AbstractTransmission}
 	 */
-	public long getTransmissionId() {
+	public int getTransmissionId() {
 		return this.TRANSMISSION_ID;
 	}
 

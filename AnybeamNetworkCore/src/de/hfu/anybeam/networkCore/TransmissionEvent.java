@@ -9,7 +9,7 @@ package de.hfu.anybeam.networkCore;
 public class TransmissionEvent {
 	
 	//The unique transmission id for the transmission displayed by this object
-	private final long TRANSMISSON_ID;
+	private final int TRANSMISSON_ID;
 	
 	//The total length of the transmission
 	private final long TOTAL_LENGTH;
@@ -39,7 +39,7 @@ public class TransmissionEvent {
 	 * @param averageSpeed the average speed of the transmission in Bytes/second
 	 * @param handler
 	 */
-	TransmissionEvent(long transmissionId, long resourceLength, long transmittedLength, 
+	TransmissionEvent(int transmissionId, long resourceLength, long transmittedLength, 
 			String resourceName, Exception error, double averageSpeed, AbstractTransmission handler) {
 		this.TRANSMISSON_ID = transmissionId;
 		this.TOTAL_LENGTH = resourceLength;
@@ -54,7 +54,7 @@ public class TransmissionEvent {
 	 * Returns the unique transmission id of the transmission displayed by this event.
 	 * @return the unique transmission id of the transmission displayed by this event
 	 */
-	public long getTransmissionId() {
+	public int getTransmissionId() {
 		return this.TRANSMISSON_ID;
 	}
 
