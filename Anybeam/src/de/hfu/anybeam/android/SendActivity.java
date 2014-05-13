@@ -14,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -109,6 +112,18 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 		if(item.getItemId() == R.id.action_refresh) {
+	    	RotateAnimation anim = new RotateAnimation(
+	    			0f,
+	    			350f,
+	    			Animation.RELATIVE_TO_SELF,
+	    			0.5f,
+	    			Animation.RELATIVE_TO_SELF,
+	    			0.5f);
+    		anim.setInterpolator(new LinearInterpolator());
+    		anim.setRepeatCount(1);
+    		anim.setDuration(750);
+    		
+    	findViewById(R.id.action_refresh).startAnimation(anim);
 			try {
 				NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).startClientSearch();
 			} catch (Exception e) {
