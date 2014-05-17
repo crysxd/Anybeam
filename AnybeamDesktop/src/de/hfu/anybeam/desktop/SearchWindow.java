@@ -1,8 +1,6 @@
 package de.hfu.anybeam.desktop;
 
 import javax.swing.JFrame;
-import javax.swing.ListCellRenderer;
-
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,19 +13,24 @@ import javax.swing.JList;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.InputStream;
 
 public class SearchWindow implements NetworkEnvironmentListener {
 
-	private JFrame frmTest;
+	private JFrame frame;
 	private JList clientList;
+	private InputStream data;
 
 	/**
 	 * Create the application.
 	 */
-	public SearchWindow() {
+	public SearchWindow(InputStream data) {
+		this.data = data;
 		try {
 			NetworkEnvironmentManager.addNetworkEnvironmentListener(this);
-			NetworkEnvironmentManager.getNetworkEnvironment().startClientSearch(365, TimeUnit.DAYS, 3, TimeUnit.SECONDS);
+			NetworkEnvironmentManager.getNetworkEnvironment().startClientSearch(365, TimeUnit.DAYS, 10, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -54,20 +57,39 @@ public class SearchWindow implements NetworkEnvironmentListener {
 	private void initialize() {
 		ResourceBundle language = ResourceBundle.getBundle("values.strings", new Locale("en", "US"));
 		
-		frmTest = new JFrame();
-		frmTest.setTitle(language.getString("shareTitle"));
-		frmTest.setIconImage(Toolkit.getDefaultToolkit().getImage(SearchWindow.class.getResource("/drawable/ic_launcher.png")));
-		frmTest.setBounds(100, 100, 300, 512);
-		frmTest.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmTest.getContentPane().setLayout(new BorderLayout(0, 0));
+		frame = new JFrame();
+		frame.setTitle(language.getString("shareTitle"));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(SearchWindow.class.getResource("/drawable/ic_launcher.png")));
+		frame.setResizable(false);
+		frame.setBounds(100, 100, 300, 512);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		clientList = new JList();
-		frmTest.getContentPane().add(clientList);
+		clientList.setFixedCellHeight(70);
 		
+		clientList.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent evt) {
+		    	
+		    JList list = (JList)evt.getSource();
+		    if (evt.getClickCount() == 2) {
+		        int index = list.getSelectedIndex();
+		        try {
+		        	Client client = NetworkEnvironmentManager.getNetworkEnvironment().getClientList().get(index);
+					System.out.println("Clicked Client:" + client.getName());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}     
+		        }
+		    }
+		});
+		    
+		frame.getContentPane().add(clientList);
+
 	}
 	
 	public JFrame getFrame() {
-		return frmTest;
+		return frame;
 	}
 	
 	private void updateView() {

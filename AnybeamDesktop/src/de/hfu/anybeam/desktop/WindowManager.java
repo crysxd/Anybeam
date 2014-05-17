@@ -8,7 +8,7 @@ public class WindowManager  {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SearchWindow window = new SearchWindow();
+					MainWindow window = new MainWindow();
 					window.getFrame().setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
