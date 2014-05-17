@@ -3,8 +3,7 @@ package de.hfu.anybeam.android;
 import de.hfu.anybeam.android.R;
 import de.hfu.anybeam.networkCore.DeviceType;
 
-public class DeviceIconUtils {
-	
+public class DeviceIconUtils {	
 	
 	public static int getIconForDeviceType(DeviceType type){
 		switch (type) {
