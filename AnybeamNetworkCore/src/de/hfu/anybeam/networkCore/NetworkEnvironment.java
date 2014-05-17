@@ -2,6 +2,7 @@ package de.hfu.anybeam.networkCore;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Able to find counterparts in the local network.
@@ -31,7 +35,6 @@ public class NetworkEnvironment {
 	private static String HEADER_FIELD_OS_NAME 		= "OS_NAME";
 	private static String HEADER_FIELD_DEVICE_NAME 	= "DEVICE_NAME";
 	private static String HEADER_FIELD_DEVICE_TYPE 	= "DEVICE_TYPE";
-	private static String HEADER_FIELD_DATA_PORT 	= "DATA_PORT";
 
 	//All methods used
 	private static String HEADER_FIELD_METHOD 		= "METHOD";
@@ -54,11 +57,14 @@ public class NetworkEnvironment {
 	//the lock to synchonize access
 	private final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock();
 
-	//the broadcast listener to find clients
-	private final BroadcastListener BROADCAST_LISTENER;
+	//all the NetworkProviders providing clients for this environment
+	private final List<EnvironmentProvider> PROVIDERS = new Vector<EnvironmentProvider>();
 
 	//The Future of the current task with the active search
 	private Future<?> clientSearchTask;
+	
+	//A Flag indicating if this instance is disposed
+	private boolean isDisposed = false;
 
 	private Condition CLIENT_SEARCH_DONE_CONDITION = this.LOCK.writeLock().newCondition();
 
@@ -70,12 +76,27 @@ public class NetworkEnvironment {
 	public NetworkEnvironment(NetworkEnvironmentSettings settings) throws Exception {
 		this.SETTINGS = settings;
 
-		this.BROADCAST_LISTENER = new BroadcastListener(this);
-		this.THREAD_EXECUTOR.execute(this.BROADCAST_LISTENER);
-
 		this.registerOnNetwork();
 	}
 
+	
+	public void registerEnvironmentProvider(EnvironmentProvider toAdd) {
+		if(toAdd.getNetworkEnvironment() != this)
+			throw new IllegalArgumentException("The EnvironmentProvider is already used by an other NetworkEnvironment instance!");
+		
+		this.PROVIDERS.add(toAdd);
+	}
+	
+	public void unregisterEnvironmentProvider(EnvironmentProvider toRemove) {
+		this.PROVIDERS.remove(toRemove);
+		
+		List<Client> clients = this.getClientsForProvider(toRemove);
+		for(Client c: clients) {
+		
+		}
+
+	}
+	
 	/**
 	 * Returns the {@link NetworkEnvironmentSettings} used by this instance.
 	 * @return the {@link NetworkEnvironmentSettings} used by this instance
@@ -88,7 +109,7 @@ public class NetworkEnvironment {
 	 * Executes the given {@link Runnable} on the {@link NetworkEnvironment}'s thread pool.
 	 * @param r the {@link Runnable} to execute
 	 */
-	void execute(Runnable r) {
+	public void execute(Runnable r) {
 		this.THREAD_EXECUTOR.execute(r);
 	}
 
@@ -105,8 +126,9 @@ public class NetworkEnvironment {
 			//Shutdown thread pool
 			this.THREAD_EXECUTOR.shutdownNow();
 
-			//dispose the BroadcastListener
-			this.BROADCAST_LISTENER.dispose();
+			//dispose all providers
+			for(EnvironmentProvider p : this.PROVIDERS)
+				p.dispose();
 
 			//unregister on Network (synchronosly, thread pool not needed)
 			this.unregisterOnNetwork();
@@ -114,6 +136,21 @@ public class NetworkEnvironment {
 		} finally {
 			//unlock
 			this.LOCK.writeLock().unlock();
+
+		}
+	}
+	
+	public boolean isDisposed() {
+		try {
+			//lock
+			this.LOCK.readLock().lock();
+
+			//return
+			return this.isDisposed;
+
+		} finally {
+			//unlock
+			this.LOCK.readLock().unlock();
 
 		}
 	}
@@ -194,6 +231,29 @@ public class NetworkEnvironment {
 		for(NetworkEnvironmentListener l : listeners)
 			this.addNetworkEnvironmentListener(l);
 	}
+	
+	public Cipher getEncryptionCipher() throws InvalidKeyException {
+		EncryptionType type = this.getNetworkEnvironmentSettings().getEncryptionType();
+		byte[] key = this.getNetworkEnvironmentSettings().getEncryptionKey();
+		
+		Cipher c = type.createCipher();
+		SecretKeySpec k = type.getSecretKeySpec(key);
+		c.init(Cipher.ENCRYPT_MODE, k);
+		
+		return c;
+	}
+	
+	public Cipher getDecryptionCipher() throws InvalidKeyException {
+		EncryptionType type = this.getNetworkEnvironmentSettings().getEncryptionType();
+		byte[] key = this.getNetworkEnvironmentSettings().getEncryptionKey();
+		
+		Cipher c = type.createCipher();
+		SecretKeySpec k = type.getSecretKeySpec(key);
+		c.init(Cipher.DECRYPT_MODE, k);
+		
+		return c;
+		
+	}
 
 	/**
 	 * Removes all {@link NetworkEnvironmentListener}s currently installed on this {@link NetworkEnvironment}.
@@ -246,6 +306,45 @@ public class NetworkEnvironment {
 
 		}
 	}
+	
+	public void clientUnavailableForProvider(Client c, EnvironmentProvider provider) {
+		c.removeAddressForProvider(provider);
+		
+		if(c.getAllProviders().size() <= 0) {
+			this.removeClient(c);
+			
+		} else {
+			try {
+				this.dispatchEvent("clientUpdated", new Class[]{Client.class}, c);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+	
+	public List<Client> getClientsForProvider(EnvironmentProvider provider) {
+		try {
+			//lock
+			this.LOCK.readLock().lock();
+
+			List<Client> found = new ArrayList<Client>();
+			//Search and return if found
+			for(Client c: this.CLIENTS.values()) {
+				if(c.getAddress(provider) != null) {
+					found.add(c);
+				}
+			}
+
+			//Nothing found -> return null
+			return found;
+
+		} finally {
+			//unlock
+			this.LOCK.readLock().unlock();
+
+		}
+	}
 
 	/**
 	 * Starts a active, "infinite" (365 day) search for {@link Client}s in the local network. Remember to cancel it, especially on mobile devices!
@@ -264,7 +363,7 @@ public class NetworkEnvironment {
 	 * @see #startClientSearch(long, TimeUnit, long, TimeUnit)
 	 */
 	public void startClientSearch(long howLong, TimeUnit unitHowLong) {
-		this.startClientSearch(howLong, unitHowLong, 500, TimeUnit.MILLISECONDS);
+		this.startClientSearch(howLong, unitHowLong, 5000, TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -406,13 +505,9 @@ public class NetworkEnvironment {
 	 * @throws IOException
 	 */
 	private void registerOnNetwork() throws IOException {
-		//Get default header and put the method
-		UrlParameterBundle b = this.createDefaultHeaderBundle();
-		b.put(NetworkEnvironment.HEADER_FIELD_METHOD, NetworkEnvironment.METHOD_TYPE_REGISTER);
-
-		//Send the signal in a parallel thread
-		NetworkBroadcast nc = new NetworkBroadcast(this, b.generateUrlString().getBytes());
-		this.THREAD_EXECUTOR.execute(nc);
+		for(EnvironmentProvider p : this.PROVIDERS)
+			p.registerOnNetwork();
+		
 	}
 
 	/**
@@ -420,13 +515,9 @@ public class NetworkEnvironment {
 	 * @throws Exception
 	 */
 	private void unregisterOnNetwork() throws Exception {
-		//Get default header and put the method
-		UrlParameterBundle b = this.createDefaultHeaderBundle();
-		b.put(NetworkEnvironment.HEADER_FIELD_METHOD, NetworkEnvironment.METHOD_TYPE_UNREGISTER);
-
-		//Send the signal in this thread. Important because the THREAD_EXECUTOR might have already been terminated
-		NetworkBroadcast nc = new NetworkBroadcast(this, b.generateUrlString().getBytes());
-		nc.run();
+		for(EnvironmentProvider p : this.PROVIDERS)
+			p.unregisterOnNetwork();
+		
 	}
 
 	/**
@@ -468,11 +559,16 @@ public class NetworkEnvironment {
 
 	}
 
+	
+	public void removeClient(Client c) {
+		this.removeClient(c.getId());
+	}
+	
 	/**
 	 * Removes the given {@link Client} from the list of reachable {@link Client}s.
 	 * @param id the id of the {@link Client} to delete
 	 */
-	private void removeClient(String id) {
+	public void removeClient(String id) {
 
 		try {
 			//lock
@@ -529,21 +625,28 @@ public class NetworkEnvironment {
 		.put(NetworkEnvironment.HEADER_FIELD_VERSION, 	 	NetworkEnvironment.VERSION)
 		.put(NetworkEnvironment.HEADER_FIELD_ID, 			this.SETTINGS.getLocalId())
 		.put(NetworkEnvironment.HEADER_FIELD_DEVICE_NAME, 	this.SETTINGS.getDeviceName())
-		.put(NetworkEnvironment.HEADER_FIELD_DATA_PORT,		this.SETTINGS.getDataPort())
 		.put(NetworkEnvironment.HEADER_FIELD_OS_NAME, 		this.SETTINGS.getOsName())
 		.put(NetworkEnvironment.HEADER_FIELD_DEVICE_TYPE,	this.SETTINGS.getDeviceType());
 	}
-
+	
 	/**
-	 * Creates the payload that should be send to a found {@link Client} as an answer.
-	 * @return the payload that should be send to a found {@link Client} as an answer
+	 * Creates the payload that should be send to register on the network.
+	 * @return the payload that should be send to register on the network
 	 */
-	byte[] createRegisterAnswerPayload() {
-		//Get default header and add method. return bytes
+	public UrlParameterBundle createRegisterPayload() {
+		//Get default header and put the method
 		return this.createDefaultHeaderBundle()
-				.put(NetworkEnvironment.HEADER_FIELD_METHOD, NetworkEnvironment.METHOD_TYPE_ANSWER)
-				.generateUrlString()
-				.getBytes();
+				.put(NetworkEnvironment.HEADER_FIELD_METHOD, NetworkEnvironment.METHOD_TYPE_REGISTER);
+	}
+	
+	/**
+	 * Creates the payload that should be send to unregister on the network.
+	 * @return the payload that should be send to unregister on the network
+	 */
+	public UrlParameterBundle createUnregisterPayload() {
+		//Get default header and put the method
+		return this.createDefaultHeaderBundle()
+				.put(NetworkEnvironment.HEADER_FIELD_METHOD, NetworkEnvironment.METHOD_TYPE_UNREGISTER);
 	}
 
 	/**
@@ -552,56 +655,57 @@ public class NetworkEnvironment {
 	 * @param address the address of the sender/potential client
 	 * @return true if the {@link BroadcastListener} should answer, false otherwise
 	 */
-	boolean potentialClientFound(String payload, InetAddress address) {
+	public Client handleIncomingParameterBundle(UrlParameterBundle b, EnvironmentProvider provider, Object address) {
 		try {
-			//create a bundle from the payload
-			UrlParameterBundle b = new UrlParameterBundle(payload);
-
 			//If the version does not match -> cancel and don't answer
 			if(b.getDouble(NetworkEnvironment.HEADER_FIELD_VERSION) !=  NetworkEnvironment.VERSION) {
-				return false;
+				return null;
 			}
 
 			//If the id matches the local one (I received my own broadcast) -> cancel and don't answer
 			if(b.get(NetworkEnvironment.HEADER_FIELD_ID).equals(this.SETTINGS.getLocalId())) {
-				return false;
+				return null;
 			}
 
 			//everythig is ok, take a closer look
-
+			//Create a new Client
+			Client c = new Client(
+				b.get(NetworkEnvironment.HEADER_FIELD_DEVICE_NAME), 
+				b.get(NetworkEnvironment.HEADER_FIELD_ID), 
+				b.get(NetworkEnvironment.HEADER_FIELD_OS_NAME), 
+				b.get(NetworkEnvironment.HEADER_FIELD_DEVICE_TYPE));
+			
 			//If the method is answer or register
 			if(b.get(NetworkEnvironment.HEADER_FIELD_METHOD).equals(NetworkEnvironment.METHOD_TYPE_REGISTER) 
 					|| b.get(NetworkEnvironment.HEADER_FIELD_METHOD).equals(NetworkEnvironment.METHOD_TYPE_ANSWER)) {
+				
+				//Add Address for provider
+				c.setAddressForProvider(provider, address);
+
 				//Add the client to the list of available clients (method will handle duplicates etc)
-				this.addClient(b.get(NetworkEnvironment.HEADER_FIELD_ID), 
-						new Client(
-								address, 
-								b.get(NetworkEnvironment.HEADER_FIELD_DEVICE_NAME), 
-								b.getInteger(NetworkEnvironment.HEADER_FIELD_DATA_PORT), 
-								b.get(NetworkEnvironment.HEADER_FIELD_ID), 
-								b.get(NetworkEnvironment.HEADER_FIELD_OS_NAME), 
-								b.get(NetworkEnvironment.HEADER_FIELD_DEVICE_TYPE)));
+				this.addClient(b.get(NetworkEnvironment.HEADER_FIELD_ID), c);	
+				
+				//Return the client
+				return c;
 
-				//Answer if the method was register, but do not answer a answer
-				return b.get(NetworkEnvironment.HEADER_FIELD_METHOD).equals(NetworkEnvironment.METHOD_TYPE_REGISTER);
-
-				//If the method is unregister
-			} else if(b.get(NetworkEnvironment.HEADER_FIELD_METHOD).equals(NetworkEnvironment.METHOD_TYPE_UNREGISTER)) {
-				//remove the client (method will handle unkonwn Clients). do not answer
-				this.removeClient(b.get("ID"));
-				return false;
-
-			} 
+			} else {
+				//Remove the provider from the client and return null
+				this.clientUnavailableForProvider(c, provider);
+				
+				return null;
+				
+			}
 
 			//Catch all Exceptions including Numberformat etc etc etc
 			//The Client will be ignored if the header is not readable
 		} catch(Exception e) {
-			new Exception("Error while interpreting received payload: " + payload, e).printStackTrace();
+			//Do nothing
+			e.printStackTrace();
 
 		}
 
-		//generally do not answer
-		return false;
+		//generally return null in case of error
+		return null;
 
 	}
 

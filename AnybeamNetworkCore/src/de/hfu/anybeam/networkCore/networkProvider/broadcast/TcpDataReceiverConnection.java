@@ -1,4 +1,4 @@
-package de.hfu.anybeam.networkCore;
+package de.hfu.anybeam.networkCore.networkProvider.broadcast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,19 +9,21 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.spec.SecretKeySpec;
 
+import de.hfu.anybeam.networkCore.AbstractDownloadTransmission;
+import de.hfu.anybeam.networkCore.AbstractDownloadTransmissionAdapter;
+import de.hfu.anybeam.networkCore.EncryptionType;
+import de.hfu.anybeam.networkCore.UrlParameterBundle;
+
 /**
- * Used by {@link DataReceiver} to handle incoming connections.
+ * Used by {@link TcpDataReceiver} to handle incoming connections.
  * @author chrwuer
  * @version 1.0
  * @since 1.0
  */
-class DataReceiverConnection extends AbstractTransmission {
+class TcpDataReceiverConnection extends AbstractDownloadTransmission {
 	
 	//The InputStream from the socket
 	private final InputStream INPUT;
-	
-	//the adapter to inform about status updates
-	private final DataReceiverAdapter ADAPTER;
 	
 	//the encryption type used
 	private final EncryptionType ENCRYPTION_TYPE;
@@ -33,19 +35,18 @@ class DataReceiverConnection extends AbstractTransmission {
 	private	OutputStream transmissionOutput = null;
 
 	/**
-	 * Creates a new {@link DataReceiverConnection} instance using the given settings.
+	 * Creates a new {@link TcpDataReceiverConnection} instance using the given settings.
 	 * @param in the {@link InputStream} to read from
 	 * @param encryptionType the used {@link EncryptionType}
 	 * @param encryptionKey the used encryption key
-	 * @param adapter the {@link DataReceiverAdapter} to get the {@link OutputStream} from and inform about progress updates
+	 * @param adapter the {@link AbstractDownloadTransmissionAdapter} to get the {@link OutputStream} from and inform about progress updates
 	 */
-	public DataReceiverConnection(InputStream in, EncryptionType encryptionType, 
-			byte[] encryptionKey, DataReceiverAdapter adapter) {
+	public TcpDataReceiverConnection(InputStream in, EncryptionType encryptionType, 
+			byte[] encryptionKey, AbstractDownloadTransmissionAdapter adapter) {
 		super(adapter);
 		//save args
 		this.INPUT = in;
 		this.ENCRYPTION_TYPE = encryptionType;
-		this.ADAPTER = adapter;
 		this.ENCRYPTION_KEY = encryptionKey;
 		
 	}
@@ -92,7 +93,7 @@ class DataReceiverConnection extends AbstractTransmission {
 				this.setResourceName(header.get("NAME"));
 				
 				//request OutpuStream from adapter
-				this.transmissionOutput = this.ADAPTER.downloadStarted(this.createTransmissionEvent(null), header.get("ID"));
+				this.transmissionOutput = this.getTransmissionOutput(header.get("ID"));
 			
 				//break the loop
 				break;
@@ -123,13 +124,12 @@ class DataReceiverConnection extends AbstractTransmission {
 
 	@Override
 	public void forceCloseTransmissionStream() throws IOException {
+		super.forceCloseTransmissionStream();
+		
 		//Close input
 		if(this.INPUT != null)
 			this.INPUT.close();
 		
-		//Call adapter and request close of output
-		if(this.transmissionOutput != null)
-			this.ADAPTER.closeOutputStream(this.createTransmissionEvent(null), this.transmissionOutput);	
 	}
 	
 }

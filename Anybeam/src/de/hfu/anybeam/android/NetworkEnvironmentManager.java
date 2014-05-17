@@ -12,26 +12,23 @@ import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import de.hfu.anybeam.networkCore.DataReceiver;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
+import de.hfu.anybeam.networkCore.EnvironmentProvider;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettingsEditor;
+import de.hfu.anybeam.networkCore.networkProvider.broadcast.LocalNetworkProvider;
 
 public class NetworkEnvironmentManager extends BroadcastReceiver {
 
 	private static NetworkEnvironment networkEnvironment;
 	private static List<NetworkEnvironmentListener> listeners;
 	private static WifiManager wifi;
-	private static DataReceiver dataReceiver;
 
 	public synchronized static NetworkEnvironment getNetworkEnvironment(Context c) throws Exception {
 
-		if(dataReceiver == null)
-			dataReceiver = new DataReceiver(loadNetworkEnvironmentSettings(c), new AndroidDataReceiverAdapter(c));
-		
 		if(!getWifiManager(c).isWifiEnabled()) {
 			disposeNetworkEnvironment();
 			throw new Exception("Wifi is not available!");
@@ -39,6 +36,8 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 
 		if(networkEnvironment == null) {
 			networkEnvironment = new NetworkEnvironment(loadNetworkEnvironmentSettings(c));
+			new LocalNetworkProvider(networkEnvironment, 1339, 1338);
+
 
 			if(listeners != null) {
 				networkEnvironment.addAllNetworkEnvironmentListeners(listeners);
@@ -128,8 +127,6 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 				prefs.getString("client_name", c.getString(R.string.default_client_name)), //The device name (e.g. Galaxy S5)
 				DeviceType.TYPE_SMARTPHONE,  //The device type: laptop, desktop, smartphone...
 				et, //The encryption to use
-				1338, //The port for data transmissions
-				1337, //The port for brodcasts
 				et.getSecretKeyFromPassword("anybeamRockt1137") //The password to use
 				);
 

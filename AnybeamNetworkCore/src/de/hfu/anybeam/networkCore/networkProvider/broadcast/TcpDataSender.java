@@ -1,4 +1,4 @@
-package de.hfu.anybeam.networkCore;
+package de.hfu.anybeam.networkCore.networkProvider.broadcast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,13 +11,18 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.SecretKeySpec;
 
+import de.hfu.anybeam.networkCore.AbstractTransmission;
+import de.hfu.anybeam.networkCore.AbstractTransmissionAdapter;
+import de.hfu.anybeam.networkCore.EncryptionType;
+import de.hfu.anybeam.networkCore.UrlParameterBundle;
+
 /**
- * Class to send a InputStream to a remote {@link DataReceiver}.
+ * Class to send a InputStream to a remote {@link TcpDataReceiver}.
  * @author chrwuer
  * @since 1.0
  * @version 1.0
  */
-public class DataSender extends AbstractTransmission {
+public class TcpDataSender extends AbstractTransmission {
 
 	//The receiver's InetAddress
 	private final InetAddress RECEIVER_ADDRESS;
@@ -44,7 +49,7 @@ public class DataSender extends AbstractTransmission {
 	private Socket socket;
 
 	/**
-	 * Creates a new {@link DataSender} instance.
+	 * Creates a new {@link TcpDataSender} instance.
 	 * @param inputStream the {@link InputStream} to send
 	 * @param inputStreamLength the length of inputStream or -1 if the stream is endless
 	 * @param inputName the name of the resource represented by inputStream, e.g. the filename
@@ -53,7 +58,7 @@ public class DataSender extends AbstractTransmission {
 	 * @param receiverPort the port on which the receiver is waiting
 	 * @param receiverAddress the {@link InetAddress} of the receiver
 	 */
-	public DataSender(InputStream inputStream, long inputStreamLength, String inputName, 
+	public TcpDataSender(InputStream inputStream, long inputStreamLength, String inputName, 
 			EncryptionType encryptionType, byte[] encryptionKey, 
 			int receiverPort, InetAddress receiverAddress) {
 
@@ -61,7 +66,7 @@ public class DataSender extends AbstractTransmission {
 	}
 	
 	/**
-	 * Creates a new {@link DataSender} instance.
+	 * Creates a new {@link TcpDataSender} instance.
 	 * @param inputStream the {@link InputStream} to send
 	 * @param inputStreamLength the length of inputStream or -1 if the stream is endless
 	 * @param inputName the name of the resource represented by inputStream, e.g. the filename
@@ -71,7 +76,7 @@ public class DataSender extends AbstractTransmission {
 	 * @param receiverAddress the {@link InetAddress} of the receiver
 	 * @param adapter the {@link AbstractTransmissionAdapter} to be notified about progress updates
 	 */
-	public DataSender(InputStream inputStream, long inputStreamLength, String inputName, 
+	public TcpDataSender(InputStream inputStream, long inputStreamLength, String inputName, 
 			EncryptionType encryptionType, byte[] encryptionKey, 
 			int receiverPort, InetAddress receiverAddress, AbstractTransmissionAdapter adapter) {
 
@@ -79,7 +84,7 @@ public class DataSender extends AbstractTransmission {
 	}
 
 	/**
-	 * Creates a new {@link DataSender} instance.
+	 * Creates a new {@link TcpDataSender} instance.
 	 * @param inputStream the {@link InputStream} to send
 	 * @param inputStreamLength the length of inputStream or -1 if the stream is endless
 	 * @param inputName the name of the resource represented by inputStream, e.g. the filename
@@ -90,7 +95,7 @@ public class DataSender extends AbstractTransmission {
 	 * @param adapter the {@link AbstractTransmissionAdapter} to be notified about progress updates
 	 * @param senderClientId this device's client id to send to the receiver to identify this device
 	 */
-	public DataSender(InputStream inputStream, long inputStreamLength, String inputName, 
+	public TcpDataSender(InputStream inputStream, long inputStreamLength, String inputName, 
 			EncryptionType encryptionType, byte[] encryptionKey, 
 			int receiverPort, InetAddress receiverAddress, AbstractTransmissionAdapter adapter, String senderClientId) {
 		super(adapter);
@@ -105,7 +110,7 @@ public class DataSender extends AbstractTransmission {
 		this.setTotalLength(inputStreamLength);
 		this.setResourceName(inputName);
 	}
-
+	
 	@Override
 	public void transmit() throws Exception {
 		//connect

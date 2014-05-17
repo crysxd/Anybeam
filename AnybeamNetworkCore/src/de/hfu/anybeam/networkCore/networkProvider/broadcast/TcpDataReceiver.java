@@ -1,4 +1,4 @@
-package de.hfu.anybeam.networkCore;
+package de.hfu.anybeam.networkCore.networkProvider.broadcast;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -8,15 +8,19 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import de.hfu.anybeam.networkCore.AbstractDownloadTransmissionAdapter;
+import de.hfu.anybeam.networkCore.AbstractTransmission;
+import de.hfu.anybeam.networkCore.EncryptionType;
+
 /**
- * Representing a mini server listening to the given port for incoming connection. For every connection a {@link DataReceiverConnection} object is used to
+ * Representing a mini server listening to the given port for incoming connection. For every connection a {@link TcpDataReceiverConnection} object is used to
  * handle the incoming data.
  * @author chrwuer
  * @since 1.0
  * @version 1.0
  *
  */
-public class DataReceiver implements Runnable {
+public class TcpDataReceiver implements Runnable {
 	
 	//The encryption type to be used
 	private final EncryptionType ENCRYPTION_TYPE;
@@ -31,30 +35,20 @@ public class DataReceiver implements Runnable {
 	private final ServerSocket SOCKET;
 	
 	//The adapter to be notified about events
-	private final DataReceiverAdapter ADAPTER;
+	private final AbstractDownloadTransmissionAdapter ADAPTER;
 	
 	//A list with all ongoing connections to cancel when this object is disposed
-	private final List<DataReceiverConnection> ONGOING_TRANSMISSONS = new Vector<DataReceiverConnection>();
+	private final List<TcpDataReceiverConnection> ONGOING_TRANSMISSONS = new Vector<TcpDataReceiverConnection>();
 	
 	/**
-	 * Creates a new {@link DataReceiver} instance using the given {@link NetworkEnvironmentSettings}.
-	 * @param settings the {@link NetworkEnvironmentSettings} to get all encessary information from
-	 * @param adapter the adapter to be notified about events
-	 * @throws IOException
-	 */
-	public DataReceiver(NetworkEnvironmentSettings settings, DataReceiverAdapter adapter) throws IOException {
-		this(settings.getEncryptionType(), settings.getEncryptionKey(), settings.getDataPort(), adapter);
-	}
-	
-	/**
-	 * Creates a new {@link DataReceiver} instance using the given information.
+	 * Creates a new {@link TcpDataReceiver} instance using the given information.
 	 * @param encryptionType the {@link EncryptionType} to be used
 	 * @param encrpytionKey the encryption key to be used
 	 * @param port the port to wait for incoming connections on
 	 * @param adapter the adapter to be notified about events
 	 * @throws IOException
 	 */
-	public DataReceiver(EncryptionType encryptionType,  byte[] encrpytionKey, int port, DataReceiverAdapter adapter) throws IOException {
+	public TcpDataReceiver(EncryptionType encryptionType,  byte[] encrpytionKey, int port, AbstractDownloadTransmissionAdapter adapter) throws IOException {
 		this.ENCRYPTION_TYPE = encryptionType;
 		this.SOCKET = new ServerSocket(port);
 		this.THREAD_EXECUTOR.submit(this);
@@ -89,7 +83,7 @@ public class DataReceiver implements Runnable {
 				Socket soc = this.SOCKET.accept();
 				
 				//create a new handler
-				DataReceiverConnection ch = new DataReceiverConnection(
+				TcpDataReceiverConnection ch = new TcpDataReceiverConnection(
 						soc.getInputStream(), 
 						this.ENCRYPTION_TYPE,
 						this.ENCRYPTION_KEY,
@@ -113,10 +107,10 @@ public class DataReceiver implements Runnable {
 	}
 
 	/**
-	 * Removes the given {@link DataReceiverConnection} from the list of active transmissions.
-	 * @param dataReceiverConnection the {@link DataReceiverConnection} to be removed from the list of active transmissions
+	 * Removes the given {@link TcpDataReceiverConnection} from the list of active transmissions.
+	 * @param dataReceiverConnection the {@link TcpDataReceiverConnection} to be removed from the list of active transmissions
 	 */
-	void transmissionDone(DataReceiverConnection dataReceiverConnection) {
+	void transmissionDone(TcpDataReceiverConnection dataReceiverConnection) {
 		this.ONGOING_TRANSMISSONS.remove(dataReceiverConnection);
 		
 	}

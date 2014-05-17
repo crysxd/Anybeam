@@ -19,12 +19,6 @@ import java.util.Enumeration;
  */
 public class NetworkEnvironmentSettings {
 	
-	//The port on which data is transmitted
-	private final int DATA_PORT;
-	
-	//The port for the broadcasts
-	private final int BROADCAST_PORT;
-	
 	//The device name
 	private final String DEVICE_NAME;
 	
@@ -64,8 +58,6 @@ public class NetworkEnvironmentSettings {
 		UrlParameterBundle bundle = new UrlParameterBundle(builder.toString());
 		
 		//restore settings
-		this.BROADCAST_PORT = bundle.getInteger("BROADCAST_PORT");
-		this.DATA_PORT = bundle.getInteger("BROADCAST_PORT");
 		this.DEVICE_NAME = bundle.get("DEVICE_NAME");
 		this.DEVICE_TYPE = DeviceType.valueOf(bundle.get("BROADCAST_PORT"));
 		this.LOCAL_ID = bundle.get("LOCAL_ID");
@@ -81,14 +73,12 @@ public class NetworkEnvironmentSettings {
 	 * @param deviceName the name of the device
 	 * @param deviceType the name of the type
 	 * @param encryptionType the type of the encryption
-	 * @param dataPort the port on which data is transmitted
-	 * @param braocastPort the port for broadcast messages
 	 * @param encryptionKey the encryption key used
 	 */
 	public NetworkEnvironmentSettings(String deviceName, DeviceType deviceType,  
-			EncryptionType encryptionType,int dataPort, int braocastPort, byte[] encryptionKey) {
-		this(deviceName, deviceType, encryptionType, dataPort, 
-				braocastPort, encryptionKey, System.getProperty("os.name"));
+			EncryptionType encryptionType, byte[] encryptionKey) {
+		this(deviceName, deviceType, encryptionType,
+				encryptionKey, System.getProperty("os.name"));
 	}
 
 	/**
@@ -97,19 +87,15 @@ public class NetworkEnvironmentSettings {
 	 * @param deviceName the name of the device
 	 * @param deviceType the name of the type
 	 * @param encryptionType the type of the encryption
-	 * @param dataPort the port on which data is transmitted
-	 * @param braocastPort the port for broadcast messages
 	 * @param encryptionKey the encryption key used
 	 * @param osName the name of the operating system
 	 */
 	public NetworkEnvironmentSettings(String deviceName, DeviceType deviceType,
-			EncryptionType encryptionType, int dataPort, int braocastPort, byte[] encryptionKey, String osName) {
+			EncryptionType encryptionType, byte[] encryptionKey, String osName) {
 		this.DEVICE_NAME = deviceName;
 		this.DEVICE_TYPE = deviceType;
 		this.ENCRYPTION_TYPE = encryptionType;
 		this.OS_NAME = osName;
-		this.DATA_PORT = dataPort;
-		this.BROADCAST_PORT = braocastPort;
 		this.LOCAL_ID = this.generateId();
 		this.ENCRPTION_KEY = encryptionKey;
 	}
@@ -130,8 +116,6 @@ public class NetworkEnvironmentSettings {
 		bundle.put("DEVICE_TYPE", this.DEVICE_TYPE);
 		bundle.put("ENCRYPTION_TYPE", this.ENCRYPTION_TYPE);
 		bundle.put("OS_NAME", this.OS_NAME);
-		bundle.put("DATA_PORT", this.DATA_PORT);
-		bundle.put("BROADCAST_PORT", this.BROADCAST_PORT);
 		bundle.put("LOCAL_ID", this.LOCAL_ID);
 		bundle.put("ENCRPTION_KEY", this.ENCRYPTION_TYPE.getHumanReadableKey(this.ENCRPTION_KEY));
 		
@@ -188,22 +172,6 @@ public class NetworkEnvironmentSettings {
 		//return the id
 		return id.toString();
 	}
-
-	/**
-	 * Returns the port on which data is transmitted.
-	 * @return the port on which data is transmitted
-	 */
-	public int getDataPort() {
-		return DATA_PORT;
-	}
-	
-	/**
-	 * Returns the port o which broadcasts are send.
-	 * @return the port o which broadcasts are send
-	 */
-	public int getBroadcastPort() {
-		return BROADCAST_PORT;
-	}
 	
 	/**
 	 * Returns the device name.
@@ -255,8 +223,7 @@ public class NetworkEnvironmentSettings {
 
 	@Override
 	public String toString() {
-		return "NetworkEnvironmentSettings [DATA_PORT=" + DATA_PORT
-				+ ", BROADCAST_PORT=" + BROADCAST_PORT + ", DEVICE_NAME="
+		return "NetworkEnvironmentSettings [DEVICE_NAME="
 				+ DEVICE_NAME + ", DEVICE_TYPE=" + DEVICE_TYPE
 				+ ", ENCRYPTION_TYPE=" + ENCRYPTION_TYPE + ", OS_NAME="
 				+ OS_NAME + ", LOCAL_ID=" + LOCAL_ID + ", ENCRPTION_KEY="

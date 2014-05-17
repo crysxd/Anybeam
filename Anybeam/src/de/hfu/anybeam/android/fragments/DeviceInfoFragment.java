@@ -1,8 +1,5 @@
 package de.hfu.anybeam.android.fragments;
 
-import de.hfu.anybeam.android.R;
-import de.hfu.anybeam.android.DeviceIconUtils;
-import de.hfu.anybeam.networkCore.Client;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
+import de.hfu.anybeam.android.DeviceIconUtils;
+import de.hfu.anybeam.android.R;
+import de.hfu.anybeam.networkCore.Client;
 
 public class DeviceInfoFragment extends DialogFragment{
 	private TextView tvAddress;
@@ -25,8 +25,8 @@ public class DeviceInfoFragment extends DialogFragment{
     	DeviceInfoFragment frag = new DeviceInfoFragment();
         Bundle args = new Bundle();
         args.putString("title", c.getName());
-        args.putString("address", c.getAddress().toString());
-//        args.putString("group", c.getGroup());
+        args.putString("address", c.getAddress(c.getBestProvider()).toString());
+        args.putString("group", c.getBestProvider().getName());
         args.putString("os", c.getOsName());
         args.putInt("deviceType", DeviceIconUtils.getIconForDeviceType(c.getDeviceType()));
         

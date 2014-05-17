@@ -14,12 +14,6 @@ public class NetworkEnvironmentSettingsEditor {
 	//The NetworkEnvironmentSettings which should be edited
 	private NetworkEnvironmentSettings SETTINGS_TO_EDIT;
 
-	//The port on which data is transmitted
-	private int dataPort;
-
-	//The port for the broadcasts
-	private int broadcastPort;
-
 	//The device name
 	private String deviceName;
 
@@ -41,8 +35,6 @@ public class NetworkEnvironmentSettingsEditor {
 	 */
 	public NetworkEnvironmentSettingsEditor(NetworkEnvironmentSettings settingToEdit) {
 		this.SETTINGS_TO_EDIT = settingToEdit;
-		this.dataPort = this.SETTINGS_TO_EDIT.getDataPort();
-		this.broadcastPort = this.SETTINGS_TO_EDIT.getBroadcastPort();
 		this.deviceName = this.SETTINGS_TO_EDIT.getDeviceName();
 		this.deviceType = this.SETTINGS_TO_EDIT.getDeviceType();
 		this.encryptionType = this.SETTINGS_TO_EDIT.getEncryptionType();
@@ -81,8 +73,6 @@ public class NetworkEnvironmentSettingsEditor {
 				NetworkEnvironmentSettingsEditor.this.getDeviceName(), 
 				NetworkEnvironmentSettingsEditor.this.getDeviceType(), 
 				NetworkEnvironmentSettingsEditor.this.getEncryptionType(), 
-				NetworkEnvironmentSettingsEditor.this.getDataPort(), 
-				NetworkEnvironmentSettingsEditor.this.getBroadcastPort(), 
 				NetworkEnvironmentSettingsEditor.this.getEncryptionKey(), 
 				NetworkEnvironmentSettingsEditor.this.getOsName()
 				);
@@ -102,8 +92,6 @@ public class NetworkEnvironmentSettingsEditor {
 	}
 
 	public NetworkEnvironment applyAll(NetworkEnvironmentSettings settings, NetworkEnvironment applyTo) {
-		this.setDataPort(settings.getDataPort());
-		this.setBroadcastPort(settings.getBroadcastPort());
 		this.setDeviceName(settings.getDeviceName());
 		this.setDeviceType(settings.getDeviceType());
 		this.setEncryptionType(settings.getEncryptionType());
@@ -111,22 +99,6 @@ public class NetworkEnvironmentSettingsEditor {
 		this.setEncryptionKey(settings.getEncryptionKey());
 
 		return this.apply(applyTo);
-	}
-
-	public int getDataPort() {
-		return dataPort;
-	}
-
-	public void setDataPort(int dataPort) {
-		this.dataPort = dataPort;
-	}
-
-	public int getBroadcastPort() {
-		return broadcastPort;
-	}
-
-	public void setBroadcastPort(int broadcastPort) {
-		this.broadcastPort = broadcastPort;
 	}
 
 	public String getDeviceName() {

@@ -5,6 +5,11 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a network Client with all necessary Information.
@@ -17,62 +22,77 @@ public class Client implements Comparable<Client>, Serializable {
 	private static final long serialVersionUID = -5823296242806470526L;
 	
 	//The InetAddress of this client
-	private InetAddress ADDRESS;
-	
+	private Map<EnvironmentProvider, Object> addresses = new HashMap<EnvironmentProvider, Object>();
+
 	//The name of this client
-	private String NAME;
-	
-	//The data port of this client
-	private int DATA_PORT;
+	private String name;
 	
 	//The id of this client
-	private String ID;
+	private String id;
 	
 	//The name of the client's os
-	private String OS_NAME;
+	private String osName;
 	
 	//The device type of the client
-	private DeviceType DEVEICE_TYPE;
+	private DeviceType deviceType;
 	
 	/**
 	 * Creates a new {@link Client} instance with the given Information.
-	 * @param address the client's {@link InetAddress}
 	 * @param name the client's name
-	 * @param dataPort the port on which the client is listening for incoming data tranmissions
 	 * @param id the client's id (from {@link NetworkEnvironmentSettings}
 	 * @param osName the name of the client's operating system
 	 * @param deviceType a String representing the client's {@link DeviceType}
 	 */
-	public Client(InetAddress address, String name, int dataPort, String id, 
+	public Client(String name, String id, 
 			String osName, String deviceType) {
-		this(address, name, dataPort, id, osName, DeviceType.valueOf(deviceType));
+		this(name, id, osName, DeviceType.valueOf(deviceType));
 	}
 	
 	/**
 	 * Creates a new {@link Client} instance with the given Information.
 	 * @param address the client's {@link InetAddress}
 	 * @param name the client's name
-	 * @param dataPort the port on which the client is listening for incoming data tranmissions
 	 * @param id the client's id (from {@link NetworkEnvironmentSettings}
 	 * @param osName the name of the client's operating system
 	 * @param deviceType the client's {@link DeviceType}
 	 */
-	public Client(InetAddress address, String name, int dataPort, String id, 
+	public Client(String name, String id, 
 			String osName, DeviceType deviceType) {
-		this.ADDRESS = address;
-		this.NAME = name;
-		this.ID = id;
-		this.DATA_PORT = dataPort;
-		this.OS_NAME = osName;
-		this.DEVEICE_TYPE = deviceType;
+		this.name = name;
+		this.id = id;
+		this.osName = osName;
+		this.deviceType = deviceType;
+	}
+	
+	
+	public void setAddressForProvider(EnvironmentProvider provider, Object address) {
+		this.addresses.put(provider, address);
 	}
 	
 	/**
-	 * Returns the client's {@link InetAddress}.
-	 * @return The client's {@link InetAddress}
+	 * Returns the client's address for the given type of {@link EnvironmentProvider}.
+	 * @return The client's address for the given type of {@link EnvironmentProvider}
 	 */
-	public InetAddress getAddress() {
-		return ADDRESS;
+	public Object getAddress(EnvironmentProvider provider) {
+		return this.addresses.get(provider);
+	}
+	
+	public List<EnvironmentProvider> getAllProviders() {
+		return new ArrayList<EnvironmentProvider>(this.addresses.keySet());
+	}
+	
+	public void removeAddressForProvider(EnvironmentProvider provider) {
+		this.addresses.remove(provider);
+	}
+	
+	public EnvironmentProvider getBestProvider() {
+		if(this.addresses.keySet().size() <= 0)
+			return null;
+		
+		List<EnvironmentProvider> providers = new ArrayList<EnvironmentProvider>(this.addresses.keySet());
+		Collections.sort(providers);
+		
+		return providers.get(0);
 	}
 	
 	/**
@@ -80,23 +100,15 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @return The client's name.
 	 */
 	public String getName() {
-		return NAME;
+		return this.name;
 	}
-	
-	/**                                                              
-	 * Returns the port on which the client is listening for incoming data transmissions.                        
-	 * @return the port on which the client is listening for incoming data transmissions   
-	 */                                                              
-	public int getDataPort() {
-		return this.DATA_PORT;
-	}
-	
+
 	/**                                                              
 	 * Returns the client's id.                        
 	 * @return the client's id
 	 */                                                              
 	public String getId() {
-		return this.ID;
+		return this.id;
 	}
 	
 	/**                                                              
@@ -104,7 +116,7 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @return the name of the client's os    
 	 */                                                              
 	public String getOsName() {
-		return this.OS_NAME;
+		return this.osName;
 	}
 
 	/**
@@ -112,7 +124,7 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @return  the client's {@link DeviceType}.
 	 */
 	public DeviceType getDeviceType() {
-		return this.DEVEICE_TYPE;
+		return this.deviceType;
 	}
 
 	/**
@@ -165,8 +177,7 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @throws Exception
 	 */
 	public void sendData(InputStream inputStream, long inputStreamLength, String sourceName, EncryptionType encryptionType, byte[] encryptionKey) throws Exception {
-		new DataSender(inputStream, inputStreamLength, sourceName, encryptionType, encryptionKey, this.getDataPort(), this.getAddress())
-			.startTransmission();
+		//Order DataProviders from ADDRESSES by their excellence and try all until one is able to send the data
 	}
 	
 	/**
@@ -174,17 +185,11 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param source the {@link Client} to copy all values from.
 	 */
 	public void copy(Client source) {
-		try {
-			Field[] fields = Client.class.getDeclaredFields();
-			
-			for(Field f : fields) {
-				if(!Modifier.isFinal(f.getModifiers())) 
-					f.set(this, f.get(source));
-			}
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}	
+		this.addresses.putAll(source.addresses);
+		this.deviceType = source.deviceType;
+		this.id = source.id;
+		this.name = source.name;
+		this.osName = source.osName;
 	}
 	
 	@Override
@@ -219,22 +224,13 @@ public class Client implements Comparable<Client>, Serializable {
 		
 		Client c = (Client) obj;
 		
-		try {
-			Field[] fields = Client.class.getDeclaredFields();
-			
-			for(Field f : fields) {
-				if(!Modifier.isStatic(f.getModifiers()))
-					if(!f.get(this).equals(f.get(c)))
-						return false;
-				
-			}
-			
-			return true;
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+		boolean equal = true;
+		equal &= this.getDeviceType().equals(c.getDeviceType());
+		equal &= this.getId().equals(c.getId());
+		equal &= this.getName().equals(c.getName());
+		equal &= this.getOsName().equals(c.getOsName());
+		
+		return equal;
 	}
 
 	@Override
