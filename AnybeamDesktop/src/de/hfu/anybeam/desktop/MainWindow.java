@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JList;
@@ -12,6 +13,11 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
+
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionListener;
@@ -23,17 +29,43 @@ import java.io.InputStream;
 public class MainWindow {
 
 	private JFrame frame;
+	private SearchWindow search;
 
 	/**
 	 * Create the application.
 	 */
 	public MainWindow() {
+		//Set Design to System Default
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
+		
+		//Initialize Network Environment Listener
+		search = new SearchWindow();
+		try {
+			NetworkEnvironmentManager.addNetworkEnvironmentListener(search);
+			NetworkEnvironmentManager.getNetworkEnvironment().startClientSearch(365, TimeUnit.DAYS, 10, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		//Add shutdown hook to stop Network Environment Listener
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				try {
+					NetworkEnvironmentListener listener = NetworkEnvironmentManager.getNetworkEnvironment().getNetworkEnvironmentListener(0);
+					NetworkEnvironmentManager.removeNetworkEnvironmentListener(listener);
+					NetworkEnvironmentManager.getNetworkEnvironment().cancelClientSearch();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
 		initialize();
 	}
 	
@@ -53,7 +85,16 @@ public class MainWindow {
 		frame.setBounds(100, 100, 420, 320);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new MigLayout("", "[20px:n][150px:n][grow][150px:n][20px:n]", "[23px][][][][grow]"));
+		frame.getContentPane().setLayout(new MigLayout("", "[20px:n][150px:n][grow][150px:n][20px:n]", "[23px][][][][grow][]"));
+		frame.setVisible(true);
+		
+		//place Window in the bottom right corner
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
+        Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
+        int x = (int) rect.getMaxX() - frame.getWidth();
+        int y = (int) rect.getMaxY() - frame.getHeight();
+        frame.setLocation(x, y);
 				
 		JButton btnClipboard = new JButton(language.getString("beamClipboard"));
 		btnClipboard.addActionListener(new ActionListener() {
@@ -64,8 +105,7 @@ public class MainWindow {
 			                .getSystemClipboard().getData(DataFlavor.stringFlavor)).getBytes());
 					System.out.println((String) Toolkit.getDefaultToolkit()
 			                .getSystemClipboard().getData(DataFlavor.stringFlavor));
-					SearchWindow window = new SearchWindow(clipboard);
-					window.getFrame().setVisible(true);
+					search.beam(clipboard);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -83,6 +123,15 @@ public class MainWindow {
 		
 		JList list = new JList();
 		frame.getContentPane().add(list, "cell 0 2 5 3,grow");
+		
+		JButton btnSettings = new JButton(language.getString("settings"));
+		btnSettings.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SettingsWindow window = new SettingsWindow();
+				window.getFrame().setVisible(true);
+			}
+		});
+		frame.getContentPane().add(btnSettings, "cell 3 5,growx,aligny top");
 	}
 
 }

@@ -26,29 +26,15 @@ public class SearchWindow implements NetworkEnvironmentListener {
 	/**
 	 * Create the application.
 	 */
-	public SearchWindow(InputStream data) {
+	public SearchWindow() {
+		clientList = new JList();
+		clientList.setFixedCellHeight(70);
+	}
+	
+	public void beam(InputStream data){
 		this.data = data;
-		try {
-			NetworkEnvironmentManager.addNetworkEnvironmentListener(this);
-			NetworkEnvironmentManager.getNetworkEnvironment().startClientSearch(365, TimeUnit.DAYS, 10, TimeUnit.SECONDS);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 		initialize();
-		
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				try {
-					NetworkEnvironmentListener listener = NetworkEnvironmentManager.getNetworkEnvironment().getNetworkEnvironmentListener(0);
-					NetworkEnvironmentManager.removeNetworkEnvironmentListener(listener);
-					NetworkEnvironmentManager.getNetworkEnvironment().cancelClientSearch();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		frame.setVisible(true);
 	}
 
 	/**
@@ -64,10 +50,7 @@ public class SearchWindow implements NetworkEnvironmentListener {
 		frame.setBounds(100, 100, 300, 512);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
-		
-		clientList = new JList();
-		clientList.setFixedCellHeight(70);
-		
+				
 		clientList.addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent evt) {
 		    	
@@ -86,10 +69,6 @@ public class SearchWindow implements NetworkEnvironmentListener {
 		    
 		frame.getContentPane().add(clientList);
 
-	}
-	
-	public JFrame getFrame() {
-		return frame;
 	}
 	
 	private void updateView() {
