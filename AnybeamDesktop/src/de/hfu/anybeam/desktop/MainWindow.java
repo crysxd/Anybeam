@@ -36,12 +36,12 @@ public class MainWindow {
 	 */
 	public MainWindow() {
 		//Set Design to System Default
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//		} catch (ClassNotFoundException | InstantiationException
+//				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+//			e.printStackTrace();
+//		}
 		
 		//Initialize Network Environment Listener
 		search = new SearchWindow();
@@ -100,12 +100,12 @@ public class MainWindow {
 		btnClipboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					InputStream clipboard = new ByteArrayInputStream(
-							((String) Toolkit.getDefaultToolkit()
-			                .getSystemClipboard().getData(DataFlavor.stringFlavor)).getBytes());
-					System.out.println((String) Toolkit.getDefaultToolkit()
-			                .getSystemClipboard().getData(DataFlavor.stringFlavor));
-					search.beam(clipboard);
+//					InputStream clipboard = new ByteArrayInputStream(
+//							((String) Toolkit.getDefaultToolkit()
+//			                .getSystemClipboard().getData(DataFlavor.stringFlavor)).getBytes());
+//					System.out.println((String) Toolkit.getDefaultToolkit()
+//			                .getSystemClipboard().getData(DataFlavor.stringFlavor));
+					search.beam("test");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

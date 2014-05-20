@@ -10,18 +10,18 @@ import javax.swing.ListCellRenderer;
 
 import de.hfu.anybeam.networkCore.Client;
 
-public class ClientRenderer implements ListCellRenderer<Client>  {
+public class ClientRenderer implements ListCellRenderer  {
 	
 	protected DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
 
 	@Override
-	public Component getListCellRendererComponent(JList list, Client client, int index, 
+	public Component getListCellRendererComponent(JList list, Object client, int index, 
 			boolean isSelected, boolean cellHasFocus) {
 		
 		JLabel renderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, client, index, isSelected, cellHasFocus);
 		
-		renderer.setText(client.getName());
-		renderer.setIcon(DeviceIconUtils.getIconForDeviceType(client.getDeviceType()));
+		renderer.setText(((Client) client).getName());
+		renderer.setIcon(DeviceIconUtils.getIconForDeviceType(((Client) client).getDeviceType()));
 		renderer.setSize(new Dimension(100, 70));
 		
 		return renderer;

@@ -57,6 +57,7 @@ public abstract class AbstractTransmission extends Thread {
 
 	@Override
 	public void run() {
+		System.out.println("ok");
 		try {
 			this.lastTransmittedLengthIncrease = System.nanoTime();
 			this.transmit();
@@ -64,6 +65,8 @@ public abstract class AbstractTransmission extends Thread {
 				this.ADAPTER.transmissionDone(this.createTransmissionEvent(null));
 
 		} catch(Exception e) {
+			e.printStackTrace();
+			
 			this.isCanceled = true;
 			
 			if(this.ADAPTER != null)

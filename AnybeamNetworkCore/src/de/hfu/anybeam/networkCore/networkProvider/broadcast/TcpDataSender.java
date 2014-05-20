@@ -117,6 +117,7 @@ public class TcpDataSender extends AbstractTransmission {
 		this.socket = new Socket();
 		this.socket.connect(new InetSocketAddress(this.RECEIVER_ADDRESS, this.RECEIVER_PORT));  
 
+		System.out.println("Connected");
 		//Create encryption stream if necessary
 		if(this.ENCRYPTION_TYPE != EncryptionType.NONE) {
 			//Create cipher
@@ -138,6 +139,9 @@ public class TcpDataSender extends AbstractTransmission {
 
 		if(this.ID != null)
 			header.put("ID", this.ID);
+		
+		System.out.println("ID:" + this.ID);
+
 
 		this.outputStream.write(header.generateUrlString().getBytes());
 		this.outputStream.write('\n');
@@ -153,6 +157,7 @@ public class TcpDataSender extends AbstractTransmission {
 				this.increaseTransmittedLength(transmittedInCurrentInterval);
 				transmittedInCurrentInterval = 0;
 			}
+			System.out.println("sending");
 
 		}
 		

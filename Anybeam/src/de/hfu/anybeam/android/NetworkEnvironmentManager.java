@@ -37,7 +37,8 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		if(networkEnvironment == null) {
 			networkEnvironment = new NetworkEnvironment(loadNetworkEnvironmentSettings(c));
 			new LocalNetworkProvider(networkEnvironment, 1339, 1338);
-
+			new AndroidDataReceiver(c);
+			//TODO Merken+Disposen
 
 			if(listeners != null) {
 				networkEnvironment.addAllNetworkEnvironmentListeners(listeners);

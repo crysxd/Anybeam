@@ -21,7 +21,7 @@ public class SearchWindow implements NetworkEnvironmentListener {
 
 	private JFrame frame;
 	private JList clientList;
-	private InputStream data;
+	private String data;
 
 	/**
 	 * Create the application.
@@ -31,7 +31,7 @@ public class SearchWindow implements NetworkEnvironmentListener {
 		clientList.setFixedCellHeight(70);
 	}
 	
-	public void beam(InputStream data){
+	public void beam(String data){
 		this.data = data;
 		initialize();
 		frame.setVisible(true);

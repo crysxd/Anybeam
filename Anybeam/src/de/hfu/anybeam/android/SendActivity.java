@@ -23,8 +23,10 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
+import de.hfu.anybeam.networkCore.AbstractTransmissionAdapter;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
+import de.hfu.anybeam.networkCore.TransmissionEvent;
 
 public class SendActivity extends ListActivity implements NetworkEnvironmentListener {
 	
@@ -218,9 +220,35 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 				try {					
 					Client c = (Client) clientList.getItemAtPosition(position);
 					String s =  intent.getStringExtra(Intent.EXTRA_TEXT);
+					Log.i("Clicked", "Clicked!!!!!!!!!!!!!!!!!!!!");
 					c.sendData(new ByteArrayInputStream(s.getBytes()), 
-							NetworkEnvironmentManager.loadNetworkEnvironmentSettings(SendActivity.this));
-					Log.i("Client", c.toString());
+							NetworkEnvironmentManager.loadNetworkEnvironmentSettings(SendActivity.this), new AbstractTransmissionAdapter() {
+								
+								@Override
+								public void transmissionStarted(TransmissionEvent e) {
+									Log.i("Transmission", "Started");
+									
+								}
+								
+								@Override
+								public void transmissionProgressChanged(TransmissionEvent e) {
+									// TODO Auto-generated method stub
+									
+								}
+								
+								@Override
+								public void transmissionFailed(TransmissionEvent e) {
+									// TODO Auto-generated method stub
+									
+								}
+								
+								@Override
+								public void transmissionDone(TransmissionEvent e) {
+									Log.i("Transmission", "Done");
+									
+								}
+							});
+					
 				} catch (IndexOutOfBoundsException e) {
 					Log.w("ClientList", "ClientList is Empty");
 				} catch (Exception e) {

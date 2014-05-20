@@ -133,8 +133,8 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
 	 * @throws Exception
 	 */
-	public void sendData(InputStream inputStream, NetworkEnvironmentSettings settings) throws Exception {
-		this.sendData(inputStream, -1, settings);
+	public void sendData(InputStream inputStream, NetworkEnvironmentSettings settings, AbstractTransmissionAdapter adapter) throws Exception {
+		this.sendData(inputStream, -1, settings, adapter);
 	}
 	
 	/**
@@ -144,8 +144,8 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
 	 * @throws Exception
 	 */
-	public void sendData(InputStream inputStream, long inputStreamLength, NetworkEnvironmentSettings settings) throws Exception {
-		this.sendData(inputStream, inputStreamLength, "unknown", settings);
+	public void sendData(InputStream inputStream, long inputStreamLength, NetworkEnvironmentSettings settings, AbstractTransmissionAdapter adapter) throws Exception {
+		this.sendData(inputStream, inputStreamLength, "unknown", settings, adapter);
 	}
 	
 	/**
@@ -156,7 +156,7 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
 	 * @throws Exception
 	 */
-	public void sendData(InputStream inputStream, long inputStreamLength, String sourceName, NetworkEnvironmentSettings settings) throws Exception {
+	public void sendData(InputStream inputStream, long inputStreamLength, String sourceName, NetworkEnvironmentSettings settings, AbstractTransmissionAdapter adapter) throws Exception {
 		if(settings == null)
 			throw new IllegalArgumentException("The given NetworkEnvironmentSettings are null. "
 					+ "This can happen if the corresponding NetworkEnvironment for this Client's group "
@@ -164,7 +164,7 @@ public class Client implements Comparable<Client>, Serializable {
 					+ "NetworkEnvironmentSettings invoking sendData(InputStream, inputStreamSize, sourceName, "
 					+ "NetworkEnvironmentSettings). ");
 		
-		this.sendData(inputStream, inputStreamLength, sourceName, settings.getEncryptionType(), settings.getEncryptionKey());
+		this.sendData(inputStream, inputStreamLength, sourceName, settings.getEncryptionType(), settings.getEncryptionKey(), adapter);
 	}
 	
 	/**
@@ -176,8 +176,10 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param encryptionKey the key to encrypt the data or null if no encryption is used
 	 * @throws Exception
 	 */
-	public void sendData(InputStream inputStream, long inputStreamLength, String sourceName, EncryptionType encryptionType, byte[] encryptionKey) throws Exception {
-		//Order DataProviders from ADDRESSES by their excellence and try all until one is able to send the data
+	public void sendData(InputStream inputStream, long inputStreamLength, String sourceName, EncryptionType encryptionType, byte[] encryptionKey, AbstractTransmissionAdapter adapter) throws Exception {
+		EnvironmentProvider p = getBestProvider();
+		System.out.println("sendData");
+		p.sendData(this, inputStream, inputStreamLength, sourceName, adapter);
 	}
 	
 	/**
