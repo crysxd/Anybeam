@@ -24,6 +24,11 @@
     <string name="default_port_broadcast">1337</string>
     <string name="default_encyption_type">AES128</string>
     <string name="default_device_type">TYPE_SMARTPHONE</string>
+    <string name="settings_pref_group_password">Group Password</string>
+    <string name="settings_pref_data_port">Data Port</string>
+    <string name="settings_pref_broadcast_port">Broadcast Port</string>
+    <string name="settings_pref_error_title">Invalid Port</string>
+    <string name="settings_pref_error_message">The port must be an integer between 1024 and 65535</string>
     
 
 </resources>

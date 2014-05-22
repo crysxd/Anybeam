@@ -9,14 +9,27 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import de.hfu.anybeam.android.utils.DeviceIconUtils;
 import de.hfu.anybeam.networkCore.Client;
 
+/**
+ * Adapter to fill the client listview with entrys
+ * @author preussjan
+ * @since 1.0
+ * @version 1.0
+ */
 public class ClientAdapter extends ArrayAdapter<Client> {
 
+	/**
+	 * Constructor
+	 * @param context the application {@link Context}
+	 * @param clients list of current found clients
+	 */
 	public ClientAdapter(Context context, ArrayList<Client> clients) {
 		super(context, R.layout.client_item, clients);
 	}
 	
+	//Modifyed getCount() to call getView() even if there are no clients 
 	@Override
 	public int getCount() {
 		int count = super.getCount();
@@ -32,7 +45,7 @@ public class ClientAdapter extends ArrayAdapter<Client> {
 					R.layout.client_item, parent, false);
 		}
 		
-		//Checks if there are no devices
+		//Checks if there are really no devices
 		if (super.getCount() == 0) {
 			convertView = LayoutInflater.from(getContext()).inflate(
 					R.layout.client_not_found, parent, false);

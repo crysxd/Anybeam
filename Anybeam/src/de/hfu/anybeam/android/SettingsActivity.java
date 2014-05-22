@@ -5,6 +5,12 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
+/**
+ * Empty Activity to hold the {@link SettingsFragment}
+ * @author preussjan
+ * @since 1.0
+ * @version 1.0
+ */
 public class SettingsActivity extends PreferenceActivity {
 
     @Override

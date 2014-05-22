@@ -6,7 +6,9 @@ import java.util.concurrent.Executors;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,30 +17,52 @@ import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
 import de.hfu.anybeam.networkCore.networkProvider.broadcast.TcpDataReceiver;
 
+/**
+ * Receiver to handle incoming data transmissions. 
+ * @author preussjan, chwuer
+ * @since 1.0
+ * @version 1.0
+ */
 public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter {
 	private Context context;
+	private TcpDataReceiver reciver;
 		
-	public AndroidDataReceiver(Context c) {
-		
-		this.context = c.getApplicationContext();
+	/**
+	 * Creates a new AndroidDataReceiver which starts a
+	 * @param context the application {@link Context}
+	 */
+	public AndroidDataReceiver(Context context) {
+			
+		this.context = context.getApplicationContext();
 		
 		NetworkEnvironmentSettings settings;
 		try {
 			settings = NetworkEnvironmentManager
-					.getNetworkEnvironment(c).getNetworkEnvironmentSettings();
-			Runnable r = new TcpDataReceiver(
+					.getNetworkEnvironment(context).getNetworkEnvironmentSettings();
+			//generate reciever from settings
+//			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+//			reciver = new TcpDataReceiver(
+//					settings.getEncryptionType(),
+//					settings.getEncryptionKey(), 
+//					Integer.parseInt(prefs.getString("port_data", c.getString(R.string.default_port_data))), 
+//					this);
+
+			reciver = new TcpDataReceiver(
 					settings.getEncryptionType(),
 					settings.getEncryptionKey(), 
-					1338, 
+					1338, //TODO Load form Preferences
 					this);
-			Executors.newSingleThreadExecutor().execute(r);
+			Executors.newSingleThreadExecutor().execute(reciver);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Disposes this  {@link AndroidDataReceiver} object and all its resources.
+	 */
 	public void dispose() {
-		//TODO TcpDataReciver disposen
+		this.reciver.dispose();
 	}
 
 	@Override

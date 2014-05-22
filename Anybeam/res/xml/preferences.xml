@@ -24,19 +24,17 @@
             android:defaultValue="@string/default_port_broadcast"
             android:inputType="numberDecimal"
             android:key="port_broadcast"
-            android:summary="Set port at which the device sends and listens to broadcasts"
-            android:title="Broadcast Port" />
+            android:title="@string/settings_pref_broadcast_port" />
         <EditTextPreference
             android:key="group_password"
             android:summary="Set the group encryption password"
-            android:title="Group Password" />
+            android:title="@string/settings_pref_group_password" />
 
         <ListPreference
             android:defaultValue="@string/default_encyption_type"
             android:entries="@array/encyption_type"
             android:entryValues="@array/encyption_type_key"
             android:key="group_encryption_type"
-            android:summary="Choose which encryption type should be used"
             android:title="Encryption type" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -49,8 +47,7 @@
             android:defaultValue="@string/default_port_data"
             android:inputType="numberDecimal"
             android:key="port_data"
-            android:summary="Set port at which the device recieves data"
-            android:title="Data Port" />
+            android:title="@string/settings_pref_data_port" />
 
         <ListPreference
             android:defaultValue="@string/default_device_type"

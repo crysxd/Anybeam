@@ -1,5 +1,6 @@
 package de.hfu.anybeam.android;
 
+import de.hfu.anybeam.android.utils.ClipboardUtils;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 import android.app.Activity;
 import android.app.AlertDialog;
