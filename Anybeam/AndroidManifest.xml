@@ -28,7 +28,7 @@
         </activity>
         <activity
             android:name="de.hfu.anybeam.android.SendActivity"
-            android:label="@string/share_title" >
+            android:label="@string/send_title" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 

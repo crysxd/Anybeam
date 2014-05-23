@@ -14,11 +14,11 @@
 
     <PreferenceCategory
         android:key="group_settings"
-        android:title="Group Settings" >
+        android:title="@string/settings_category_group" >
         <Preference
             android:enabled="false"
             android:selectable="false"
-            android:summary="All group settings must be the same on all your devices." />
+            android:summary="@string/settings_category_group_summary" />
 
         <EditTextPreference
             android:defaultValue="@string/default_port_broadcast"
@@ -27,7 +27,7 @@
             android:title="@string/settings_pref_broadcast_port" />
         <EditTextPreference
             android:key="group_password"
-            android:summary="Set the group encryption password"
+            android:summary="@string/settings_pref_group_password_summary"
             android:title="@string/settings_pref_group_password" />
 
         <ListPreference
@@ -35,14 +35,14 @@
             android:entries="@array/encyption_type"
             android:entryValues="@array/encyption_type_key"
             android:key="group_encryption_type"
-            android:title="Encryption type" />
+            android:title="@string/settings_pref_encryption_type" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="client_settings"
-        android:title="Client Settings" >
+        android:title="@string/settings_category_client" >
         <EditTextPreference
             android:key="client_name"
-            android:title="Client Name" />
+            android:title="@string/settings_pref_client_name" />
         <EditTextPreference
             android:defaultValue="@string/default_port_data"
             android:inputType="numberDecimal"
@@ -54,34 +54,36 @@
             android:entries="@array/device_type"
             android:entryValues="@array/device_type_key"
             android:key="client_type"
-            android:title="Device Type" />
+            android:title="@string/settings_pref_device_type" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="general_settings"
-        android:title="General Preferences" >
+        android:title="@string/settings_category_general" >
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="gen_auto_clipboard"
-            android:summary="Share clipboard between devices"
-            android:title="Auto Clipboard" />
+            android:summary="@string/settings_pref_auto_clipboard_summary"
+            android:title="@string/settings_pref_auto_clipboard" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="About" >
+    <PreferenceCategory android:title="@string/settings_category_about" >
         <Preference
             android:enabled="false"
             android:selectable="false"
-            android:summary="Creadet and developed by Christian Würthner und Jan-Henrik Preuß Furtwangen university 2014"
-            android:title="Any Beam" />
+            android:summary="@string/settings_category_about_summary"
+            android:title="@string/app_name" />
 
-        <PreferenceScreen android:title="Icons" >
+        <PreferenceScreen android:title="@string/settings_category_icons" >
             <Preference
                 android:summary="Some Text about our beautiful icons :D"
-                android:title="Icons" />
+                android:title="@string/settings_category_icons" />
         </PreferenceScreen>
+        
         <PreferenceScreen android:title="Legal Notices" >
             <Preference
                 android:summary="LEGALBAHBAH"
-                android:title="Icons" />
+                android:title="@string/settings_category_icons" />
         </PreferenceScreen>
+        
     </PreferenceCategory>
 
 </PreferenceScreen>

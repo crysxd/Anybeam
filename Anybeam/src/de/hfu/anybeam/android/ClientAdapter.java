@@ -55,7 +55,7 @@ public class ClientAdapter extends ArrayAdapter<Client> {
 					.findViewById(R.id.tvDeviceNotFound);
 
 			// Populate the data into the template view using the data object
-			tv.setText(R.string.noclients);
+			tv.setText(R.string.send_clients_not_found);
 			
 			// Return the completed view to render on screen
 			return convertView;

@@ -7,7 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.ListActivity;
 import android.content.Context;
@@ -40,6 +42,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	private ListView clientList;
 	private Intent intent;
 	private InputStream data;
+	private String dataType;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +96,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	    String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
 	    if (sharedText != null) {
 	    	this.data = new ByteArrayInputStream(sharedText.getBytes());
-
+	    	this.dataType = "*clipboard";
 	        Toast.makeText(this, sharedText, Toast.LENGTH_SHORT).show();
 	    }
 	}
@@ -103,10 +106,10 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	    if (imageUri != null) {
 	        try {
 				this.data = new FileInputStream(new File(getRealPathFromURI(this, imageUri)));
+				this.dataType = getFilenameFromURI(this, imageUri);
+				Toast.makeText(this, dataType, Toast.LENGTH_SHORT).show();				
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
-				Toast.makeText(this, "Fehlermeldung Fehlt!" + imageUri.getPath(), Toast.LENGTH_SHORT).show();
-				finish();
 			} 
 	    }
 	}
@@ -165,7 +168,8 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 			@Override
 			public void run() {
 				try {
-					ArrayList<Client> l = new ArrayList<Client> (NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).getClientList());
+					ArrayList<Client> l = new ArrayList<Client> (NetworkEnvironmentManager
+							.getNetworkEnvironment(SendActivity.this).getClientList());
 					setListAdapter(new ClientAdapter(getApplicationContext(), l));
 
 				} catch (Exception e) {
@@ -206,20 +210,27 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 		
 	}
 	
-	public String getRealPathFromURI(Context context, Uri contentUri) {
-		  Cursor cursor = null;
-		  try { 
-		    String[] proj = { MediaStore.Images.Media.DATA };
-		    cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-		    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-		    cursor.moveToFirst();
-		    return cursor.getString(column_index);
-		  } finally {
-		    if (cursor != null) {
-		      cursor.close();
-		    }
-		  }
+	private String getRealPathFromURI(Context context, Uri contentUri) {
+		Cursor cursor = null;
+		try {
+			String[] proj = { MediaStore.Images.Media.DATA };
+			cursor = context.getContentResolver().query(contentUri, proj, null,
+					null, null);
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			return cursor.getString(column_index);
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
 		}
+	}
+	
+	private String getFilenameFromURI(Context context, Uri contentUri) {
+		return getRealPathFromURI(context, contentUri).replaceAll("(.*[\\/])", "");
+	}
+	
 		
 	private void setListener() {
 		clientList.setOnItemLongClickListener(new OnItemLongClickListener() {
@@ -250,36 +261,39 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 				try {					
 					Client c = (Client) clientList.getItemAtPosition(position);
 					String s =  intent.getStringExtra(Intent.EXTRA_TEXT);
-					c.sendData(data,
-							s.length(), 
-							"*clipboard", 
-							NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this), 
-							new AbstractTransmissionAdapter() {
+					c.sendData(
+						data,
+						s.length(), 
+						dataType, 
+						NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this), 
+						new AbstractTransmissionAdapter() {
 								
-								@Override
-								public void transmissionStarted(TransmissionEvent e) {
-									Log.i("Transmission", "Started");
-									
-								}
+							@Override
+							public void transmissionStarted(TransmissionEvent e) {
+								Log.i("Transmission", "Started");
 								
-								@Override
-								public void transmissionProgressChanged(TransmissionEvent e) {
-									// TODO Auto-generated method stub
-									
-								}
+							}
+							
+							@Override
+							public void transmissionProgressChanged(TransmissionEvent e) {
+								// TODO Auto-generated method stub
 								
-								@Override
-								public void transmissionFailed(TransmissionEvent e) {
-									// TODO Auto-generated method stub
-									
-								}
+							}
+							
+							@Override
+							public void transmissionFailed(TransmissionEvent e) {
+								// TODO Auto-generated method stub
 								
-								@Override
-								public void transmissionDone(TransmissionEvent e) {
-									Log.i("Transmission", "Done");
-									
-								}
+							}
+							
+							@Override
+							public void transmissionDone(TransmissionEvent e) {
+								Log.i("Transmission", "Done");
+								
+							}
 							});
+					
+					//Close Activity after Sending
 					finish();
 				} catch (IndexOutOfBoundsException e) {
 					Log.w("ClientList", "ClientList is Empty");

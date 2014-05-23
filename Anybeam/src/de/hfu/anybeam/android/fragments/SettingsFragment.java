@@ -35,10 +35,10 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				String key = (String) newValue;
 				if (!isPort(key)) {
-	        		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        		builder.setTitle(R.string.settings_pref_error_title);
-	        		builder.setMessage(R.string.settings_pref_error_message);
-	        		builder.setPositiveButton(android.R.string.ok, null);
+	        		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+	        			.setTitle(R.string.settings_pref_port_error_title)
+	        			.setMessage(R.string.settings_pref_port_error_message)
+	        			.setPositiveButton(android.R.string.ok, null);
 	        		builder.show();
 	        		return false;				
 				}				

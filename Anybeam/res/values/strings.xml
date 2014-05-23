@@ -2,21 +2,16 @@
 <resources>
 
     <string name="app_name">Anybeam</string>
-    <string name="share_title">Anybeam - Share</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_refresh">Reload client list</string>
     <string name="replaceMe">Replace Me</string>
-    <string name="device_icon">Device Icon</string>
-    <string name="warning_icon">Warning Icon</string>
-    <string name="adress">IP-Address:</string>
-    <string name="group">Group:</string>
-    <string name="id">ID:</string>
-    <string name="os">OS:</string>
-    <string name="noclients">No Clients Found</string>
-    <string name="click_to_share">Tap to beam clipboard</string>
+    <string name="menu_action_settings">Settings</string>
+    <string name="menu_action_refresh">Reload client list</string>
+    <string name="icon_device">Device Icon</string>
+    <string name="info_adress">IP-Address:</string>
+    <string name="info_group">Group:</string>
+    <string name="info_id">ID:</string>
+    <string name="info_os">OS:</string>
+    <string name="main_click_to_share">Tap to beam clipboard</string>
     <string name="main_instruction">Use the share button in other apps to beam data</string>
-    <string name="settings_title">Settings</string>
-    <string name="send_clipboard_error">The clipboard dose not contain text to beam</string>
     <string name="action_settings_clipboard_remove">Clear Clipboard</string>
     <string name="action_settings_clipboard_set">Set Clipboard</string>
     <string name="default_client_name">Android</string>
@@ -24,11 +19,29 @@
     <string name="default_port_broadcast">1337</string>
     <string name="default_encyption_type">AES128</string>
     <string name="default_device_type">TYPE_SMARTPHONE</string>
-    <string name="settings_pref_group_password">Group Password</string>
-    <string name="settings_pref_data_port">Data Port</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_category_group">Group Settings</string>
+    <string name="settings_category_group_summary">All group settings must be the same on all your devices.</string>
     <string name="settings_pref_broadcast_port">Broadcast Port</string>
-    <string name="settings_pref_error_title">Invalid Port</string>
-    <string name="settings_pref_error_message">The port must be an integer between 1024 and 65535</string>
+    <string name="settings_pref_group_password">Group Password</string>
+    <string name="settings_pref_group_password_summary">Set the group encryption password</string>
+    <string name="settings_pref_encryption_type">Encryption type</string>
+    <string name="settings_category_client">Client Settings</string>
+    <string name="settings_pref_client_name">Client Name</string>
+    <string name="settings_pref_data_port">Data Port</string>
+    <string name="settings_pref_device_type">Device Type</string>
+    <string name="settings_category_general">General Preferences</string>
+    <string name="settings_pref_auto_clipboard">Auto Clipboard</string>
+    <string name="settings_pref_auto_clipboard_summary">Share clipboard between devices</string>
+    <string name="settings_category_about">About</string>
+    <string name="settings_category_about_summary">Creadet and developed by Christian Würthner und Jan-Henrik Preuß Furtwangen university 2014</string>
+    <string name="settings_category_icons">Icons</string>    
+    <string name="settings_pref_port_error_title">Invalid Port</string>
+    <string name="settings_pref_port_error_message">The port must be an integer between 1024 and 65535</string>
+    <string name="send_title">Anybeam - Share</string>
+    <string name="send_clients_not_found">No Clients Found</string>
+    <string name="send_clipboard_error">The clipboard dose not contain text to beam</string>
+    <string name="send_image_error">Fehlermeldung Fehlt!</string>
     
 
 </resources>

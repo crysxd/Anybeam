@@ -151,7 +151,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		}
 		editor.commit();
 
-		EncryptionType type = EncryptionType.valueOf(prefs.getString("group_encryption_type", EncryptionType.AES256.toString()));
+//		EncryptionType type = EncryptionType.valueOf(prefs.getString("group_encryption_type", EncryptionType.AES256.toString()));
 		
 		//Create settings Object from SharedPreferences
 /*		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(

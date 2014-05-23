@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="@string/adress"
+        android:text="@string/info_adress"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/tvDeviceInfoGroupDesc"
-        android:text="@string/id"
+        android:text="@string/info_id"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/tvDeviceInfoIdDesc"
-        android:text="@string/os"
+        android:text="@string/info_os"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/tvDeviceInfoAddressDesc"
-        android:text="@string/group"
+        android:text="@string/info_group"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView

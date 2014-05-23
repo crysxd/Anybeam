@@ -846,8 +846,6 @@ public class NetworkEnvironment {
 				+ Arrays.toString(ENCRYPTION_KEY) + "]";
 	}
 	
-	//TODO BUILDER HERE
-	
 	/**
 	 * A class containing all necessary settings for an {@link NetworkEnvironment}
 	 * @author chrwuer
