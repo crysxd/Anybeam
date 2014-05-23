@@ -30,7 +30,7 @@ public class TcpDataSender extends AbstractTransmission {
 	//The receiver's data port
 	private final int RECEIVER_PORT;
 	
-	//The encrpytion key that will be used
+	//The encryption key that will be used
 	private final byte[] ENCRYPTION_KEY;
 	
 	//The EncryptionType that will be used
