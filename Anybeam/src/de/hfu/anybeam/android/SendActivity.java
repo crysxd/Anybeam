@@ -43,6 +43,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	private Intent intent;
 	private InputStream data;
 	private String dataType;
+	private long length;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	    if (sharedText != null) {
 	    	this.data = new ByteArrayInputStream(sharedText.getBytes());
 	    	this.dataType = "*clipboard";
+	    	this.length = sharedText.length();
 	        Toast.makeText(this, sharedText, Toast.LENGTH_SHORT).show();
 	    }
 	}
@@ -107,6 +109,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 	        try {
 				this.data = new FileInputStream(new File(getRealPathFromURI(this, imageUri)));
 				this.dataType = getFilenameFromURI(this, imageUri);
+				this.length = new File(getRealPathFromURI(this, imageUri)).length();
 				Toast.makeText(this, dataType, Toast.LENGTH_SHORT).show();				
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -260,10 +263,10 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 					int position, long id) {
 				try {					
 					Client c = (Client) clientList.getItemAtPosition(position);
-					String s =  intent.getStringExtra(Intent.EXTRA_TEXT);
+										
 					c.sendData(
 						data,
-						s.length(), 
+						length, 
 						dataType, 
 						NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this), 
 						new AbstractTransmissionAdapter() {

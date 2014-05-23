@@ -103,7 +103,7 @@ public class NetworkEnvironment {
 		this.DEVICE_TYPE = builder.deviceType;
 		this.ENCRYPTION_TYPE = builder.encryptionType;
 		this.ENCRYPTION_KEY = builder.encryptionKey;
-		this.OS_NAME = builder.localID;
+		this.OS_NAME = builder.osName;
 		this.LOCAL_ID = builder.localID;
 
 		this.registerOnNetwork();
@@ -867,7 +867,6 @@ public class NetworkEnvironment {
 		private byte[] encryptionKey;
 		
 		//the name of the os
-		@SuppressWarnings("unused")
 		private String osName = System.getProperty("os.name");
 		
 		//the id of the local device
