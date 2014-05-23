@@ -4,12 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.ListActivity;
 import android.content.Context;
@@ -30,7 +27,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
 import de.hfu.anybeam.networkCore.AbstractTransmissionAdapter;
 import de.hfu.anybeam.networkCore.Client;
@@ -40,10 +36,6 @@ import de.hfu.anybeam.networkCore.TransmissionEvent;
 public class SendActivity extends ListActivity implements NetworkEnvironmentListener {
 	
 	private ListView clientList;
-	private Intent intent;
-	private InputStream data;
-	private String dataType;
-	private long length;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,25 +47,8 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 
 		} catch (Exception e) {
 			e.printStackTrace();
-
 		}	
-			
-		intent = getIntent();
-	    String action = intent.getAction();
-	    String type = intent.getType();
-
-	    if (Intent.ACTION_SEND.equals(action) && type != null) {
-	        if ("text/plain".equals(type)) {
-	            handleSendText(intent); // Handle text being sent
-	        } else if (type.startsWith("image/")) {
-	            handleSendImage(intent); // Handle single image being sent
-	        }
-	    } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-	        if (type.startsWith("image/")) {
-	            handleSendMultipleImages(intent); // Handle multiple images being sent
-	        }
-	    }
-		
+					
 		clientList = this.getListView();
 		
 		this.setListener();
@@ -92,38 +67,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 			
 		}
 	}
-	
-	private void handleSendText(Intent intent) {
-	    String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-	    if (sharedText != null) {
-	    	this.data = new ByteArrayInputStream(sharedText.getBytes());
-	    	this.dataType = "*clipboard";
-	    	this.length = sharedText.length();
-	        Toast.makeText(this, sharedText, Toast.LENGTH_SHORT).show();
-	    }
-	}
-
-	private void handleSendImage(Intent intent) {
-	    Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-	    if (imageUri != null) {
-	        try {
-				this.data = new FileInputStream(new File(getRealPathFromURI(this, imageUri)));
-				this.dataType = getFilenameFromURI(this, imageUri);
-				this.length = new File(getRealPathFromURI(this, imageUri)).length();
-				Toast.makeText(this, dataType, Toast.LENGTH_SHORT).show();				
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} 
-	    }
-	}
-
-	private void handleSendMultipleImages(Intent intent) {
-	    ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-	    if (imageUris != null) {
-	        // Update UI to reflect multiple images being shared
-	    }
-	}
-	
+		
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
@@ -263,14 +207,45 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 					int position, long id) {
 				try {					
 					Client c = (Client) clientList.getItemAtPosition(position);
-										
-					c.sendData(
-						data,
-						length, 
-						dataType, 
-						NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this), 
-						new AbstractTransmissionAdapter() {
-								
+					Intent intent = getIntent();
+				    String action = intent.getAction();
+				    String type = intent.getType();
+				    
+				    Client.SenderBuilder builder = new Client.SenderBuilder();
+
+				    if (Intent.ACTION_SEND.equals(action) && type != null) {
+				        if ("text/plain".equals(type)) {
+				        	// Handle text being sent
+				        	String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+				    	    if (sharedText != null) {
+				    	    	builder.setInputStream(new ByteArrayInputStream(sharedText.getBytes()));
+				    	    	builder.setSourceName("*clipboard");
+				    	    	builder.setInputStreamLength(sharedText.length());
+				    	    }
+				        } else if (type.startsWith("image/")) { 
+				        	// Handle single image being sent
+			        	    Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+			        	    if (imageUri != null) {
+			        	        try {
+			        	        	builder.setInputStream(
+			        	        			new FileInputStream(
+			        	        					new File(getRealPathFromURI(getApplicationContext(), imageUri))));
+			        	        	builder.setSourceName(
+			        	        			getFilenameFromURI(getApplicationContext(), imageUri));
+			        	        	builder.setInputStreamLength(
+			        	        			new File(getRealPathFromURI(getApplicationContext(), imageUri)).length());
+			        			} catch (FileNotFoundException e) {
+			        				e.printStackTrace();
+			        			} 
+				        	}
+				        }
+				    } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+				        if (type.startsWith("image/")) {
+				            // Handle multiple images being sent
+				        }
+				    }
+				    
+					builder.setAdapter(	new AbstractTransmissionAdapter() {
 							@Override
 							public void transmissionStarted(TransmissionEvent e) {
 								Log.i("Transmission", "Started");
@@ -295,6 +270,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 								
 							}
 							});
+					builder.sendTo(c);
 					
 					//Close Activity after Sending
 					finish();

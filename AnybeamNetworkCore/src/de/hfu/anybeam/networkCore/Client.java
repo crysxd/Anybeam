@@ -1,5 +1,6 @@
 package de.hfu.anybeam.networkCore;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -126,61 +127,6 @@ public class Client implements Comparable<Client>, Serializable {
 	public DeviceType getDeviceType() {
 		return this.deviceType;
 	}
-
-	/**
-	 * Sends the data from the stream to the client.
-	 * @param inputStream the {@link InputStream} to send the data from
-	 * @param environment the {@link NetworkEnvironmentSettings} to get all necessary information from
-	 * @throws Exception
-	 */
-	public void sendData(InputStream inputStream, NetworkEnvironment environment, AbstractTransmissionAdapter adapter) throws Exception {
-		this.sendData(inputStream, -1, environment, adapter);
-	}
-	
-	/**
-	 * Sends the data from the stream to the client.
-	 * @param inputStream the {@link InputStream} to send the data from
-	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
-	 * @param environment the {@link NetworkEnvironmentSettings} to get all necessary information from
-	 * @throws Exception
-	 */
-	public void sendData(InputStream inputStream, long inputStreamLength, NetworkEnvironment environment, AbstractTransmissionAdapter adapter) throws Exception {
-		this.sendData(inputStream, inputStreamLength, "unknown", environment, adapter);
-	}
-	
-	/**
-	 * Sends the data from the stream to the client.
-	 * @param inputStream the {@link InputStream} to send the data from
-	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
-	 * @param sourceName the name of the source represented by inputStream e.g. the filename
-	 * @param environment the {@link NetworkEnvironmentSettings} to get all necessary information from
-	 * @throws Exception
-	 */
-	public void sendData(InputStream inputStream, long inputStreamLength, String sourceName, NetworkEnvironment environment, AbstractTransmissionAdapter adapter) throws Exception {
-		if(environment == null)
-			throw new IllegalArgumentException("The given NetworkEnvironmentSettings are null. "
-					+ "This can happen if the corresponding NetworkEnvironment for this Client's group "
-					+ "is not registered at NetworkCoreUtils. In this case you can provide a individual set of "
-					+ "NetworkEnvironmentSettings invoking sendData(InputStream, inputStreamSize, sourceName, "
-					+ "NetworkEnvironmentSettings). ");
-		
-		this.sendData(inputStream, inputStreamLength, sourceName, environment.getEncryptionType(), environment.getEncryptionKey(), adapter);
-	}
-	
-	/**
-	 * Sends the data from the stream to the client.
-	 * @param inputStream the {@link InputStream} to send the data from
-	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
-	 * @param sourceName the name of the source represented by inputStream e.g. the filename
-	 * @param encryptionType the {@link EncryptionType} to be used 
-	 * @param encryptionKey the key to encrypt the data or null if no encryption is used
-	 * @throws Exception
-	 */
-	public void sendData(InputStream inputStream, long inputStreamLength, String sourceName, EncryptionType encryptionType, byte[] encryptionKey, AbstractTransmissionAdapter adapter) throws Exception {
-		EnvironmentProvider p = getBestProvider();
-		System.out.println("sendData");
-		p.sendData(this, inputStream, inputStreamLength, sourceName, adapter);
-	}
 	
 	/**
 	 * Copies all values from the given source {@link Client}.
@@ -239,5 +185,103 @@ public class Client implements Comparable<Client>, Serializable {
 	public int compareTo(Client o) {
 		return this.getName().compareTo(o.getName());
 	}
+		
+	/**
+	 * Sends the data from the stream to the client.
+	 * @param builder the {@link SenderBuilder} used to send
+	 * @throws IOException
+	 */
+	private void sendData(SenderBuilder builder) throws IOException{
+		EnvironmentProvider p = getBestProvider();
+		System.out.println("sendData");
+		p.sendData(this, builder.inputStream, builder.inputStreamLength, builder.sourceName, builder.adapter);
+	}
+	
+	/**
+	 * Creates an Builder to send data to another client
+	 * @author preussjan
+	 * @since 1.0
+	 * @version 1.0
+	 */
+	public static class SenderBuilder {
+		private InputStream inputStream;
+		private long inputStreamLength = -1;
+		private String sourceName = "unknown"; 
+		private EncryptionType encryptionType; //TODO Is the Encryption currently used? Default value?
+		private byte[] encryptionKey; 
+		private AbstractTransmissionAdapter adapter;
 
+			
+		/**
+		 * Sets the {@link InputStream} to send
+		 * @param inputStream the {@link InputStream} to send the data from
+		 * @return the {@link SenderBuilder} object
+		 */
+		public SenderBuilder setInputStream(InputStream inputStream) {
+			this.inputStream = inputStream;
+			return this;
+		}
+		
+		/**
+		 * Sets the length of data to send
+		 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
+		 * @return the {@link SenderBuilder} object
+		 */
+		public SenderBuilder setInputStreamLength(long inputStreamLength) {
+			this.inputStreamLength = inputStreamLength;
+			return this;
+		}
+		
+		/**
+		 * Sets the name of the source
+		 * @param sourceName the name of the source represented by inputStream e.g. the filename
+		 * @return the {@link SenderBuilder} object
+		 */
+		public SenderBuilder setSourceName(String sourceName) {
+			this.sourceName = sourceName;
+			return this;
+		}
+		
+		/**
+		 * Sets the encryptionType
+		 * @param encryptionType the {@link EncryptionType} to be used 
+		 * @return the {@link SenderBuilder} object
+		 */
+		public SenderBuilder setEncryptionType(EncryptionType encryptionType) {
+			this.encryptionType = encryptionType;
+			return this;
+		}
+		 
+		/**
+		 * Sets the encryptionKey
+		 * @param encryptionKey the key to encrypt the data or null if no encryption is used
+		 * @return the {@link SenderBuilder} object
+		 */
+		public SenderBuilder setEncryptionKey(byte[] encryptionKey) {
+			this.encryptionKey = encryptionKey;
+			return this;
+		}
+		
+		/**
+		 * Sets the {@link AbstractDownloadTransmissionAdapter}
+		 * @param adapter the {@link AbstractDownloadTransmissionAdapter} for status updates
+		 * @return the {@link SenderBuilder} object
+		 */
+		public SenderBuilder setAdapter(AbstractTransmissionAdapter adapter) {
+			this.adapter = adapter;
+			return this;
+		}
+		
+		/**
+		 * Calls the sendData function from the given {@link Client}
+		 * @param c the client which receives the data
+		 * @throws IOException
+		 */
+		public void sendTo(Client c) throws IOException{
+			if (adapter == null || inputStream == null) 
+				throw new IllegalArgumentException("The required attributes are empty!");
+			
+			c.sendData(this);
+		}
+	}
 }
