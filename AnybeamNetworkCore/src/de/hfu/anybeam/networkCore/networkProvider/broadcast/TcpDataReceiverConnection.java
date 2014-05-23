@@ -126,6 +126,10 @@ class TcpDataReceiverConnection extends AbstractDownloadTransmission {
 	public void forceCloseTransmissionStream() throws IOException {
 		super.forceCloseTransmissionStream();
 		
+		if(this.getAdapter() != null && this.transmissionOutput != null)
+			((AbstractDownloadTransmissionAdapter)
+					this.getAdapter()).closeOutputStream(this.createTransmissionEvent(null), transmissionOutput);
+			
 		//Close input
 		if(this.INPUT != null)
 			this.INPUT.close();
