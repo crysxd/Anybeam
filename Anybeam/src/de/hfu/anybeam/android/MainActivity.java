@@ -1,10 +1,9 @@
 package de.hfu.anybeam.android;
 
 import de.hfu.anybeam.android.utils.ClipboardUtils;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
+import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -26,7 +25,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		NetworkEnvironmentManager.loadNetworkEnvironmentSettings(this);
+		NetworkEnvironmentManager.buildNetworkEnvironments(this);
 		setListeners();
 
 		this.includeShareIcon((TextView) this.findViewById(R.id.tvInstructionText));
@@ -98,8 +97,8 @@ public class MainActivity extends Activity {
 		if (item.getItemId() == R.id.action_settings_show) {
 			AlertDialog.Builder b = new AlertDialog.Builder(this);
 			try {
-				NetworkEnvironmentSettings s = NetworkEnvironmentManager.getNetworkEnvironment(this).getNetworkEnvironmentSettings();
-				b.setMessage(s.toString());
+				NetworkEnvironment environment = NetworkEnvironmentManager.getNetworkEnvironment(this);
+				b.setMessage(environment.toString());
 				b.show();
 			} catch (Exception e) {
 				e.printStackTrace();

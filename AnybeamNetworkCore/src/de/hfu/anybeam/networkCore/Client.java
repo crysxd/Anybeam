@@ -130,22 +130,22 @@ public class Client implements Comparable<Client>, Serializable {
 	/**
 	 * Sends the data from the stream to the client.
 	 * @param inputStream the {@link InputStream} to send the data from
-	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
+	 * @param environment the {@link NetworkEnvironmentSettings} to get all necessary information from
 	 * @throws Exception
 	 */
-	public void sendData(InputStream inputStream, NetworkEnvironmentSettings settings, AbstractTransmissionAdapter adapter) throws Exception {
-		this.sendData(inputStream, -1, settings, adapter);
+	public void sendData(InputStream inputStream, NetworkEnvironment environment, AbstractTransmissionAdapter adapter) throws Exception {
+		this.sendData(inputStream, -1, environment, adapter);
 	}
 	
 	/**
 	 * Sends the data from the stream to the client.
 	 * @param inputStream the {@link InputStream} to send the data from
 	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
-	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
+	 * @param environment the {@link NetworkEnvironmentSettings} to get all necessary information from
 	 * @throws Exception
 	 */
-	public void sendData(InputStream inputStream, long inputStreamLength, NetworkEnvironmentSettings settings, AbstractTransmissionAdapter adapter) throws Exception {
-		this.sendData(inputStream, inputStreamLength, "unknown", settings, adapter);
+	public void sendData(InputStream inputStream, long inputStreamLength, NetworkEnvironment environment, AbstractTransmissionAdapter adapter) throws Exception {
+		this.sendData(inputStream, inputStreamLength, "unknown", environment, adapter);
 	}
 	
 	/**
@@ -153,18 +153,18 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @param inputStream the {@link InputStream} to send the data from
 	 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
 	 * @param sourceName the name of the source represented by inputStream e.g. the filename
-	 * @param settings the {@link NetworkEnvironmentSettings} to get all necessary information from
+	 * @param environment the {@link NetworkEnvironmentSettings} to get all necessary information from
 	 * @throws Exception
 	 */
-	public void sendData(InputStream inputStream, long inputStreamLength, String sourceName, NetworkEnvironmentSettings settings, AbstractTransmissionAdapter adapter) throws Exception {
-		if(settings == null)
+	public void sendData(InputStream inputStream, long inputStreamLength, String sourceName, NetworkEnvironment environment, AbstractTransmissionAdapter adapter) throws Exception {
+		if(environment == null)
 			throw new IllegalArgumentException("The given NetworkEnvironmentSettings are null. "
 					+ "This can happen if the corresponding NetworkEnvironment for this Client's group "
 					+ "is not registered at NetworkCoreUtils. In this case you can provide a individual set of "
 					+ "NetworkEnvironmentSettings invoking sendData(InputStream, inputStreamSize, sourceName, "
 					+ "NetworkEnvironmentSettings). ");
 		
-		this.sendData(inputStream, inputStreamLength, sourceName, settings.getEncryptionType(), settings.getEncryptionKey(), adapter);
+		this.sendData(inputStream, inputStreamLength, sourceName, environment.getEncryptionType(), environment.getEncryptionKey(), adapter);
 	}
 	
 	/**

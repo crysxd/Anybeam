@@ -1,11 +1,9 @@
 package de.hfu.anybeam.networkCore.example;
 
 import de.hfu.anybeam.networkCore.Client;
-import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
 import de.hfu.anybeam.networkCore.networkProvider.broadcast.LocalNetworkProvider;
 
 public class SimpleAutoDetect implements NetworkEnvironmentListener {
@@ -24,17 +22,12 @@ public class SimpleAutoDetect implements NetworkEnvironmentListener {
 		//The Encryption type to use
 		EncryptionType et = EncryptionType.AES256;
 
-		//create the settings for the NetworkEnvironment
-		//Keep in mind that the broadcast port, the EncryptionType and the password must be equal on all used devices!
-		NetworkEnvironmentSettings settings = new NetworkEnvironmentSettings(
-				"Test Device", //The device name (e.g. Galaxy S5)
-				DeviceType.TYPE_UNKNOWN,  //The device type: laptop, desktop, smartphone...
+		//create a new NetwworkEnvironment - this class will do all the work for us!
+		final NetworkEnvironment NE =new NetworkEnvironment.Builder(
 				et, //The encryption to use
 				et.getSecretKeyFromPassword("anybeamRockt1137") //The password to use
-				);
+			).build();
 
-		//create a new NetwworkEnvironment - this class will do all the work for us!
-		final NetworkEnvironment NE = new NetworkEnvironment(settings);
 
 		//Add a EnvironmentProvider for the local network
 		new LocalNetworkProvider(NE, 1339, 1338);

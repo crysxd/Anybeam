@@ -6,14 +6,12 @@ import java.util.concurrent.Executors;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 import de.hfu.anybeam.networkCore.AbstractDownloadTransmissionAdapter;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
+import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
 import de.hfu.anybeam.networkCore.networkProvider.broadcast.TcpDataReceiver;
 
@@ -35,21 +33,20 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			
 		this.context = context.getApplicationContext();
 		
-		NetworkEnvironmentSettings settings;
 		try {
-			settings = NetworkEnvironmentManager
-					.getNetworkEnvironment(context).getNetworkEnvironmentSettings();
+			NetworkEnvironment environment = NetworkEnvironmentManager.getNetworkEnvironment(context);
+
 			//generate reciever from settings
 //			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
 //			reciver = new TcpDataReceiver(
-//					settings.getEncryptionType(),
-//					settings.getEncryptionKey(), 
+//					environment.getEncryptionType(),
+//					environment.getEncryptionKey(), 
 //					Integer.parseInt(prefs.getString("port_data", c.getString(R.string.default_port_data))), 
 //					this);
 
 			reciver = new TcpDataReceiver(
-					settings.getEncryptionType(),
-					settings.getEncryptionKey(), 
+					environment.getEncryptionType(),
+					environment.getEncryptionKey(), 
 					1338, //TODO Load form Preferences
 					this);
 			Executors.newSingleThreadExecutor().execute(reciver);

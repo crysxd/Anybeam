@@ -1,9 +1,19 @@
 package de.hfu.anybeam.networkCore;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +30,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Able to find counterparts in the local network.
- * @author chrwuer
+ * @author chrwuer, preussjan
  * @since 1.0
  * @version 1.0
  */
@@ -42,8 +52,23 @@ public class NetworkEnvironment {
 	private static String METHOD_TYPE_UNREGISTER	= "UNREGISTER";
 	private static String METHOD_TYPE_ANSWER		= "ANSWER";
 
-	//The settings for this instance
-	private final NetworkEnvironmentSettings SETTINGS;
+	//The device name
+	private final String DEVICE_NAME;
+	
+	//the type of the device
+	private final DeviceType DEVICE_TYPE;
+	
+	//the encrpytion type used
+	private final EncryptionType ENCRYPTION_TYPE;
+	
+	//the name of the os
+	private final String OS_NAME;
+	
+	//the id of the local device
+	private final String LOCAL_ID;
+	
+	//the encrpytion key used
+	private final byte[] ENCRYPTION_KEY;
 
 	//The list of all available clients
 	private final Map<String, Client> CLIENTS = new HashMap<String, Client>();
@@ -69,12 +94,17 @@ public class NetworkEnvironment {
 	private Condition CLIENT_SEARCH_DONE_CONDITION = this.LOCK.writeLock().newCondition();
 
 	/**
-	 * Creates a new {@link NetworkEnvironment} instance using the given {@link NetworkEnvironmentSettings}.
-	 * @param settings the {@link NetworkEnvironmentSettings} to use
+	 * Creates a new {@link NetworkEnvironment} instance using the given {@link Builder}.
+	 * @param builder the {@link Builder} to use
 	 * @throws Exception
 	 */
-	public NetworkEnvironment(NetworkEnvironmentSettings settings) throws Exception {
-		this.SETTINGS = settings;
+	private NetworkEnvironment(Builder builder) throws Exception {
+		this.DEVICE_NAME = builder.deviceName;
+		this.DEVICE_TYPE = builder.deviceType;
+		this.ENCRYPTION_TYPE = builder.encryptionType;
+		this.ENCRYPTION_KEY = builder.encryptionKey;
+		this.OS_NAME = builder.localID;
+		this.LOCAL_ID = builder.localID;
 
 		this.registerOnNetwork();
 	}
@@ -88,21 +118,35 @@ public class NetworkEnvironment {
 	}
 	
 	public void unregisterEnvironmentProvider(EnvironmentProvider toRemove) {
-		this.PROVIDERS.remove(toRemove);
-		
-		List<Client> clients = this.getClientsForProvider(toRemove);
-		for(Client c: clients) {
-		
+		try {
+			//lock
+			this.LOCK.writeLock().lock();
+
+			this.PROVIDERS.remove(toRemove);
+			
+			List<Client> clients = this.getClientsForProvider(toRemove);
+			for(Client c: clients) {
+				c.removeAddressForProvider(toRemove);
+				this.dispatchEvent("clientUpdated", new Class[]{Client.class}, c);
+
+			}
+			
+			try {
+				toRemove.dispose();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			//unlock
+			this.LOCK.writeLock().unlock();
+
 		}
 
-	}
-	
-	/**
-	 * Returns the {@link NetworkEnvironmentSettings} used by this instance.
-	 * @return the {@link NetworkEnvironmentSettings} used by this instance
-	 */
-	public NetworkEnvironmentSettings getNetworkEnvironmentSettings() {
-		return this.SETTINGS;
+
 	}
 
 	/**
@@ -233,8 +277,8 @@ public class NetworkEnvironment {
 	}
 	
 	public Cipher getEncryptionCipher() throws InvalidKeyException {
-		EncryptionType type = this.getNetworkEnvironmentSettings().getEncryptionType();
-		byte[] key = this.getNetworkEnvironmentSettings().getEncryptionKey();
+		EncryptionType type = ENCRYPTION_TYPE;
+		byte[] key = ENCRYPTION_KEY;
 		
 		Cipher c = type.createCipher();
 		SecretKeySpec k = type.getSecretKeySpec(key);
@@ -244,8 +288,8 @@ public class NetworkEnvironment {
 	}
 	
 	public Cipher getDecryptionCipher() throws InvalidKeyException {
-		EncryptionType type = this.getNetworkEnvironmentSettings().getEncryptionType();
-		byte[] key = this.getNetworkEnvironmentSettings().getEncryptionKey();
+		EncryptionType type = ENCRYPTION_TYPE;
+		byte[] key = ENCRYPTION_KEY;
 		
 		Cipher c = type.createCipher();
 		SecretKeySpec k = type.getSecretKeySpec(key);
@@ -623,10 +667,10 @@ public class NetworkEnvironment {
 	private UrlParameterBundle createDefaultHeaderBundle() {
 		return new UrlParameterBundle()
 		.put(NetworkEnvironment.HEADER_FIELD_VERSION, 	 	NetworkEnvironment.VERSION)
-		.put(NetworkEnvironment.HEADER_FIELD_ID, 			this.SETTINGS.getLocalId())
-		.put(NetworkEnvironment.HEADER_FIELD_DEVICE_NAME, 	this.SETTINGS.getDeviceName())
-		.put(NetworkEnvironment.HEADER_FIELD_OS_NAME, 		this.SETTINGS.getOsName())
-		.put(NetworkEnvironment.HEADER_FIELD_DEVICE_TYPE,	this.SETTINGS.getDeviceType());
+		.put(NetworkEnvironment.HEADER_FIELD_ID, 			this.LOCAL_ID)
+		.put(NetworkEnvironment.HEADER_FIELD_DEVICE_NAME, 	this.DEVICE_NAME)
+		.put(NetworkEnvironment.HEADER_FIELD_OS_NAME, 		this.OS_NAME)
+		.put(NetworkEnvironment.HEADER_FIELD_DEVICE_TYPE,	this.DEVICE_TYPE);
 	}
 	
 	/**
@@ -663,7 +707,7 @@ public class NetworkEnvironment {
 			}
 
 			//If the id matches the local one (I received my own broadcast) -> cancel and don't answer
-			if(b.get(NetworkEnvironment.HEADER_FIELD_ID).equals(this.SETTINGS.getLocalId())) {
+			if(b.get(NetworkEnvironment.HEADER_FIELD_ID).equals(this.LOCAL_ID)) {
 				return null;
 			}
 
@@ -742,5 +786,192 @@ public class NetworkEnvironment {
 				}
 			}
 		});
+	}
+	
+	
+	/**
+	 * Returns the device name.
+	 * @return the device name
+	 */
+	public String getDeviceName() {
+		return DEVICE_NAME;
+	}
+	
+	/**
+	 * Returns the {@link DeviceType}.
+	 * @return the {@link DeviceType}
+	 */
+	public DeviceType getDeviceType() {
+		return DEVICE_TYPE;
+	}
+	
+	/**
+	 * Returns the operating system's name.
+	 * @return the operating system's name
+	 */
+	public String getOsName() {
+		return OS_NAME;
+	}
+	
+	/**
+	 * Returns the local id.
+	 * @return the local id
+	 */
+	public String getLocalId() {
+		return LOCAL_ID;
+	}
+
+	/**
+	 * Returns the {@link EncryptionType} used.
+	 * @return the {@link EncryptionType} used
+	 */
+	public EncryptionType getEncryptionType() {
+		return ENCRYPTION_TYPE;
+	}
+	
+	/**
+	 * Returns the encryption key used.
+	 * @return the encryption key used
+	 */
+	public byte[] getEncryptionKey() {
+		return this.ENCRYPTION_KEY;
+	}
+
+	@Override
+	public String toString() {
+		return "NetworkEnvironmentSettings [DEVICE_NAME="
+				+ DEVICE_NAME + ", DEVICE_TYPE=" + DEVICE_TYPE
+				+ ", ENCRYPTION_TYPE=" + ENCRYPTION_TYPE + ", OS_NAME="
+				+ OS_NAME + ", LOCAL_ID=" + LOCAL_ID + ", ENCRPTION_KEY="
+				+ Arrays.toString(ENCRYPTION_KEY) + "]";
+	}
+	
+	//TODO BUILDER HERE
+	
+	/**
+	 * A class containing all necessary settings for an {@link NetworkEnvironment}
+	 * @author chrwuer
+	 * @since 1.0
+	 * @version 1.0
+	 */
+	public static class Builder {
+		
+		//The device name
+		private String deviceName = "Unknown";
+		
+		//the type of the device
+		private DeviceType deviceType = DeviceType.TYPE_UNKNOWN;
+		
+		//the encrpytion type used
+		private EncryptionType encryptionType;
+		
+		//the encryption key used
+		private byte[] encryptionKey;
+		
+		//the name of the os
+		@SuppressWarnings("unused")
+		private String osName = System.getProperty("os.name");
+		
+		//the id of the local device
+		private String localID;
+		
+		public Builder(EncryptionType encryptionType, byte[] encryptionKey) {
+			this.encryptionType = encryptionType;
+			this.encryptionKey = encryptionKey;
+			this.localID = this.generateId();
+		}
+		
+		public Builder setDeviceName(String deviceName) {
+			this.deviceName = deviceName;
+			return this;
+		}
+
+		//TODO DOKU
+
+		public Builder setDeviceType(DeviceType deviceType) {
+			this.deviceType = deviceType;
+			return this;
+		}
+
+
+
+		public Builder setEncryptionType(EncryptionType encryptionType) {
+			this.encryptionType = encryptionType;
+			return this;
+		}
+
+
+
+		public Builder setOsName(String osName) {
+			this.osName = osName;
+			return this;
+		}
+
+
+
+		public Builder setLocalID(String localID) {
+			this.localID = localID;
+			return this;
+		}
+
+
+
+		public Builder setEncryptionKey(byte[] encryptionKey) {
+			this.encryptionKey = encryptionKey;
+			return this;
+		}
+		
+		public NetworkEnvironment build() throws Exception {
+			return new NetworkEnvironment(this);
+		}
+		
+		/**
+		 * Generates a unique id for the {@link NetworkEnvironment} containing a mac-adress.
+		 * @return a unique id
+		 */
+		private String generateId() {
+
+			//create StringBuilder
+			StringBuilder id = new StringBuilder();
+			try {
+				//All network interfaces
+				Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+
+				//iterate over all network interfaces
+				while(interfaces.hasMoreElements()) {
+					//try, skip if error and try next
+					try {
+						//get mac
+						byte[] mac = interfaces.nextElement().getHardwareAddress();
+
+						//if mac is null or empty skip (reqiered for windows)
+						if(mac == null || mac.length == 0)
+							continue;
+
+						//create hex string for mac
+						for(byte b : mac) {
+							ByteBuffer buf = ByteBuffer.wrap(new byte[] {0x00, 0x00, 0x00, b});		
+							id.append(String.format("%h:", buf.getInt()));
+						}
+
+						//Delete last :
+						id.deleteCharAt(id.length()-1);
+
+						//done. stop iterating over interfaces
+						break;
+						
+					} catch(Exception e) {
+						e.printStackTrace();
+						
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+			}
+
+			//return the id
+			return id.toString();
+		}
 	}
 }

@@ -221,8 +221,11 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 					Client c = (Client) clientList.getItemAtPosition(position);
 					String s =  intent.getStringExtra(Intent.EXTRA_TEXT);
 					Log.i("Clicked", "Clicked!!!!!!!!!!!!!!!!!!!!");
-					c.sendData(new ByteArrayInputStream(s.getBytes()), 
-							NetworkEnvironmentManager.loadNetworkEnvironmentSettings(SendActivity.this), new AbstractTransmissionAdapter() {
+					c.sendData(new ByteArrayInputStream(s.getBytes()),
+							s.length(), 
+							"*clipboard", 
+							NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this), 
+							new AbstractTransmissionAdapter() {
 								
 								@Override
 								public void transmissionStarted(TransmissionEvent e) {

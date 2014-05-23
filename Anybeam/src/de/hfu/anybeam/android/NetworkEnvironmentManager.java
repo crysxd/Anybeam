@@ -14,11 +14,8 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
-import de.hfu.anybeam.networkCore.EnvironmentProvider;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettingsEditor;
 import de.hfu.anybeam.networkCore.networkProvider.broadcast.LocalNetworkProvider;
 
 /**
@@ -47,7 +44,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		}
 
 		if(networkEnvironment == null) {
-			networkEnvironment = new NetworkEnvironment(loadNetworkEnvironmentSettings(context));
+			networkEnvironment = buildNetworkEnvironments(context);
 			
 //			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
 //			new LocalNetworkProvider(networkEnvironment,Integer.parseInt(prefs.getString("port_data", c.getString(R.string.default_port_data))), 
@@ -136,7 +133,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 	 * @param context the application {@link Context}
 	 * @return Returns the current {@link NetworkEnvironmentSettings}
 	 */
-	public static NetworkEnvironmentSettings loadNetworkEnvironmentSettings(Context context) {
+	public static NetworkEnvironment buildNetworkEnvironments(Context context) {
 		PreferenceManager.setDefaultValues(context.getApplicationContext(), R.xml.preferences, false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = prefs.edit();
@@ -165,14 +162,20 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		
 		EncryptionType et = EncryptionType.AES256;
 		
-		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
-				prefs.getString("client_name", context.getString(R.string.default_client_name)), //The device name (e.g. Galaxy S5)
-				DeviceType.TYPE_SMARTPHONE,  //The device type: laptop, desktop, smartphone...
-				et, //The encryption to use
-				et.getSecretKeyFromPassword("anybeamRockt1137") //The password to use
-				); //TODO Load from Preferences
+		//TODO Load from Preferences
 
-		return s;
+		try {
+			return new NetworkEnvironment.Builder(				
+						et, //The encryption to use
+						et.getSecretKeyFromPassword("anybeamRockt1137")) //The password to use
+					.setDeviceName(prefs.getString("client_name", context.getString(R.string.default_client_name)))//The device name (e.g. Galaxy S5)
+					.setDeviceType(DeviceType.TYPE_SMARTPHONE) //The device type: laptop, desktop, smartphone...
+					.setOsName("Android")
+					.build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -181,11 +184,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 	 * @throws Exception getNetworkEnvironment error Exception
 	 */
 	public synchronized static void updateNetworkEnvironment(Context context) throws Exception {
-		NetworkEnvironmentSettingsEditor editor = new NetworkEnvironmentSettingsEditor(
-				getNetworkEnvironment(context).getNetworkEnvironmentSettings());
-		NetworkEnvironmentSettings newSettings = loadNetworkEnvironmentSettings(context);
-
-		networkEnvironment = editor.applyAll(newSettings, networkEnvironment);
+		//TODO Disposen + Neuerstellen
 	}
 
 	@Override

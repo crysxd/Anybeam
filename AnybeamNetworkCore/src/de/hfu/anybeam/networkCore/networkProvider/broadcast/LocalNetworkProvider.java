@@ -105,8 +105,8 @@ public class LocalNetworkProvider extends EnvironmentProvider implements UdpBroa
 		UdpBroadcastSender nc = new UdpBroadcastSender(
 				this.broadcastPort, 
 				this.broadcastMessage.getBytes(), 
-				this.getNetworkEnvironment().getNetworkEnvironmentSettings().getEncryptionType(),
-				this.getNetworkEnvironment().getNetworkEnvironmentSettings().getEncryptionKey());
+				this.getNetworkEnvironment().getEncryptionType(),
+				this.getNetworkEnvironment().getEncryptionKey());
 		this.getNetworkEnvironment().execute(nc);
 		
 	}
@@ -148,8 +148,8 @@ public class LocalNetworkProvider extends EnvironmentProvider implements UdpBroa
 		new TcpDataSender(in, 
 				inLength, 
 				resourceName,
-				this.getNetworkEnvironment().getNetworkEnvironmentSettings().getEncryptionType(),
-				this.getNetworkEnvironment().getNetworkEnvironmentSettings().getEncryptionKey(),
+				this.getNetworkEnvironment().getEncryptionType(),
+				this.getNetworkEnvironment().getEncryptionKey(),
 				a.getPort(),
 				a.getAddress(),
 				adapter,
