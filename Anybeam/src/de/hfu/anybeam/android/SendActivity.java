@@ -90,7 +90,6 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 				NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).startClientSearch();
 				updateView();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return true;
@@ -190,7 +189,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 				    String action = intent.getAction();
 				    String type = intent.getType();
 				    
-				    Client.SenderBuilder builder = new Client.SenderBuilder();
+				    Client.SendTarsk builder = new Client.SendTarsk();
 
 				    if (Intent.ACTION_SEND.equals(action) && type != null) {
 				        if ("text/plain".equals(type)) {

@@ -120,8 +120,11 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 						synchronized (NetworkEnvironmentManager.class) {
 							networkEnvironment.dispose();
 							networkEnvironment = null;
+							androidDataReceiver.dispose();
+							androidDataReceiver = null;
+							localNetworkProvider.dispose();
+							localNetworkProvider = null;
 						}
-
 
 					} catch(Exception e) {
 						e.printStackTrace();
@@ -130,8 +133,6 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 				}
 			}.start();
 		}
-		androidDataReceiver.dispose();
-		localNetworkProvider.dispose();
 	}
 
 	/**

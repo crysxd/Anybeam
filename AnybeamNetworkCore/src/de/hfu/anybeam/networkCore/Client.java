@@ -188,10 +188,10 @@ public class Client implements Comparable<Client>, Serializable {
 		
 	/**
 	 * Sends the data from the stream to the client.
-	 * @param builder the {@link SenderBuilder} used to send
+	 * @param builder the {@link SendTarsk} used to send
 	 * @throws IOException
 	 */
-	private void sendData(SenderBuilder builder) throws IOException{
+	private void sendData(SendTarsk builder) throws IOException{
 		EnvironmentProvider p = getBestProvider();
 		System.out.println("sendData");
 		p.sendData(this, builder.inputStream, builder.inputStreamLength, builder.sourceName, builder.adapter);
@@ -203,21 +203,19 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @since 1.0
 	 * @version 1.0
 	 */
-	public static class SenderBuilder {
+	public static class SendTarsk {
 		private InputStream inputStream;
 		private long inputStreamLength = -1;
 		private String sourceName = "unknown"; 
-		private EncryptionType encryptionType; //TODO Is the Encryption currently used? Default value?
-		private byte[] encryptionKey; 
 		private AbstractTransmissionAdapter adapter;
 
 			
 		/**
 		 * Sets the {@link InputStream} to send
 		 * @param inputStream the {@link InputStream} to send the data from
-		 * @return the {@link SenderBuilder} object
+		 * @return the {@link SendTarsk} object
 		 */
-		public SenderBuilder setInputStream(InputStream inputStream) {
+		public SendTarsk setInputStream(InputStream inputStream) {
 			this.inputStream = inputStream;
 			return this;
 		}
@@ -225,9 +223,9 @@ public class Client implements Comparable<Client>, Serializable {
 		/**
 		 * Sets the length of data to send
 		 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
-		 * @return the {@link SenderBuilder} object
+		 * @return the {@link SendTarsk} object
 		 */
-		public SenderBuilder setInputStreamLength(long inputStreamLength) {
+		public SendTarsk setInputStreamLength(long inputStreamLength) {
 			this.inputStreamLength = inputStreamLength;
 			return this;
 		}
@@ -235,39 +233,19 @@ public class Client implements Comparable<Client>, Serializable {
 		/**
 		 * Sets the name of the source
 		 * @param sourceName the name of the source represented by inputStream e.g. the filename
-		 * @return the {@link SenderBuilder} object
+		 * @return the {@link SendTarsk} object
 		 */
-		public SenderBuilder setSourceName(String sourceName) {
+		public SendTarsk setSourceName(String sourceName) {
 			this.sourceName = sourceName;
 			return this;
 		}
-		
-		/**
-		 * Sets the encryptionType
-		 * @param encryptionType the {@link EncryptionType} to be used 
-		 * @return the {@link SenderBuilder} object
-		 */
-		public SenderBuilder setEncryptionType(EncryptionType encryptionType) {
-			this.encryptionType = encryptionType;
-			return this;
-		}
-		 
-		/**
-		 * Sets the encryptionKey
-		 * @param encryptionKey the key to encrypt the data or null if no encryption is used
-		 * @return the {@link SenderBuilder} object
-		 */
-		public SenderBuilder setEncryptionKey(byte[] encryptionKey) {
-			this.encryptionKey = encryptionKey;
-			return this;
-		}
-		
+				
 		/**
 		 * Sets the {@link AbstractDownloadTransmissionAdapter}
 		 * @param adapter the {@link AbstractDownloadTransmissionAdapter} for status updates
-		 * @return the {@link SenderBuilder} object
+		 * @return the {@link SendTarsk} object
 		 */
-		public SenderBuilder setAdapter(AbstractTransmissionAdapter adapter) {
+		public SendTarsk setAdapter(AbstractTransmissionAdapter adapter) {
 			this.adapter = adapter;
 			return this;
 		}

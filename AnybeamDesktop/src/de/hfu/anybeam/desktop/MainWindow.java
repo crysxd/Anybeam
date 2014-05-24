@@ -7,11 +7,13 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -100,6 +102,12 @@ public class MainWindow {
 		frame.getContentPane().add(btnClipboard, "cell 1 0,growx,aligny center");
 		
 		JButton btnFile = new JButton(language.getString("beamFile"));
+		btnFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//open Choose Window
+				openFileChooser();
+			}
+		});
 		frame.getContentPane().add(btnFile, "cell 3 0,growx,aligny center");
 		
 		JLabel lblHistory = new JLabel(language.getString("lableHitory"));
@@ -118,6 +126,16 @@ public class MainWindow {
 			}
 		});
 		frame.getContentPane().add(btnSettings, "cell 3 5,growx,aligny top");
+	}
+	
+	private void openFileChooser() {
+		 JFileChooser fileChooser = new JFileChooser();
+	        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+	        int result = fileChooser.showOpenDialog(fileChooser);
+	        if (result == JFileChooser.APPROVE_OPTION) {
+	            File selectedFile = fileChooser.getSelectedFile();
+	            search.showWindow(selectedFile);
+	        } 
 	}
 
 }

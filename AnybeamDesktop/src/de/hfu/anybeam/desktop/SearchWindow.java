@@ -6,6 +6,8 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +23,7 @@ public class SearchWindow implements NetworkEnvironmentListener {
 
 	private JFrame frame;
 	private JList clientList;
+	private File file;
 
 	/**
 	 * Create the application.
@@ -32,6 +35,12 @@ public class SearchWindow implements NetworkEnvironmentListener {
 	}
 	
 	public void showWindow(){
+		this.file = null;
+		frame.setVisible(true);
+	}
+	
+	public void showWindow(File file) {
+		this.file = file;
 		frame.setVisible(true);
 	}
 
@@ -57,13 +66,22 @@ public class SearchWindow implements NetworkEnvironmentListener {
 		        int index = list.getSelectedIndex();
 		        try {
 		        	Client client = NetworkEnvironmentManager.getNetworkEnvironment().getClientList().get(index);
-					Client.SenderBuilder builder = new Client.SenderBuilder();
 					
-		        	String data = (String) Toolkit.getDefaultToolkit()
-		                    .getSystemClipboard().getData(DataFlavor.stringFlavor); 
-		        	builder.setInputStream(new ByteArrayInputStream(data.getBytes()));
-		        	builder.setInputStreamLength(data.length());
-		        	builder.setSourceName("*clipboard");
+		        	Client.SenderBuilder builder = new Client.SenderBuilder();
+					
+					if (file == null) {
+						// Handle text being sent
+						String data = (String) Toolkit.getDefaultToolkit()
+			                    .getSystemClipboard().getData(DataFlavor.stringFlavor); 
+						builder.setInputStream(new ByteArrayInputStream(data.getBytes()));
+						builder.setInputStreamLength(data.length());
+						builder.setSourceName("*clipboard");
+					} else {
+						builder.setInputStream(new FileInputStream(file));
+						builder.setInputStreamLength(file.length());
+						builder.setSourceName(getFilenameFromPath(file.getPath()));
+					}
+		        	
 					builder.setAdapter(new GeneralTransmission());
 					builder.sendTo(client);
 					frame.setVisible(false);
@@ -91,6 +109,10 @@ public class SearchWindow implements NetworkEnvironmentListener {
 			ClientRenderer renderer = new ClientRenderer();
 			clientList.setCellRenderer(renderer);
 		}
+	}
+	
+	private String getFilenameFromPath(String path) {
+		return path.replaceAll("(.*[\\/])", "").replaceAll("(.*[\\\\])", "");
 	}
 
 	@Override
