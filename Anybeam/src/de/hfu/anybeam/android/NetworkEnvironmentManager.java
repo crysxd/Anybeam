@@ -29,6 +29,8 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 	private static NetworkEnvironment networkEnvironment;
 	private static List<NetworkEnvironmentListener> listeners;
 	private static WifiManager wifi;
+	private static LocalNetworkProvider localNetworkProvider;
+	private static AndroidDataReceiver androidDataReceiver;
 
 	/**
 	 * Returns or creates  the current {@link NetworkEnvironment}
@@ -46,13 +48,15 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		if(networkEnvironment == null) {
 			networkEnvironment = buildNetworkEnvironment(context);
 			
+			//TODO Load form preferences
 //			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
 //			new LocalNetworkProvider(networkEnvironment,Integer.parseInt(prefs.getString("port_data", c.getString(R.string.default_port_data))), 
 //				Integer.parseInt(prefs.getString("port_broadcast", c.getString(R.string.default_port_broadcast))));
-			
-			new LocalNetworkProvider(networkEnvironment, 1339, 1338); //TODO Load from Preferences
+		if (localNetworkProvider == null) 
+			localNetworkProvider = new LocalNetworkProvider(networkEnvironment, 1339, 1338); //TODO Load from Preferences
+		
+		if (androidDataReceiver == null)
 			new AndroidDataReceiver(context);
-			//TODO Merken+Disposen
 
 			if(listeners != null) {
 				networkEnvironment.addAllNetworkEnvironmentListeners(listeners);
@@ -126,6 +130,8 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 				}
 			}.start();
 		}
+		androidDataReceiver.dispose();
+		localNetworkProvider.dispose();
 	}
 
 	/**

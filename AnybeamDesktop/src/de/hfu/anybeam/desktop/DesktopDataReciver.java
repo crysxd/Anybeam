@@ -82,8 +82,7 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter{
 
 	@Override
 	public void closeOutputStream(TransmissionEvent e, OutputStream out) {
-		System.out.println("close!");
-		System.out.println(e.getResourceName().equals("*clipboard"));
+		System.out.println("OutputStream closed");
 		if(out instanceof ByteArrayOutputStream && e.getResourceName().equals("*clipboard")) {
 			ByteArrayOutputStream clipboardOut = (ByteArrayOutputStream) out;
 			String s = new String(clipboardOut.toByteArray());

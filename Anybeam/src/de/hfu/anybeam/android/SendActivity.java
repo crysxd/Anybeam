@@ -93,6 +93,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
     	findViewById(R.id.action_refresh).startAnimation(anim);
 			try {
 				NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).startClientSearch();
+				updateView();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -219,8 +220,8 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 				        	String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
 				    	    if (sharedText != null) {
 				    	    	builder.setInputStream(new ByteArrayInputStream(sharedText.getBytes()));
-				    	    	builder.setSourceName("*clipboard");
 				    	    	builder.setInputStreamLength(sharedText.length());
+				    	    	builder.setSourceName("*clipboard");
 				    	    }
 				        } else if (type.startsWith("image/")) { 
 				        	// Handle single image being sent
@@ -245,31 +246,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 				        }
 				    }
 				    
-					builder.setAdapter(	new AbstractTransmissionAdapter() {
-							@Override
-							public void transmissionStarted(TransmissionEvent e) {
-								Log.i("Transmission", "Started");
-								
-							}
-							
-							@Override
-							public void transmissionProgressChanged(TransmissionEvent e) {
-								// TODO Auto-generated method stub
-								
-							}
-							
-							@Override
-							public void transmissionFailed(TransmissionEvent e) {
-								// TODO Auto-generated method stub
-								
-							}
-							
-							@Override
-							public void transmissionDone(TransmissionEvent e) {
-								Log.i("Transmission", "Done");
-								
-							}
-							});
+					builder.setAdapter(	new GeneralTransmission());
 					builder.sendTo(c);
 					
 					//Close Activity after Sending

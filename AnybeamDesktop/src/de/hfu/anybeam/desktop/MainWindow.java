@@ -1,30 +1,24 @@
 package de.hfu.anybeam.desktop;
 
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
-
-import net.miginfocom.swing.MigLayout;
-import javax.swing.JList;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
-import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
-
+import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Font;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.awt.event.ActionListener;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.SwingConstants;
+
+import net.miginfocom.swing.MigLayout;
+import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 
 public class MainWindow {
 
@@ -99,16 +93,8 @@ public class MainWindow {
 		JButton btnClipboard = new JButton(language.getString("beamClipboard"));
 		btnClipboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-//					InputStream clipboard = new ByteArrayInputStream(
-//							((String) Toolkit.getDefaultToolkit()
-//			                .getSystemClipboard().getData(DataFlavor.stringFlavor)).getBytes());
-//					System.out.println((String) Toolkit.getDefaultToolkit()
-//			                .getSystemClipboard().getData(DataFlavor.stringFlavor));
-					search.beam("test");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				//open Search window
+				search.showWindow();
 			}
 		});
 		frame.getContentPane().add(btnClipboard, "cell 1 0,growx,aligny center");

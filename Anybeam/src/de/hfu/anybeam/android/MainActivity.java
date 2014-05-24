@@ -92,7 +92,7 @@ public class MainActivity extends Activity {
 			ClipboardUtils.copyToClipboard(this, "", "");
 		}
 		if (item.getItemId() == R.id.action_settings_clipboard_set) {
-			ClipboardUtils.copyToClipboard(this, "Überschrift", "Das ist ein Test String");
+			ClipboardUtils.copyToClipboard(this, "Text", "Das ist ein Test String");
 		}
 		if (item.getItemId() == R.id.action_settings_show) {
 			AlertDialog.Builder b = new AlertDialog.Builder(this);

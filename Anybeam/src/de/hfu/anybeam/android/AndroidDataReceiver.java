@@ -1,15 +1,18 @@
 package de.hfu.anybeam.android;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.Executors;
 
 import android.app.NotificationManager;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
+import de.hfu.anybeam.android.utils.ClipboardUtils;
 import de.hfu.anybeam.networkCore.AbstractDownloadTransmissionAdapter;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
@@ -69,7 +72,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 
 	@Override
 	public void transmissionProgressChanged(TransmissionEvent e) {
-		Log.i("Transmission", "Progress Changed: " + e.getPercentDone());
+		Log.i("Transmission", "Progress Changed: " + String.format("%.2f", e.getPercentDone()));
 	}
 
 	@Override
@@ -85,25 +88,48 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 
 	@Override
 	public OutputStream downloadStarted(TransmissionEvent e, String clientId) {
-		return new ByteArrayOutputStream();
+		if(e.getResourceName().equals("*clipboard")) {
+			return new ByteArrayOutputStream();
+		} else {
+			return null;
+		}
+		
+		
 	}
 
 	@Override
 	public void closeOutputStream(TransmissionEvent e, OutputStream out) {
-		ByteArrayOutputStream bo = (ByteArrayOutputStream) out;		
-		String value = new String(bo.toByteArray());
+		Log.i("Transmission", "Closed id: " + e.getTransmissionId());
+		if (out instanceof ByteArrayOutputStream && e.getResourceName().equals("*clipboard")) {
+			Looper.prepare();
+
+			ByteArrayOutputStream bo = (ByteArrayOutputStream) out;	
+			String value = new String(bo.toByteArray());
+			ClipboardUtils.copyToClipboard(context, "Text", value);
+			
+			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setContentTitle("New Clipboard")
+				.setWhen(System.currentTimeMillis());
+			if (value.length() > 40) {
+				mBuilder.setContentText(value.substring(0, 40) + "...");				
+			}else {
+				mBuilder.setContentText(value);
+			}
+			
+			NotificationManager mManager = (NotificationManager) context
+					.getSystemService(Context.NOTIFICATION_SERVICE);
+			mManager.notify(e.getTransmissionId(), mBuilder.build());
+			
+			Toast.makeText(context, value, Toast.LENGTH_LONG).show();
+		}
 		
-		Log.i("Transmission", "Closed");
-		Looper.prepare();
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-		mBuilder.setSmallIcon(R.drawable.ic_launcher)
-			.setContentTitle("New String")
-			.setContentText(value);
-		NotificationManager mManager = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-		mManager.notify(e.getTransmissionId(), mBuilder.build());
-		
-		Toast.makeText(context, value, Toast.LENGTH_LONG).show();
+		try {
+			out.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
 	}
 
 }
