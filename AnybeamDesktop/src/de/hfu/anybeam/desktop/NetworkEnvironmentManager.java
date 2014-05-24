@@ -8,18 +8,23 @@ import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettings;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentSettingsEditor;
 import de.hfu.anybeam.networkCore.networkProvider.broadcast.LocalNetworkProvider;
 
 public class NetworkEnvironmentManager {
 	private static NetworkEnvironment networkEnvironment;
 	private static List<NetworkEnvironmentListener> listeners;
+	private static DesktopDataReciver desktopDataReciver;
+	private static LocalNetworkProvider localNetworkProvider;
 	
 	public synchronized static NetworkEnvironment getNetworkEnvironment() throws Exception {
 		if(networkEnvironment == null) {
-			networkEnvironment = new NetworkEnvironment(loadNetworkEnvironmentSettings());
-			new LocalNetworkProvider(networkEnvironment, 1339, 1338);
+			networkEnvironment = buildNetworkEnvironment();
+			
+		if (localNetworkProvider == null) 
+			localNetworkProvider = new LocalNetworkProvider(networkEnvironment, 1339, 1338);
+		
+		if (desktopDataReciver == null)
+			desktopDataReciver = new DesktopDataReciver();
 
 			if(listeners != null) {
 				networkEnvironment.addAllNetworkEnvironmentListeners(listeners);
@@ -68,28 +73,26 @@ public class NetworkEnvironmentManager {
 				}
 			}.start();
 		}
+		localNetworkProvider.dispose();
+		desktopDataReciver.dispose();
 	}
 
-	public static NetworkEnvironmentSettings loadNetworkEnvironmentSettings() {
+	public static NetworkEnvironment buildNetworkEnvironment() {
 	
 		EncryptionType et = EncryptionType.AES256;
 		
-		NetworkEnvironmentSettings s = new NetworkEnvironmentSettings(
-				"Desktop Environment", //The device name (e.g. Galaxy S5)
-				DeviceType.TYPE_DESKTOP,  //The device type: laptop, desktop, smartphone...
-				et, //The encryption to use
-				et.getSecretKeyFromPassword("anybeamRockt1137") //The password to use
-				);
-
-		return s;
+		try {
+			return new NetworkEnvironment.Builder(et, et.getSecretKeyFromPassword("anybeamRockt1137"))
+			.setDeviceName("Desktop Environment")
+			.setDeviceType(DeviceType.TYPE_DESKTOP)
+			.build();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public synchronized static void updateNetworkEnvironment() throws Exception {
-		NetworkEnvironmentSettingsEditor editor = new NetworkEnvironmentSettingsEditor(
-				getNetworkEnvironment().getNetworkEnvironmentSettings());
-		NetworkEnvironmentSettings newSettings = loadNetworkEnvironmentSettings();
-
-		networkEnvironment = editor.applyAll(newSettings, networkEnvironment);
+		
 	}
 
 }

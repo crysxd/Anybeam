@@ -44,7 +44,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 		}
 
 		if(networkEnvironment == null) {
-			networkEnvironment = buildNetworkEnvironments(context);
+			networkEnvironment = buildNetworkEnvironment(context);
 			
 //			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
 //			new LocalNetworkProvider(networkEnvironment,Integer.parseInt(prefs.getString("port_data", c.getString(R.string.default_port_data))), 
@@ -129,11 +129,11 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 	}
 
 	/**
-	 * Load the {@link NetworkEnvironmentSettings} from the current {@link NetworkEnvironment}
+	 * Load the settings into the current {@link NetworkEnvironment}
 	 * @param context the application {@link Context}
 	 * @return Returns the current {@link NetworkEnvironmentSettings}
 	 */
-	public static NetworkEnvironment buildNetworkEnvironments(Context context) {
+	public static NetworkEnvironment buildNetworkEnvironment(Context context) {
 		PreferenceManager.setDefaultValues(context.getApplicationContext(), R.xml.preferences, false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = prefs.edit();
