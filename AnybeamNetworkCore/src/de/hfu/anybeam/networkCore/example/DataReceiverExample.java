@@ -12,7 +12,6 @@ import java.io.OutputStream;
 
 import de.hfu.anybeam.networkCore.AbstractDownloadTransmissionAdapter;
 import de.hfu.anybeam.networkCore.Client;
-import de.hfu.anybeam.networkCore.DeviceType;
 import de.hfu.anybeam.networkCore.EncryptionType;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;

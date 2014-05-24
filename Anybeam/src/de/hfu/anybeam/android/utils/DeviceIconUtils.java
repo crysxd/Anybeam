@@ -2,7 +2,6 @@ package de.hfu.anybeam.android.utils;
 
 import android.graphics.drawable.Drawable;
 import de.hfu.anybeam.android.R;
-import de.hfu.anybeam.android.R.drawable;
 import de.hfu.anybeam.networkCore.DeviceType;
 
 

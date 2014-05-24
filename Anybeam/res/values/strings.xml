@@ -42,6 +42,9 @@
     <string name="send_clients_not_found">No Clients Found</string>
     <string name="send_clipboard_error">The clipboard dose not contain text to beam</string>
     <string name="send_image_error">Fehlermeldung Fehlt!</string>
+    <string name="transmission_done_title_clipboard">New Clipboard</string>
+    <string name="transmission_done_title_file">New File</string>
+    <string name="transmission_progress_title">Transmission in Progress</string>
     
 
 </resources>

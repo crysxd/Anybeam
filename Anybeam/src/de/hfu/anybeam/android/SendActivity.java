@@ -9,12 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.FragmentManager;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,10 +25,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
-import de.hfu.anybeam.networkCore.AbstractTransmissionAdapter;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
-import de.hfu.anybeam.networkCore.TransmissionEvent;
 
 public class SendActivity extends ListActivity implements NetworkEnvironmentListener {
 	
@@ -158,25 +153,8 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 		
 	}
 	
-	private String getRealPathFromURI(Context context, Uri contentUri) {
-		Cursor cursor = null;
-		try {
-			String[] proj = { MediaStore.Images.Media.DATA };
-			cursor = context.getContentResolver().query(contentUri, proj, null,
-					null, null);
-			int column_index = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			cursor.moveToFirst();
-			return cursor.getString(column_index);
-		} finally {
-			if (cursor != null) {
-				cursor.close();
-			}
-		}
-	}
-	
-	private String getFilenameFromURI(Context context, Uri contentUri) {
-		return getRealPathFromURI(context, contentUri).replaceAll("(.*[\\/])", "");
+	private String getFilenameFromPath(String path) {
+		return path.replaceAll("(.*[\\/])", "");
 	}
 	
 		
@@ -223,26 +201,24 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 				    	    	builder.setInputStreamLength(sharedText.length());
 				    	    	builder.setSourceName("*clipboard");
 				    	    }
-				        } else if (type.startsWith("image/")) { 
-				        	// Handle single image being sent
-			        	    Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-			        	    if (imageUri != null) {
+				        } else { 
+				        	// Handle file image being sent
+			        	    Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+			        	    if (fileUri != null) {
+			        	    	String path = fileUri.toString().replace("file:/", "");
+			        	    	Log.i("Filepaht", path);
 			        	        try {
 			        	        	builder.setInputStream(
 			        	        			new FileInputStream(
-			        	        					new File(getRealPathFromURI(getApplicationContext(), imageUri))));
+			        	        				new File(path)));
 			        	        	builder.setSourceName(
-			        	        			getFilenameFromURI(getApplicationContext(), imageUri));
+			        	        				getFilenameFromPath(path));
 			        	        	builder.setInputStreamLength(
-			        	        			new File(getRealPathFromURI(getApplicationContext(), imageUri)).length());
+			        	        			new File(path).length());
 			        			} catch (FileNotFoundException e) {
 			        				e.printStackTrace();
 			        			} 
 				        	}
-				        }
-				    } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-				        if (type.startsWith("image/")) {
-				            // Handle multiple images being sent
 				        }
 				    }
 				    
