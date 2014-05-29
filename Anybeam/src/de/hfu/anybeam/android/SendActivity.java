@@ -204,7 +204,8 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 				        	// Handle file image being sent
 			        	    Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
 			        	    if (fileUri != null) {
-			        	    	String path = fileUri.toString().replace("file:/", "");
+			        	    	String path = Uri.decode(fileUri.toString()).replace("file:/", "");
+
 			        	    	Log.i("Filepaht", path);
 			        	        try {
 			        	        	builder.setInputStream(

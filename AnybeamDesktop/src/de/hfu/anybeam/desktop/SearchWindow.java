@@ -67,7 +67,7 @@ public class SearchWindow implements NetworkEnvironmentListener {
 		        try {
 		        	Client client = NetworkEnvironmentManager.getNetworkEnvironment().getClientList().get(index);
 					
-		        	Client.SenderBuilder builder = new Client.SenderBuilder();
+		        	Client.SendTarsk builder = new Client.SendTarsk();
 					
 					if (file == null) {
 						// Handle text being sent

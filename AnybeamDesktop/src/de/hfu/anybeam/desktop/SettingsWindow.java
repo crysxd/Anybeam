@@ -84,8 +84,7 @@ public class SettingsWindow {
 		frame.getContentPane().add(cbEncryptionType, "cell 2 4,growx");
 		
 		JSeparator separator = new JSeparator();
-		separator.setForeground(SystemColor.controlDkShadow);
-		frame.getContentPane().add(separator, "cell 1 5 2 1");
+		frame.getContentPane().add(separator, "cell 1 5 2 1,grow");
 		
 		JLabel lblClientSettings = new JLabel(language.getString("SettingsWindow.lblClientSettings.text")); //$NON-NLS-1$
 		frame.getContentPane().add(lblClientSettings, "cell 1 6");
@@ -114,8 +113,7 @@ public class SettingsWindow {
 		frame.getContentPane().add(comboBox, "cell 2 9,growx");
 		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setForeground(SystemColor.controlDkShadow);
-		frame.getContentPane().add(separator_1, "cell 1 10 2 1");
+		frame.getContentPane().add(separator_1, "cell 1 10 2 1,grow");
 		
 		JLabel lblGeneralSettings = new JLabel(language.getString("SettingsWindow.lblGeneralSettings.text")); //$NON-NLS-1$
 		frame.getContentPane().add(lblGeneralSettings, "cell 1 11");
@@ -133,7 +131,7 @@ public class SettingsWindow {
 		frame.getContentPane().add(cbLanguage, "cell 2 13,growx");
 		
 		JSeparator separator_2 = new JSeparator();
-		frame.getContentPane().add(separator_2, "cell 1 14 2 1");
+		frame.getContentPane().add(separator_2, "cell 1 14 2 1,grow");
 		
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, "cell 1 15 2 1,grow");
