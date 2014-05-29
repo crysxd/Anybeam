@@ -2,10 +2,11 @@ package de.hfu.anybeam.desktop;
 
 import java.awt.EventQueue;
 
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-public class WindowManager  {
+public class Main  {
 	
 	public static void main(String[] args) {
 		try {
@@ -18,7 +19,8 @@ public class WindowManager  {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				MainWindow window = new MainWindow();
-				window.getFrame().setVisible(true);
+				window.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+				
 			}
 		});
 	}

@@ -1,141 +1,159 @@
 package de.hfu.anybeam.desktop;
 
-import java.awt.Font;
-import java.awt.GraphicsDevice;
+import java.awt.AWTException;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
+import java.awt.GridLayout;
+import java.awt.SystemTray;
 import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.SwingConstants;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
-import net.miginfocom.swing.MigLayout;
-import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
+import drawable.R;
 
-public class MainWindow {
+public class MainWindow extends JDialog implements ActionListener, MouseListener {
 
-	private JFrame frame;
-	private SearchWindow search;
+	private static final long serialVersionUID = 968022375061119513L;
 
-	/**
-	 * Create the application.
-	 */
+	private final JPanel dropZonePanel = new DropZone();
+	private final JPanel toolbarPanel = new JPanel();
+	private final JPanel toolbarHelperPanel = new JPanel();
+	private final JButton settingsButton = ViewUtils.createImageButton("settings");
+	private final JButton beamClipboardButton = ViewUtils.createButton("Beam Clipnoard");
+	private final JButton beamFileButton = ViewUtils.createButton("Beam File");
+	private final SearchWindow searchWindow = new SearchWindow();
+
 	public MainWindow() {
-		//Set Design to System Default
-//		try {
-//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//		} catch (ClassNotFoundException | InstantiationException
-//				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-//			e.printStackTrace();
-//		}
-		
-		//Initialize Network Environment Listener
-		search = new SearchWindow();
+		//Trayicon setup 
+		TrayIcon ico = new TrayIcon(R.getImgae("ic_launcher.png"));
+		ico.addMouseListener(this);
 		try {
-			NetworkEnvironmentManager.addNetworkEnvironmentListener(search);
+			SystemTray.getSystemTray().add(ico);
+		} catch (AWTException e) {
+			e.printStackTrace();
+		}
+		
+		//Window setup
+		this.setResizable(false);
+		this.setAlwaysOnTop(true);
+		this.setSize(400, 300);
+		
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+		int y = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getSize().height - 320;
+		this.setLocation(screen.width - 420, y);
+
+		//Build view
+		this.buildView();
+
+		//Init search window
+		try {
+			NetworkEnvironmentManager.addNetworkEnvironmentListener(this.searchWindow);
 			NetworkEnvironmentManager.getNetworkEnvironment().startClientSearch(365, TimeUnit.DAYS, 10, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		//Add shutdown hook to stop Network Environment Listener
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				try {
-					NetworkEnvironmentListener listener = NetworkEnvironmentManager.getNetworkEnvironment().getNetworkEnvironmentListener(0);
-					NetworkEnvironmentManager.removeNetworkEnvironmentListener(listener);
-					NetworkEnvironmentManager.getNetworkEnvironment().cancelClientSearch();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		
-		initialize();
 	}
-	
-	public JFrame getFrame() {
-		return frame;
-	}	
-	
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		ResourceBundle language = ResourceBundle.getBundle("values.strings", new Locale("en", "US"));
+
+	private void buildView() {
+		//restore start state
+		this.getContentPane().removeAll();
+
+		//set main layout
+		this.setLayout(new BorderLayout());
+
+		//Build toolbar
+		this.toolbarPanel.setLayout(new BorderLayout());
+		this.toolbarHelperPanel.setLayout(new GridLayout(1, this.beamClipboardButton.isVisible() ? 2 : 1, 10, 0));
+		this.toolbarHelperPanel.setBorder(new EmptyBorder(0, 0, 0, 10));
+		this.toolbarHelperPanel.add(this.beamFileButton);
+		if(this.beamClipboardButton.isVisible())
+			this.toolbarHelperPanel.add(this.beamClipboardButton);
+		this.toolbarPanel.add(toolbarHelperPanel, BorderLayout.CENTER);
+		this.toolbarPanel.add(this.settingsButton, BorderLayout.EAST);
 		
-		frame = new JFrame();
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/drawable/ic_launcher.png")));
-		frame.setTitle(language.getString("programmName"));
-		frame.setBounds(100, 100, 420, 320);
-		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new MigLayout("", "[20px:n][150px:n][grow][150px:n][20px:n]", "[23px][][][][grow][]"));
-		frame.setVisible(true);
+		this.settingsButton.addActionListener(this);
+		this.beamClipboardButton.addActionListener(this);
+		this.beamFileButton.addActionListener(this);
+
+		this.add(toolbarPanel, BorderLayout.SOUTH);
+		this.toolbarPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+
+		//Build dropzone
+		this.add(dropZonePanel, BorderLayout.CENTER);		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == this.beamClipboardButton) {
+			this.searchWindow.showWindow();
+
+		} else if(e.getSource() == this.beamFileButton) {
+			this.openFileChooser();
+
+		} else if(e.getSource() == this.settingsButton) {
+			SettingsWindow window = new SettingsWindow();
+			window.getFrame().setVisible(true);
+
+		}
 		
-		//place Window in the bottom right corner
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
-        Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
-        int x = (int) rect.getMaxX() - frame.getWidth();
-        int y = (int) rect.getMaxY() - frame.getHeight();
-        frame.setLocation(x, y);
-				
-		JButton btnClipboard = new JButton(language.getString("beamClipboard"));
-		btnClipboard.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//open Search window
-				search.showWindow();
-			}
-		});
-		frame.getContentPane().add(btnClipboard, "cell 1 0,growx,aligny center");
-		
-		JButton btnFile = new JButton(language.getString("beamFile"));
-		btnFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//open Choose Window
-				openFileChooser();
-			}
-		});
-		frame.getContentPane().add(btnFile, "cell 3 0,growx,aligny center");
-		
-		JLabel lblHistory = new JLabel(language.getString("lableHitory"));
-		lblHistory.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblHistory.setHorizontalAlignment(SwingConstants.CENTER);
-		frame.getContentPane().add(lblHistory, "cell 2 1,alignx center,aligny center");
-		
-		JList list = new JList();
-		frame.getContentPane().add(list, "cell 0 2 5 3,grow");
-		
-		JButton btnSettings = new JButton(language.getString("settings"));
-		btnSettings.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				SettingsWindow window = new SettingsWindow();
-				window.getFrame().setVisible(true);
-			}
-		});
-		frame.getContentPane().add(btnSettings, "cell 3 5,growx,aligny top");
+		this.setVisible(false);
+
 	}
 	
 	private void openFileChooser() {
-		 JFileChooser fileChooser = new JFileChooser();
-	        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-	        int result = fileChooser.showOpenDialog(fileChooser);
-	        if (result == JFileChooser.APPROVE_OPTION) {
-	            File selectedFile = fileChooser.getSelectedFile();
-	            search.showWindow(selectedFile);
-	        } 
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		int result = fileChooser.showOpenDialog(fileChooser);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = fileChooser.getSelectedFile();
+			this.searchWindow.showWindow(selectedFile);
+		} 
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(this.isVisible())
+			this.setVisible(false);
+		else
+			this.setVisible(true);
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
