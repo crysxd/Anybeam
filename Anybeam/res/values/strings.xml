@@ -42,9 +42,15 @@
     <string name="send_clients_not_found">No Clients Found</string>
     <string name="send_clipboard_error">The clipboard dose not contain text to beam</string>
     <string name="send_image_error">Fehlermeldung Fehlt!</string>
-    <string name="transmission_done_title_clipboard">New Clipboard</string>
-    <string name="transmission_done_title_file">New File</string>
-    <string name="transmission_progress_title">Transmission in Progress</string>
+    <string name="transmission_in_done_title_clipboard">New clipboard text received</string>
+    <string name="transmission_in_done_title_file">New file received</string>
+    <string name="transmission_in_progress_title">Receiving file</string>
+    <string name="transmission_out_done_title_clipboard">Clipboard Beamed</string>
+    <string name="transmission_out_done_title_file">File Beamed</string>
+    <string name="transmission_out_progress_title">Beaming in Progress</string>
+    <string name="error_port_bind_message">The present ports for brodcast or data messages are already used by another application</string>
+    <string name="error_port_bind_title">Port bind error</string>
+    <string name="error_accept">Ok</string>
     
 
 </resources>

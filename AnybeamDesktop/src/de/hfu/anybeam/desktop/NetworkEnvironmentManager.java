@@ -63,8 +63,11 @@ public class NetworkEnvironmentManager {
 						synchronized (NetworkEnvironmentManager.class) {
 							networkEnvironment.dispose();
 							networkEnvironment = null;
+							localNetworkProvider.dispose();
+							localNetworkProvider = null;
+							desktopDataReciver.dispose();
+							desktopDataReciver = null;
 						}
-
 
 					} catch(Exception e) {
 						e.printStackTrace();
@@ -73,8 +76,6 @@ public class NetworkEnvironmentManager {
 				}
 			}.start();
 		}
-		localNetworkProvider.dispose();
-		desktopDataReciver.dispose();
 	}
 
 	public static NetworkEnvironment buildNetworkEnvironment() {

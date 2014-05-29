@@ -222,7 +222,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 				        }
 				    }
 				    
-					builder.setAdapter(	new GeneralTransmission());
+					builder.setAdapter(new GeneralTransmission(getApplicationContext()));
 					builder.sendTo(c);
 					
 					//Close Activity after Sending

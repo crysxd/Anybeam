@@ -7,13 +7,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.Executors;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -35,28 +38,22 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	private File file;
 		
 	/**
-	 * Creates a new AndroidDataReceiver which starts a
+	 * Creates a new AndroidDataReceiver which starts a {@link TcpDataReceiver}
 	 * @param context the application {@link Context}
+	 * @throws Exception 
 	 */
-	public AndroidDataReceiver(Context context) {
-			
+	public AndroidDataReceiver(Context context) throws Exception {
 		this.context = context.getApplicationContext();
 		
 		try {
 			NetworkEnvironment environment = NetworkEnvironmentManager.getNetworkEnvironment(context);
-
+			
 			//generate reciever from settings
-//			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
-//			reciver = new TcpDataReceiver(
-//					environment.getEncryptionType(),
-//					environment.getEncryptionKey(), 
-//					Integer.parseInt(prefs.getString("port_data", c.getString(R.string.default_port_data))), 
-//					this);
-
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 			reciver = new TcpDataReceiver(
 					environment.getEncryptionType(),
 					environment.getEncryptionKey(), 
-					1338, //TODO Load form Preferences
+					Integer.parseInt(prefs.getString("port_data", context.getString(R.string.default_port_data))),
 					this);
 			Executors.newSingleThreadExecutor().execute(reciver);
 		} catch (Exception e) {
@@ -84,7 +81,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			.setSmallIcon(R.drawable.ic_launcher)
 			.setWhen(System.currentTimeMillis())
 			.setProgress(100, (int) (e.getPercentDone() * 100), false)
-			.setContentTitle(context.getString(R.string.transmission_progress_title)) 
+			.setContentTitle(context.getString(R.string.transmission_in_progress_title)) 
 			.setContentText(e.getResourceName());
 		
 		NotificationManager mManager = (NotificationManager) context
@@ -151,7 +148,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			}else {
 				mBuilder.setContentText(value);
 			}
-			mBuilder.setContentTitle(context.getString(R.string.transmission_done_title_clipboard));
+			mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_clipboard));
 			
 		} else if (out instanceof FileOutputStream) {
 			Uri uri = Uri.fromFile(file);
@@ -161,7 +158,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			intent.setDataAndType(uri, getMimeType(uri.getPath()));
 			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 			
-			mBuilder.setContentTitle(context.getString(R.string.transmission_done_title_file)); 
+			mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_file)); 
 			mBuilder.setContentText(e.getResourceName());
 			mBuilder.setContentIntent(pendingIntent);
 		}

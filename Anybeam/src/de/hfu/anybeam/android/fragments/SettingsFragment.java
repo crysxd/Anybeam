@@ -41,7 +41,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 	        			.setPositiveButton(android.R.string.ok, null);
 	        		builder.show();
 	        		return false;				
-				}				
+				}			
 				return true;
 			}
 		};

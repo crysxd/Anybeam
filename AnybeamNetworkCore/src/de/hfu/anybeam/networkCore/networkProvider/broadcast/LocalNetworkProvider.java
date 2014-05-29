@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.crypto.NoSuchPaddingException;
 
-import sun.misc.Cache;
 import de.hfu.anybeam.networkCore.AbstractTransmissionAdapter;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.EnvironmentProvider;

@@ -841,7 +841,7 @@ public class NetworkEnvironment {
 	
 	/**
 	 * A class containing all necessary settings for an {@link NetworkEnvironment}
-	 * @author chrwuer
+	 * @author preussjan, chrwuer
 	 * @since 1.0
 	 * @version 1.0
 	 */
@@ -865,52 +865,82 @@ public class NetworkEnvironment {
 		//the id of the local device
 		private String localID;
 		
+		/**
+		 * Creates {@link Builder} object with necessary attributes
+		 * @param encryptionType the used {@link EncryptionType}
+		 * @param encryptionKey the used Key
+		 */
 		public Builder(EncryptionType encryptionType, byte[] encryptionKey) {
 			this.encryptionType = encryptionType;
 			this.encryptionKey = encryptionKey;
 			this.localID = this.generateId();
 		}
 		
+		/**
+		 * Sets the device name (Default = "Unknown")
+		 * @param deviceName the Name
+		 * @return the {@link Builder} object to chain commands
+		 */
 		public Builder setDeviceName(String deviceName) {
 			this.deviceName = deviceName;
 			return this;
 		}
 
-		//TODO DOKU
-
+		/**
+		 * Sets the {@link DeviceType} (Default = "Unknown")
+		 * @param deviceType the {@link DeviceType}
+		 * @return the {@link Builder} object to chain commands
+		 */
 		public Builder setDeviceType(DeviceType deviceType) {
 			this.deviceType = deviceType;
 			return this;
 		}
 
-
-
+		/**
+		 * Sets the {@link EncryptionType}
+		 * @param encryptionType the {@link EncryptionType}
+		 * @return the {@link Builder} object to chain commands
+		 */
 		public Builder setEncryptionType(EncryptionType encryptionType) {
 			this.encryptionType = encryptionType;
 			return this;
 		}
 
-
-
+		/**
+		 * Sets the operating system name (Default = os.name from System.getProperty)
+		 * @param osName the name of the operating system
+		 * @return the {@link Builder} object to chain commands
+		 */
 		public Builder setOsName(String osName) {
 			this.osName = osName;
 			return this;
 		}
 
-
-
+		/**
+		 * Sets the local Id to identify a client
+		 * @param localID the local Id
+		 * @return the {@link Builder} object to chain commands
+		 */
 		public Builder setLocalID(String localID) {
 			this.localID = localID;
 			return this;
 		}
 
-
-
+		/**
+		 * Sets the encryption key
+		 * @param encryptionKey the encryption key
+		 * @return the {@link Builder} object to chain commands
+		 */
 		public Builder setEncryptionKey(byte[] encryptionKey) {
 			this.encryptionKey = encryptionKey;
 			return this;
 		}
 		
+		/**
+		 * Builds the {@link NetworkEnvironment}
+		 * @return the finished {@link NetworkEnvironment}
+		 * @throws Exception
+		 */
 		public NetworkEnvironment build() throws Exception {
 			return new NetworkEnvironment(this);
 		}

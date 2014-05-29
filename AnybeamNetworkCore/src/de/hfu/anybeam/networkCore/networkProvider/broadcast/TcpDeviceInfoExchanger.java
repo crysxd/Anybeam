@@ -65,7 +65,9 @@ public class TcpDeviceInfoExchanger implements Runnable {
 					int port = bundle.getInteger(TcpDeviceInfoExchanger.HEADER_FIELD_DATA_PORT);
 					address = new InetSocketAddress(s.getInetAddress(), port);
 					
-				} catch(Exception e) {}
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 				
 				//Call NetworkEnvironment to handle infos
 				Client c = this.MY_OWNER.getNetworkEnvironment().handleIncomingParameterBundle(bundle, this.MY_OWNER, address);
