@@ -35,17 +35,21 @@ public class MainWindow extends JDialog implements ActionListener, MouseListener
 	private final JButton beamClipboardButton = ViewUtils.createButton("Beam Clipnoard");
 	private final JButton beamFileButton = ViewUtils.createButton("Beam File");
 	private final SearchWindow searchWindow = new SearchWindow();
-
-	public MainWindow() {
+	public final static TrayIcon trayIcon;
+	
+	static {
 		//Trayicon setup 
-		TrayIcon ico = new TrayIcon(R.getImgae("ic_launcher.png"));
-		ico.addMouseListener(this);
+		trayIcon = new TrayIcon(R.getImgae("ic_launcher.png"));
 		try {
-			SystemTray.getSystemTray().add(ico);
+			SystemTray.getSystemTray().add(trayIcon);
 		} catch (AWTException e) {
 			e.printStackTrace();
 		}
-		
+	}
+	
+	public MainWindow() {	
+		trayIcon.addMouseListener(this);
+
 		//Window setup
 		this.setResizable(false);
 		this.setAlwaysOnTop(true);

@@ -1,6 +1,7 @@
 package de.hfu.anybeam.desktop;
 
 import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.ByteArrayOutputStream;
@@ -50,6 +51,7 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter{
 	@Override
 	public void transmissionDone(TransmissionEvent e) {
 		System.out.println("[" + e.getResourceName() + "] Done");
+		MainWindow.trayIcon.displayMessage("Download done", "Downloaded \"" + e.getResourceName() + "\".", TrayIcon.MessageType.INFO);
 
 	}
 
