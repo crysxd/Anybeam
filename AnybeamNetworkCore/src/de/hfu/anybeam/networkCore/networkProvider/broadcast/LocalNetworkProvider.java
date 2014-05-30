@@ -112,7 +112,6 @@ public class LocalNetworkProvider extends EnvironmentProvider implements UdpBroa
 
 	@Override
 	public void unregisterOnNetwork() {
-		System.out.println("unregister");
 		//TODO Start a single thread for every known client and open a tcp connection to unregister
 		ExecutorService executor = Executors.newCachedThreadPool();
 		List<Callable<Void>> tasks = new ArrayList<Callable<Void>>();

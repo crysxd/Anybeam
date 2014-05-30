@@ -124,6 +124,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 
 	@Override
 	public void clientFound(Client c) {
+		Log.i("Client", "Found");
 		updateView();		
 	}
 
