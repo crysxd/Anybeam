@@ -189,7 +189,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 				    String action = intent.getAction();
 				    String type = intent.getType();
 				    
-				    Client.SendTarsk builder = new Client.SendTarsk();
+				    Client.SendTask builder = new Client.SendTask();
 
 				    if (Intent.ACTION_SEND.equals(action) && type != null) {
 				        if ("text/plain".equals(type)) {
