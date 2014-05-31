@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ListActivity;
 import android.content.Intent;
@@ -28,13 +29,14 @@ import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 
-public class SendActivity extends ListActivity implements NetworkEnvironmentListener {
+public class SendActivity extends Activity implements NetworkEnvironmentListener {
 	
 	private ListView clientList;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_search);
 		
 		try {
 			NetworkEnvironmentManager.addNetworkEnvironmentListener(this);
@@ -44,7 +46,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 			e.printStackTrace();
 		}	
 					
-		clientList = this.getListView();
+		clientList = (ListView) findViewById(R.id.lvClient);
 		
 		this.setListener();
 		this.updateView();
@@ -112,7 +114,7 @@ public class SendActivity extends ListActivity implements NetworkEnvironmentList
 				try {
 					ArrayList<Client> l = new ArrayList<Client> (NetworkEnvironmentManager
 							.getNetworkEnvironment(SendActivity.this).getClientList());
-					setListAdapter(new ClientAdapter(getApplicationContext(), l));
+					clientList.setAdapter(new ClientAdapter(getApplicationContext(), l));
 
 				} catch (Exception e) {
 					e.printStackTrace();

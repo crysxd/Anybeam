@@ -23,4 +23,19 @@
     <color name="anybeam_green">#7aa623</color>
     <color name="anybeam_gray">#484848</color>
     
+    <style name="Widget">
+        <item name="android:textAppearance">@android:attr/textAppearance</item>
+    </style>
+
+    <style name="Widget.ProgressBar">
+        <item name="android:indeterminateOnly">true</item>
+        <item name="android:indeterminateBehavior">repeat</item>
+        <item name="android:indeterminateDuration">3500</item>
+    </style>
+
+    <style name="Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
+    </style>
+
 </resources>
