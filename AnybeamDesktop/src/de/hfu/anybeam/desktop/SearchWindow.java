@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -73,7 +75,8 @@ public class SearchWindow implements NetworkEnvironmentListener {
 						// Handle text being sent
 						String data = (String) Toolkit.getDefaultToolkit()
 			                    .getSystemClipboard().getData(DataFlavor.stringFlavor); 
-						builder.setInputStream(new ByteArrayInputStream(data.getBytes()));
+						ByteBuffer bytes = Charset.forName("UTF-8").encode(data);
+						builder.setInputStream(new ByteArrayInputStream(bytes.array()));
 						builder.setInputStreamLength(data.length());
 						builder.setSourceName("*clipboard");
 					} else {
