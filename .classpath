@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="Anybeam/gen"/>
+	<classpathentry kind="src" path="Anybeam/src"/>
+	<classpathentry kind="src" path="AnybeamDesktop/res"/>
+	<classpathentry kind="src" path="AnybeamDesktop/src"/>
+	<classpathentry kind="src" path="AnybeamNetworkCore/src"/>
+	<classpathentry kind="lib" path="Anybeam/libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="AnybeamDesktop/forms-1.3.0.jar"/>
+	<classpathentry kind="lib" path="AnybeamDesktop/miglayout15-swing.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="AnybeamNetworkCore/bin"/>
+</classpath>
