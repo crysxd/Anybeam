@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Settings>
+    <PreferencesGroup title="Group Settings" summary="All group settings must be equal on all devices.">
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="integerPreference" min="1025" max="49151" name="Broadcast Port" summary="@value"  value="1339" id="port_broadcast"/>
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textPreference" maxLegth="32" name="Group Password" summary="@value"  value="anybeamRockt1137" id="group_password"/>
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="listPreference" name="Encryption Type" summary="@value"  value="AES128" id="group_encryption_type">
+            <Possibilities>
+                <Possibility value="No Encryption" key="None"/>
+                <Possibility value="DES" key="DES"/>
+                <Possibility value="AES128" key="AES 128"/>
+                <Possibility value="AES256" key="AES 256"/>
+            </Possibilities>
+        </Preference>
+    </PreferencesGroup>
+    <PreferencesGroup title="Client Settings" summary="">
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textPreference" maxLegth="32" name="Client Name" summary="@value"  value="Test Device" id="client_name"/>
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="integerPreference" min="1025" max="64000" name="Data Port" summary="@value"  value="1339" id="port_data"/>
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="listPreference" name="Device Type" summary="@value"  value="TYPE_UNKNOWN" id="client_type">
+            <Possibilities>
+                <Possibility value="TYPE_SMARTPHONE" key="Smartphone"/>
+                <Possibility value="TYPE_DESKTOP" key="Desktop"/>
+                <Possibility value="TYPE_LAPTOP" key="Laptop"/>
+                <Possibility value="TYPE_TABLET" key="Tablet"/>
+                <Possibility value="TYPE_UNKNOWN" key="Unknown"/>
+            </Possibilities>
+        </Preference>
+    </PreferencesGroup>
+    <PreferencesGroup title="General Settings" summary="">
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanPreference" name="Auto Clipboard" summary="Auto share new clipboard entreis (text only)" value="False" id="gen_auto_clipboard"/>
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanPreference" name="Auto Open Links" summary="Auto open received links" value="False" id="gen_auto_open_links"/>
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanPreference" name="Auto Open Files" summary="Auto open received files" value="False" id="gen_auto_open_files"/>
+    </PreferencesGroup>
+</Settings>

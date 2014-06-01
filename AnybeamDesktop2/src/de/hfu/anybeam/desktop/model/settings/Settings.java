@@ -16,7 +16,8 @@ public class Settings {
 	 * Static content
 	 */
 	private static Settings singleton;
-	private static File xmlFile = new File("C:\\Users\\Christian\\Desktop\\settings.xml");
+	//TODO Save in convinient location
+	private static File xmlFile = new File("settings.xml");
 	
 	public static Settings getSettings() {
 		if(singleton == null)

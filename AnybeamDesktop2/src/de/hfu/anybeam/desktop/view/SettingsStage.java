@@ -130,8 +130,6 @@ public class SettingsStage extends Stage implements ActionListener, MouseListene
 		
 	}
 
-
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		DefaultListModel<SettingsListItem> m = (DefaultListModel<SettingsListItem>) this.SETTINGS_LIST.getModel();
@@ -161,7 +159,7 @@ public class SettingsStage extends Stage implements ActionListener, MouseListene
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		
+		this.SETTINGS_LIST.removeSelectionInterval(0, this.SETTINGS_LIST.getModel().getSize());
 	}
 
 	@Override
