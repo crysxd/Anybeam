@@ -73,6 +73,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	public void transmissionProgressChanged(TransmissionEvent e) {
 		Log.i("Transmission", "Progress Changed: " + String.format("%.2f", e.getPercentDone()));
 		
+		//Notification to inform user about progress
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
 			.setSmallIcon(R.drawable.ic_launcher)
 			.setWhen(System.currentTimeMillis())
@@ -80,6 +81,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			.setContentTitle(context.getString(R.string.transmission_in_progress_title)) 
 			.setContentText(e.getResourceName());
 		
+		//Update/Create notification
 		NotificationManager mManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		mManager.notify(e.getTransmissionId(), mBuilder.build());
@@ -125,20 +127,27 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	}
 
 	@Override
-	public void closeOutputStream(TransmissionEvent e, OutputStream out) {
+	public void closeOutputStream(final TransmissionEvent e, OutputStream out) {
 		Log.i("Transmission", "Closed id: " + e.getTransmissionId());
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
 			.setSmallIcon(R.drawable.ic_launcher)
 			.setWhen(System.currentTimeMillis());
 		
+		final NotificationManager mManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		
+		
 		if (out instanceof ByteArrayOutputStream && e.getResourceName().equals("*clipboard")) {
 			Looper.prepare();
-
+			//Clipboard Text
+			
+			//Get String from stream
 			ByteArrayOutputStream bo = (ByteArrayOutputStream) out;	
 			String value = new String(bo.toByteArray());
 			ClipboardUtils.copyToClipboard(context, "Text", value);
 			
+			//Shorten content text
 			if (value.length() > 40) {
 				mBuilder.setContentText(value.substring(0, 40) + "...");				
 			}else {
@@ -146,7 +155,20 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			}
 			mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_clipboard));
 			
+			//Remove notification after 3 seconds
+			new Thread() {
+				public void run() {
+					try {
+						sleep(3000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+					mManager.cancel(e.getTransmissionId());
+				};
+			}.start();
+			
 		} else if (out instanceof FileOutputStream) {
+			//File to save
 			Uri uri = Uri.fromFile(file);
 			
 			Intent intent = new Intent();
@@ -159,9 +181,6 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			mBuilder.setContentIntent(pendingIntent);
 		}
 		
-		
-		NotificationManager mManager = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
 		mManager.notify(e.getTransmissionId(), mBuilder.build());
 		
 		try {

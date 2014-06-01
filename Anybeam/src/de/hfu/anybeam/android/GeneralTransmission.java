@@ -31,6 +31,7 @@ public class GeneralTransmission implements AbstractTransmissionAdapter {
 	public void transmissionProgressChanged(TransmissionEvent e) {
 		Log.i("Transmission", "Progress Changed: " + String.format("%.2f", e.getPercentDone()));
 		
+		//Notification to inform user about progress
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
 			.setSmallIcon(R.drawable.ic_launcher)
 			.setWhen(System.currentTimeMillis())
@@ -38,6 +39,7 @@ public class GeneralTransmission implements AbstractTransmissionAdapter {
 			.setContentTitle(context.getString(R.string.transmission_out_progress_title)) 
 			.setContentText(e.getResourceName());
 		
+		//Update/Create notification
 		NotificationManager mManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		mManager.notify(e.getTransmissionId(), mBuilder.build());
@@ -50,20 +52,34 @@ public class GeneralTransmission implements AbstractTransmissionAdapter {
 	}
 
 	@Override
-	public void transmissionDone(TransmissionEvent e) {
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-			.setSmallIcon(R.drawable.ic_launcher)
-			.setWhen(System.currentTimeMillis());
-		if (e.getResourceName().equals("*clipboard")) {
-			mBuilder.setContentTitle(context.getString(R.string.transmission_out_done_title_clipboard));
-		} else {
-			mBuilder.setContentTitle(context.getString(R.string.transmission_out_done_title_file))
+	public void transmissionDone(final TransmissionEvent e) {
+		//if we have a file send a message
+		if (!(e.getResourceName().equals("*clipboard"))) { 
+			//Build notification
+			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setWhen(System.currentTimeMillis())
+				.setContentTitle(context.getString(R.string.transmission_out_done_title_file))
 				.setContentText(e.getResourceName());
+			
+			//Show notification
+			final NotificationManager mManager = (NotificationManager) context
+					.getSystemService(Context.NOTIFICATION_SERVICE);
+			mManager.notify(e.getTransmissionId(), mBuilder.build());
+			
+			//Remove notification after 5 seconds
+			new Thread() {
+				public void run() {
+					try {
+						sleep(5000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+					mManager.cancel(e.getTransmissionId());
+				};
+			}.start();
 		}
 	
-	NotificationManager mManager = (NotificationManager) context
-			.getSystemService(Context.NOTIFICATION_SERVICE);
-	mManager.notify(e.getTransmissionId(), mBuilder.build());
 
 	}
 }

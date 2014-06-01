@@ -70,7 +70,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 				new AlertDialog.Builder(context)
 					.setTitle(R.string.error_port_bind_title)
 					.setMessage(R.string.error_port_bind_message)
-					.setNeutralButton(R.string.error_accept, new DialogInterface.OnClickListener() {
+					.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();

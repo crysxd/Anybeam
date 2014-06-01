@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
@@ -37,6 +38,12 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
+		
+		ImageView ivSearching = (ImageView) findViewById(R.id.ivSearching);
+		AnimationDrawable frameAnimation = (AnimationDrawable) ivSearching.getDrawable();
+		frameAnimation.setCallback(ivSearching);
+		frameAnimation.setVisible(true, true);
+		frameAnimation.start();
 		
 		try {
 			NetworkEnvironmentManager.addNetworkEnvironmentListener(this);

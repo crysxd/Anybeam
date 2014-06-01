@@ -1,23 +1,22 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:layout_alignParentLeft="true"
+    android:layout_centerVertical="true"
+    android:orientation="vertical" >
 
-	<ProgressBar
-	    android:id="@+id/pbSearching"
-	    style="@style/Widget.ProgressBar.Horizontal"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:indeterminate="true"
-	    android:minHeight="4dp"
-	    android:minWidth="48dp"
-	    android:progressDrawable="@drawable/progress_indeterminate_horizontal_holo" />
+    <ImageView
+        android:id="@+id/ivSearching"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/progress_indeterminate_horizontal_holo" 
+        android:contentDescription="@string/alt_ivsearching"/>
 
     <ListView
         android:id="@+id/lvClient"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/pbSearching"
-        android:layout_below="@+id/pbSearching" >
+        android:layout_height="wrap_content" >
     </ListView>
 
-</RelativeLayout>
+</LinearLayout>
