@@ -11,6 +11,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.util.Log;
 
 /**
  * Fragment to display the settings.xml
@@ -99,10 +100,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		} else if (preference instanceof EditTextPreference) {
 			EditTextPreference editTextPreference = (EditTextPreference) preference;
 			
-			//Don't overwrite Password Summary
-			if (!editTextPreference.getTitle().equals(getString(R.string.settings_pref_group_password))) {
-				editTextPreference.setSummary(editTextPreference.getText());				
-			}
+			editTextPreference.setSummary(editTextPreference.getText());				
 		}
 	}
 	

@@ -75,7 +75,7 @@ public class TcpDataReceiver implements Runnable {
 	public void run() {
 		
 		//While not interupter
-		while(!Thread.interrupted()) {
+		while(!Thread.interrupted() && !this.SOCKET.isClosed()) {
 			
 			try {
 				
@@ -97,7 +97,7 @@ public class TcpDataReceiver implements Runnable {
 				
 			} catch(Exception e) {
 				//If the Thread was interrupted -> break, else print stack trace and wait again for incoming connections
-				if(Thread.interrupted())
+				if(!Thread.interrupted() || this.SOCKET.isClosed())
 					break;
 				else
 					e.printStackTrace();

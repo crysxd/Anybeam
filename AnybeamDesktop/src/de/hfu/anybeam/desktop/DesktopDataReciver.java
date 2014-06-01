@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
 import de.hfu.anybeam.networkCore.AbstractDownloadTransmissionAdapter;
 import de.hfu.anybeam.networkCore.NetworkEnvironment;
@@ -87,12 +88,17 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter{
 		System.out.println("OutputStream closed");
 		if(out instanceof ByteArrayOutputStream && e.getResourceName().equals("*clipboard")) {
 			ByteArrayOutputStream clipboardOut = (ByteArrayOutputStream) out;
-			String s = new String(clipboardOut.toByteArray());
-			StringSelection selection = new StringSelection(s);
-			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-			clipboard.setContents(selection, selection);
-
-			System.out.println("[" + e.getResourceName() + "] Copied to clipboard: " + s);
+			
+			try {
+				String s = new String(clipboardOut.toByteArray(), "UTF-8");
+				StringSelection selection = new StringSelection(s);
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				clipboard.setContents(selection, selection);
+				
+				System.out.println("[" + e.getResourceName() + "] Copied to clipboard: " + s);
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			}
 
 		}
 

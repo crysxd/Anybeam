@@ -17,24 +17,26 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AnybeamTheme" >
+        
+        <!-- The Main Activity -->
         <activity
             android:name="de.hfu.anybeam.android.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <!-- The Send Activity -->
         <activity
             android:name="de.hfu.anybeam.android.SendActivity"
             android:label="@string/send_title" >
+            
             <!-- Share File -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="application/*" /> <!-- Not media/text files (pdf, zip etc...) -->
 			    <data android:mimeType="audio/*" />
 			    <data android:mimeType="image/*" />
@@ -42,6 +44,8 @@
 			    <data android:mimeType="text/*" />
 			    <data android:mimeType="video/*" />
             </intent-filter>
+            
+            <!-- Share Text -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -50,10 +54,13 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+        
+        <!-- The Settings Activity -->
         <activity
             android:name="de.hfu.anybeam.android.SettingsActivity"
             android:label="@string/settings_title" >
         </activity>
+        
         <!-- Receive Wi-Fi connection state changes -->
         <receiver android:name="de.hfu.anybeam.android.NetworkEnvironmentManager" >
             <intent-filter>

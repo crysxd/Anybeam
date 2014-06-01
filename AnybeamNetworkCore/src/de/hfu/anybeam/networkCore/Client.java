@@ -188,10 +188,10 @@ public class Client implements Comparable<Client>, Serializable {
 		
 	/**
 	 * Sends the data from the stream to the client.
-	 * @param builder the {@link SendTarsk} used to send
+	 * @param builder the {@link SendTask} used to send
 	 * @throws IOException
 	 */
-	private void sendData(SendTarsk builder) throws IOException{
+	private void sendData(SendTask builder) throws IOException{
 		EnvironmentProvider p = getBestProvider();
 		System.out.println("sendData");
 		p.sendData(this, builder.inputStream, builder.inputStreamLength, builder.sourceName, builder.adapter);
@@ -203,7 +203,7 @@ public class Client implements Comparable<Client>, Serializable {
 	 * @since 1.0
 	 * @version 1.0
 	 */
-	public static class SendTarsk {
+	public static class SendTask {
 		private InputStream inputStream;
 		private long inputStreamLength = -1;
 		private String sourceName = "unknown"; 
@@ -213,9 +213,9 @@ public class Client implements Comparable<Client>, Serializable {
 		/**
 		 * Sets the {@link InputStream} to send
 		 * @param inputStream the {@link InputStream} to send the data from
-		 * @return the {@link SendTarsk} object
+		 * @return the {@link SendTask} object
 		 */
-		public SendTarsk setInputStream(InputStream inputStream) {
+		public SendTask setInputStream(InputStream inputStream) {
 			this.inputStream = inputStream;
 			return this;
 		}
@@ -223,9 +223,9 @@ public class Client implements Comparable<Client>, Serializable {
 		/**
 		 * Sets the length of data to send
 		 * @param inputStreamLength the length of inputStream or -1 if inputStream is endless
-		 * @return the {@link SendTarsk} object
+		 * @return the {@link SendTask} object
 		 */
-		public SendTarsk setInputStreamLength(long inputStreamLength) {
+		public SendTask setInputStreamLength(long inputStreamLength) {
 			this.inputStreamLength = inputStreamLength;
 			return this;
 		}
@@ -233,9 +233,9 @@ public class Client implements Comparable<Client>, Serializable {
 		/**
 		 * Sets the name of the source
 		 * @param sourceName the name of the source represented by inputStream e.g. the filename
-		 * @return the {@link SendTarsk} object
+		 * @return the {@link SendTask} object
 		 */
-		public SendTarsk setSourceName(String sourceName) {
+		public SendTask setSourceName(String sourceName) {
 			this.sourceName = sourceName;
 			return this;
 		}
@@ -243,9 +243,9 @@ public class Client implements Comparable<Client>, Serializable {
 		/**
 		 * Sets the {@link AbstractDownloadTransmissionAdapter}
 		 * @param adapter the {@link AbstractDownloadTransmissionAdapter} for status updates
-		 * @return the {@link SendTarsk} object
+		 * @return the {@link SendTask} object
 		 */
-		public SendTarsk setAdapter(AbstractTransmissionAdapter adapter) {
+		public SendTask setAdapter(AbstractTransmissionAdapter adapter) {
 			this.adapter = adapter;
 			return this;
 		}

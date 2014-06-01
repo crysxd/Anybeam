@@ -45,20 +45,16 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	public AndroidDataReceiver(Context context) throws Exception {
 		this.context = context.getApplicationContext();
 		
-		try {
-			NetworkEnvironment environment = NetworkEnvironmentManager.getNetworkEnvironment(context);
-			
-			//generate reciever from settings
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-			reciver = new TcpDataReceiver(
-					environment.getEncryptionType(),
-					environment.getEncryptionKey(), 
-					Integer.parseInt(prefs.getString("port_data", context.getString(R.string.default_port_data))),
-					this);
-			Executors.newSingleThreadExecutor().execute(reciver);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		NetworkEnvironment environment = NetworkEnvironmentManager.getNetworkEnvironment(context);
+		
+		//generate reciever from settings
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		reciver = new TcpDataReceiver(
+				environment.getEncryptionType(),
+				environment.getEncryptionKey(), 
+				Integer.parseInt(prefs.getString("port_data", context.getString(R.string.default_port_data))),
+				this);
+		Executors.newSingleThreadExecutor().execute(reciver);
 	}
 	
 	/**

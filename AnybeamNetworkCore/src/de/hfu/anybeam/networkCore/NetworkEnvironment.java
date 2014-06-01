@@ -573,9 +573,8 @@ public class NetworkEnvironment {
 				if(!this.CLIENTS.get(id).equals(c)) {
 					//copy and invoke clientUpdated
 					this.CLIENTS.get(id).copy(c);
-					this.dispatchEvent("clientUpdated", new Class[]{Client.class}, this.CLIENTS.get(id));
-
 				}
+				this.dispatchEvent("clientUpdated", new Class[]{Client.class}, this.CLIENTS.get(id));
 
 				//Client is in the list and information is up to date -> do nothing
 				return;

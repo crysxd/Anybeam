@@ -7,7 +7,8 @@ public abstract class EnvironmentProvider implements Comparable<EnvironmentProvi
 
 	//The NetworEnvironment wich owns this BroadcastListener instance
 	private final NetworkEnvironment MY_ENVIRONMENT;
-
+	private boolean isDisposed = false;
+	
 	public EnvironmentProvider(NetworkEnvironment environment) {
 		this.MY_ENVIRONMENT = environment;
 	}
@@ -16,13 +17,17 @@ public abstract class EnvironmentProvider implements Comparable<EnvironmentProvi
 		return this.MY_ENVIRONMENT;
 	}
 	
-	public void dispose() throws Exception {
+	public synchronized void dispose() throws Exception {
+		if (this.isDisposed) {
+			return;
+		}
+		this.isDisposed = true;
 		//Send unregister to all known Clients
 		this.unregisterOnNetwork();
 		
 		this.disposeResources();
 		this.getNetworkEnvironment().unregisterEnvironmentProvider(this);
-
+		
 	}
 	
 	public abstract void registerOnNetwork();

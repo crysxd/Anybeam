@@ -5,6 +5,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
@@ -38,8 +40,21 @@ public class MainWindow extends JDialog implements ActionListener, MouseListener
 	public final static TrayIcon trayIcon;
 	
 	static {
+		//Popup Menu
+		PopupMenu popmen = new PopupMenu();
+		MenuItem m1 = new MenuItem("Quit");
+		m1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		popmen.add(m1);
+		
 		//Trayicon setup 
 		trayIcon = new TrayIcon(R.getImgae("ic_launcher.png"));
+		trayIcon.setPopupMenu(popmen);
 		try {
 			SystemTray.getSystemTray().add(trayIcon);
 		} catch (AWTException e) {
