@@ -11,14 +11,13 @@ public class ShadowInsetPanel extends JPanel {
 
 	@Override
 	public void paint(Graphics g) {
+		super.paint(g);
+		
 		g.setColor(Color.gray);
 		g.drawLine(0, 0, this.getWidth(), 0);
 		g.setColor(Color.lightGray);
 		g.drawLine(0, 1, this.getWidth(), 1);
-		
-		this.setOpaque(false);
-		
-		super.paint(g);
+
 
 	}
 

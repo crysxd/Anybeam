@@ -18,6 +18,7 @@ public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFo
 	private static final long serialVersionUID = -3265790096085134965L;
 	private final TrayIcon TRAY_ICON;
 	private final int PADDING = 0;
+	private boolean hideOnFocusLost = true;
 	
 	public TrayWindow(Image trayIcon) throws AWTException, UnsupportedOperationException {	
 		//Check system tray availability
@@ -47,6 +48,14 @@ public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFo
 		this.TRAY_ICON.addMouseListener(this);
 		this.addWindowFocusListener(this);
 		
+	}
+	
+	public void setHideOnFocusLost(boolean hideOnFocusLost) {
+		this.hideOnFocusLost = hideOnFocusLost;
+	}
+	
+	public boolean isHideOnFocusLost() {
+		return hideOnFocusLost;
 	}
 	
 	public TrayIcon getTrayIcon() {
@@ -137,7 +146,8 @@ public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFo
 
 	@Override
 	public void windowLostFocus(WindowEvent e) {
-		this.setVisible(false);
+		if(this.isHideOnFocusLost())
+			this.setVisible(false);
 		
 	}
 }

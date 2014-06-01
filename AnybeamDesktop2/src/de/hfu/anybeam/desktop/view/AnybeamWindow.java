@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JDialog;
@@ -18,7 +17,6 @@ public class AnybeamWindow extends JDialog {
 	private static final long serialVersionUID = 3171054796462078510L;
 
 	private static final int PADDING = 25;
-	private static final int ARC_WIDTH = 10;
 
 	private static final BufferedImage TOP_LEFT = R.getImage("top_left.png");
 	private static final BufferedImage TOP = R.getImage("top.png");
@@ -81,19 +79,9 @@ public class AnybeamWindow extends JDialog {
 		@Override
 		public void paint(Graphics g) {
 
-			Graphics2D g2 = ViewUtils.prepareGraphics(g);
+			Graphics2D g2 = (Graphics2D) g; //ViewUtils.prepareGraphics(g);
 			//Paint this
 			this.paintComponent(g2);
-
-			//Set clip
-//			g2.setClip(new RoundRectangle2D.Float(
-//					AnybeamWindow.PADDING, 
-//					AnybeamWindow.PADDING, 
-//					this.getWidth() - AnybeamWindow.PADDING * 2, 
-//					this.getHeight() - AnybeamWindow.PADDING * 2,
-//					AnybeamWindow.ARC_WIDTH, 
-//					AnybeamWindow.ARC_WIDTH
-//					));
 
 			//Paint Background
 			g2.setPaint(AnybeamWindow.this.backgroundColor);

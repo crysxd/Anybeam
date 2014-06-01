@@ -28,6 +28,9 @@ public class ViewUtils {
 	public static final Color GREY = Color.decode("#7e7e7e");
 	public static final Color ANYBEAM_GREEN = Color.decode("#7aa623");
 	public static final Color ANYBEAM_GREY = Color.decode("#484848");
+	public static final Color SEPERATOR_COLOR = Color.gray;
+	
+	private static final Font DEFAULT_FONT = R.getFont("Roboto-Regular", 14f);
 	
 	public static JButton createImageButton(String name, Dimension size) {
 		//Create button
@@ -63,7 +66,7 @@ public class ViewUtils {
 	}
 	
 	public static Font getDefaultFont() {
-		return R.getFont("Roboto-Regular", 14f);
+		return ViewUtils.DEFAULT_FONT;
 	}
 
 	public static Image resizeImage(Image image, Dimension iconSize) {
