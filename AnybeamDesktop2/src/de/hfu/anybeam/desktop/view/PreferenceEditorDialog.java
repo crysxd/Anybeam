@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import de.hfu.anybeam.desktop.model.settings.Preference;
+import de.hfu.anybeam.desktop.view.androidUI.ShadowInsetPanel;
 
 public class PreferenceEditorDialog extends JDialog {
 	

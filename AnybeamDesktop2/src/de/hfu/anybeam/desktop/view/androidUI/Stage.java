@@ -1,6 +1,5 @@
-package de.hfu.anybeam.desktop.view;
+package de.hfu.anybeam.desktop.view.androidUI;
 
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,13 +10,12 @@ public abstract class Stage extends JPanel {
 
 	private static final long serialVersionUID = 6769966917659388418L;
 	private final List<ActionbarButton> ACTIONS = new ArrayList<ActionbarButton>();
-	private final MainWindow MY_MAIN_WINDOW;
+	private final AndroidUI MY_ANDROID_UI;
 
-	public Stage(MainWindow w) {
-		this.MY_MAIN_WINDOW = w;
+	public Stage(AndroidUI w) {
+		this.MY_ANDROID_UI = w;
 		
 		//General setup
-		this.setMinimumSize(new Dimension(300, 300));
 		this.setOpaque(false);
 		this.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -26,13 +24,13 @@ public abstract class Stage extends JPanel {
 	public void addAction(ActionbarButton action) {
 		if(!this.ACTIONS.contains(action)) {
 			this.ACTIONS.add(action);
-			this.getMainWindow().enterStage(this);
+			this.getAndroidUI().enterStage(this);
 		}
 	}
 	
 	public void removeAction(ActionbarButton action) {
 		this.ACTIONS.remove(action);
-		this.getMainWindow().enterStage(this);
+		this.getAndroidUI().enterStage(this);
 	}
 	
 	public List<ActionbarButton> getActions() {
@@ -40,12 +38,19 @@ public abstract class Stage extends JPanel {
 		
 	}
 	
-	public MainWindow getMainWindow() {
-		return MY_MAIN_WINDOW;
+	public AndroidUI getAndroidUI() {
+		return MY_ANDROID_UI;
 		
 	}
 	
 	public abstract String getTitle();
 	
+	public void onResume() {
+		
+	}
+	
+	public void onPause() {
+		
+	}
 
 }

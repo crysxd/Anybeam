@@ -7,6 +7,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.border.EmptyBorder;
 
+import de.hfu.anybeam.desktop.view.androidUI.ActionbarButton;
+import de.hfu.anybeam.desktop.view.androidUI.AndroidUI;
+import de.hfu.anybeam.desktop.view.androidUI.Stage;
 import de.hfu.anybeam.desktop.view.resources.R;
 
 public class StartStage extends Stage implements ActionListener {
@@ -20,7 +23,7 @@ public class StartStage extends Stage implements ActionListener {
 	private final SettingsStage SETTINGS_STAGE;
 	private final SendStage SEND_STAGE;
 
-	public StartStage(MainWindow w) {
+	public StartStage(AndroidUI w) {
 		super(w);
 		
 		//create Substages
@@ -50,25 +53,33 @@ public class StartStage extends Stage implements ActionListener {
 		return "Anybeam";
 	}
 	
+	public SettingsStage getSettingsStage() {
+		return SETTINGS_STAGE;
+	}
+	
+	public SendStage getSendStage() {
+		return this.SEND_STAGE;
+	}
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 		//If Settings is clicked -> show setting stage
 		if(e.getSource() == this.SETTINGS_BUTTON) {
-			this.getMainWindow().enterStage(this.SETTINGS_STAGE);
+			this.getAndroidUI().enterStage(this.SETTINGS_STAGE);
 			
 		}
 		
 		//If the start stage's send clipboard button was pressed -> go to send stage
 		if(e.getSource() == this.SEND_CLIPBOARD_BUTTON) {
-			this.getMainWindow().enterStage(this.SEND_STAGE);
+			this.getAndroidUI().enterStage(this.SEND_STAGE);
 			//TODO set send content
 		}
 
 		//If the start stage's send file button was pressed -> go to send stage
 		if(e.getSource() == this.SEND_FILE_BUTTON) {
-			this.getMainWindow().enterStage(this.SEND_STAGE);
+			this.getAndroidUI().enterStage(this.SEND_STAGE);
 			//TODO set send content
 		}
 	}

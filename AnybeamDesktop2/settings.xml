@@ -29,5 +29,6 @@
         <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanPreference" name="Auto Clipboard" summary="Auto share new clipboard entreis (text only)" value="False" id="gen_auto_clipboard"/>
         <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanPreference" name="Auto Open Links" summary="Auto open received links" value="False" id="gen_auto_open_links"/>
         <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanPreference" name="Auto Open Files" summary="Auto open received files" value="False" id="gen_auto_open_files"/>
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanPreference" name="Start with system" summary="Start anybeam automatically" value="False" id="gen_auto_open_files"/>
     </PreferencesGroup>
 </Settings>

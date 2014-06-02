@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 
 import javax.swing.JTextArea;
 
+import de.hfu.anybeam.desktop.view.androidUI.Stage;
+import de.hfu.anybeam.desktop.view.androidUI.Substage;
+
 
 public class LegalNoticesStage extends Substage {
 

@@ -1,4 +1,4 @@
-package de.hfu.anybeam.desktop.view;
+package de.hfu.anybeam.desktop.view.androidUI;
 
 import java.awt.Color;
 import java.awt.Graphics;

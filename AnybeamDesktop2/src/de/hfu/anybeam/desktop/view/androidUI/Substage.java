@@ -1,4 +1,4 @@
-package de.hfu.anybeam.desktop.view;
+package de.hfu.anybeam.desktop.view.androidUI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +12,7 @@ public abstract class Substage extends Stage implements ActionListener {
 	private final Stage PARENT;
 	
 	public Substage(Stage parent) {
-		super(parent.getMainWindow());
+		super(parent.getAndroidUI());
 		
 		this.PARENT = parent;
 		this.setBackButton(this.backButton);
@@ -30,7 +30,7 @@ public abstract class Substage extends Stage implements ActionListener {
 	
 		//Go back if back button was pressed
 		if(e.getSource() == this.backButton) {
-			this.getMainWindow().enterStage(this.PARENT);
+			this.getAndroidUI().enterStage(this.PARENT);
 			
 		}
 		

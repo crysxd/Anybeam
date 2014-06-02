@@ -1,12 +1,13 @@
 package de.hfu.anybeam.desktop.view;
 
 import de.hfu.anybeam.desktop.model.settings.Preference;
+import de.hfu.anybeam.desktop.view.androidUI.ListItem;
 
-public class SettingsListPreferenceItem extends SettingsListItem {
+public class PreferenceListItem extends ListItem {
 
 	private final Preference MY_SETTING;
 	
-	public SettingsListPreferenceItem(Preference p) {
+	public PreferenceListItem(Preference p) {
 		super(p.getName(), p.getSummary());
 		
 		this.MY_SETTING = p;

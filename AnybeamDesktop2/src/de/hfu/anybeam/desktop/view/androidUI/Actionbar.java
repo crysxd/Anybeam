@@ -1,4 +1,4 @@
-package de.hfu.anybeam.desktop.view;
+package de.hfu.anybeam.desktop.view.androidUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,7 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class ActionBar extends JPanel {
+import de.hfu.anybeam.desktop.view.ViewUtils;
+
+public class Actionbar extends JPanel {
 
 	private static final long serialVersionUID = -6737953259314216708L;
 	private static final Font TITLE_FONT = ViewUtils.getDefaultFont().deriveFont(16f);
@@ -22,8 +24,9 @@ public class ActionBar extends JPanel {
 	private final JLabel ICON_LABEL;
 	private final JLabel TITLE_LABEL;
 	private final JPanel ACTION_PANEL;
+	private final ActionbarProgressIndicator PROGRSS_INDICATOR;
 	
-	public ActionBar(BufferedImage image, Color backgroundColor, String title, Color textColor) {
+	public Actionbar(BufferedImage image, Color backgroundColor, String title, Color textColor) {
 		//Set Backgorund Color
 		this.setBackground(backgroundColor);
 
@@ -31,7 +34,7 @@ public class ActionBar extends JPanel {
 		this.setLayout(new BorderLayout(5, 0));
 		
 		//Add Icon
-		Image sizedImage  = ViewUtils.resizeImage(image, ActionBar.getIconSize());
+		Image sizedImage  = ViewUtils.resizeImage(image, Actionbar.getIconSize());
 		this.ICON_LABEL = new JLabel(new ImageIcon(sizedImage));
 		this.ICON_LABEL.setOpaque(false);
 		this.ICON_LABEL.setBorder(new EmptyBorder(5, 10, 5, 0));
@@ -40,7 +43,7 @@ public class ActionBar extends JPanel {
 		//Add title
 		this.TITLE_LABEL = new JLabel(title);
 		this.TITLE_LABEL.setOpaque(false);
-		this.TITLE_LABEL.setFont(ActionBar.TITLE_FONT);
+		this.TITLE_LABEL.setFont(Actionbar.TITLE_FONT);
 		this.TITLE_LABEL.setForeground(textColor);
 		this.add(this.TITLE_LABEL, BorderLayout.CENTER);
 		
@@ -50,12 +53,24 @@ public class ActionBar extends JPanel {
 		this.ACTION_PANEL.setOpaque(false);
 		this.add(this.ACTION_PANEL, BorderLayout.EAST);
 		
+		//Progress Idicator
+		this.PROGRSS_INDICATOR = new ActionbarProgressIndicator();
+		this.add(this.PROGRSS_INDICATOR, BorderLayout.SOUTH);
+		this.setProgressIndicatorVisible(false);
 		
 	}
 
 	public static Dimension getIconSize() {
 		return new Dimension(28, 28);
 		
+	}
+	
+	public void setProgressIndicatorVisible(boolean v) {
+		this.PROGRSS_INDICATOR.setVisible(v);
+	}
+	
+	public boolean isProgressIndicatorVisible() {
+		return this.PROGRSS_INDICATOR.isVisible();
 	}
 	
 	public void clearActions() {

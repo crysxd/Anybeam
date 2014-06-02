@@ -1,4 +1,4 @@
-package de.hfu.anybeam.desktop.view;
+package de.hfu.anybeam.desktop.view.androidUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,6 +8,8 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import de.hfu.anybeam.desktop.view.ViewUtils;
+
 public class ActionbarButton extends JButton {
 	
 
@@ -16,7 +18,7 @@ public class ActionbarButton extends JButton {
 	private static final Color ROLLOVER_BACKGROUND = new Color(1, 1, 1, 0.075f);
 	
 	public ActionbarButton(Image icon) {
-		super(new ImageIcon(ViewUtils.resizeImage(icon, ActionBar.getIconSize())));
+		super(new ImageIcon(ViewUtils.resizeImage(icon, Actionbar.getIconSize())));
 		
 		this.setContentAreaFilled(false);
 		this.setBorder(null);

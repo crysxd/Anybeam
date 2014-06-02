@@ -1,4 +1,4 @@
-package de.hfu.anybeam.desktop.view;
+package de.hfu.anybeam.desktop.view.androidUI;
 
 import java.awt.AWTException;
 import java.awt.Dimension;
@@ -11,6 +11,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+
+import de.hfu.anybeam.desktop.view.ViewUtils;
 
 //TODO: Hide on focus lost
 public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFocusListener {
@@ -121,12 +123,12 @@ public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFo
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		
+		this.setHideOnFocusLost(false);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		
+		this.setHideOnFocusLost(true);
 	}
 
 	@Override
