@@ -66,11 +66,16 @@ public class Actionbar extends JPanel {
 	}
 	
 	public void setProgressIndicatorVisible(boolean v) {
-		this.PROGRSS_INDICATOR.setVisible(v);
+		if(v)
+			this.PROGRSS_INDICATOR.start();
+		else
+			this.PROGRSS_INDICATOR.stop();
+		
 	}
 	
 	public boolean isProgressIndicatorVisible() {
-		return this.PROGRSS_INDICATOR.isVisible();
+		return !this.PROGRSS_INDICATOR.isStopped();
+		
 	}
 	
 	public void clearActions() {
