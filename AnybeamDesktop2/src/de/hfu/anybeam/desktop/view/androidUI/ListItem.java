@@ -7,23 +7,29 @@ import java.awt.Font;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 import de.hfu.anybeam.desktop.view.ViewUtils;
+import de.hfu.anybeam.desktop.view.resources.R;
 
 public class ListItem {
 	
-	protected static final Font TITLE_FONT = ViewUtils.getDefaultFont();
-	protected static final Font SUBTITLE_FONT = TITLE_FONT.deriveFont(12f);
-	protected static final Color TITLE_COLOR = Color.gray;
-	protected static final Color SUBTITLE_COLOR = Color.lightGray;
-	protected static final Border DEFAULT_BORDER = new EmptyBorder(8, 8, 8, 8);
-
+	protected static final Font TITLE_FONT = ViewUtils.getDefaultFont().deriveFont(16f);
+	protected static final Font SUBTITLE_FONT = R.getFont("Roboto-Light", 13f);
+	protected static final Color TITLE_COLOR = new Color(0, 0, 0);
+	protected static final Color SUBTITLE_COLOR = new Color(50, 50, 50);
+	protected static final Color SEPERATOR_COLOR = new Color(194, 194, 194);
+	protected static final Border DEFAULT_BORDER = new EmptyBorder(12, 12, 12, 12);
+	
+	
 	private String title;
 	private String subtitle;
+	private boolean centered;
 
 	public ListItem(String title) {
 		this.title = title;
@@ -35,9 +41,10 @@ public class ListItem {
 		this.subtitle = subtitle;
 	}
 	
-	public ListItem(String title, String subtitle, boolean enbaled) {
+	public ListItem(String title, String subtitle, boolean centered) {
 		this.title = title;
 		this.subtitle = subtitle;
+		this.centered = centered;
 	}
 
 	public String getTitle() {
@@ -56,36 +63,40 @@ public class ListItem {
 		this.title = title;
 	}
 	
-	public JComponent createView(boolean isSelected, boolean paintBottomLineBorder) {
+	public JComponent createView(JList<?> list, boolean isSelected, boolean paintBottomLineBorder) {
 	
 		//Create empty container
-		JPanel comp = this.createEmptyContainer(paintBottomLineBorder, isSelected);
+		JPanel comp = this.createEmptyContainer(list, paintBottomLineBorder, isSelected);
 		
 		//Create title label
 		JLabel title = new JLabel(this.getTitle());
 		title.setForeground(TITLE_COLOR);
 		title.setFont(TITLE_FONT);
-		comp.add(title, BorderLayout.CENTER);
+		comp.add(title, BorderLayout.NORTH);
+		
+		if(centered)
+			title.setHorizontalAlignment(SwingConstants.CENTER);
 
 		//Create detail label
 		if(this.getSubtitle() != null && this.getSubtitle().length() > 0) {
 			JLabel subtitle = new JLabel(this.getSubtitle());
 			subtitle.setForeground(TITLE_COLOR);
 			subtitle.setFont(SUBTITLE_FONT);
+
 			comp.add(subtitle, BorderLayout.SOUTH);
 		}
 
 		return comp;
 	}
 	
-	protected JPanel createEmptyContainer(boolean paintBottomLineBorder, boolean isSelected) {
+	protected JPanel createEmptyContainer(JList<?> list, boolean paintBottomLineBorder, boolean isSelected) {
 		//Create container
 		JPanel comp = new JPanel();
 		comp.setLayout(new BorderLayout());
 		
 		//Set Border
 		if(paintBottomLineBorder)
-			comp.setBorder(new CompoundBorder(new BottomLineBorder(ViewUtils.SEPERATOR_COLOR, 1), DEFAULT_BORDER));
+			comp.setBorder(new CompoundBorder(new BottomLineBorder(SEPERATOR_COLOR, 1), DEFAULT_BORDER));
 		else
 			comp.setBorder(DEFAULT_BORDER);
 		
@@ -96,7 +107,7 @@ public class ListItem {
 			comp.setOpaque(false);
 				
 		//Set default preferred size (width doesn't matter)
-		comp.setPreferredSize(new Dimension(1, 52));
+		comp.setMinimumSize(new Dimension(1, 58));
 		
 		return comp;
 	}

@@ -43,9 +43,6 @@ public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFo
 		//Add TrayIcon to system tray
 		tray.add(this.TRAY_ICON);
 		
-		//Set always on top
-		this.setAlwaysOnTop(true);
-		
 		//Add listeners
 		this.TRAY_ICON.addMouseListener(this);
 		this.addWindowFocusListener(this);

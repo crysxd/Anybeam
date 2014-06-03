@@ -6,16 +6,16 @@ import java.awt.Font;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.border.CompoundBorder;
 
-import de.hfu.anybeam.desktop.view.ViewUtils;
 import de.hfu.anybeam.desktop.view.resources.R;
 
 public class ListSectionHeaderItem extends ListItem {
 	
 	private static final Font SECTION_HEADER_FONT = R.getFont("Roboto-Bold", 12f);
-	private static final Color SECTION_HEADER_COLOR = Color.darkGray;
+	private static final Color SECTION_HEADER_COLOR = new Color(50, 50, 50);
 	
 	public ListSectionHeaderItem(String sectionTitle) {
 		super(sectionTitle);
@@ -33,8 +33,7 @@ public class ListSectionHeaderItem extends ListItem {
 	
 	
 	@Override
-	public JComponent createView(boolean isSelected,
-			boolean paintBottomLineBorder) {
+	public JComponent createView(JList<?> list, boolean isSelected, boolean paintBottomLineBorder) {
 		
 		//Create container
 		JPanel comp = new JPanel();
@@ -45,14 +44,14 @@ public class ListSectionHeaderItem extends ListItem {
 		JLabel title = new JLabel(this.getTitle());
 		title.setForeground(SECTION_HEADER_COLOR);
 		title.setFont(SECTION_HEADER_FONT);
-		title.setBorder(new CompoundBorder(new BottomLineBorder(ViewUtils.SEPERATOR_COLOR, 2), DEFAULT_BORDER));
+		title.setBorder(new CompoundBorder(new BottomLineBorder(SEPERATOR_COLOR, 2), DEFAULT_BORDER));
 		comp.add(title, BorderLayout.NORTH);
 
 		//Create detail label
 		if(this.getSubtitle() != null && this.getSubtitle().length() > 0) {
-			JLabel subtitle = new JLabel("<html>" + this.getSubtitle() + "</html>");
+			JLabel subtitle = new JLabel(this.getSubtitle());
 			subtitle.setBorder(DEFAULT_BORDER);
-			subtitle.setForeground(SUBTITLE_COLOR);
+			subtitle.setForeground(SEPERATOR_COLOR);
 			subtitle.setFont(SUBTITLE_FONT);
 			comp.add(subtitle, BorderLayout.CENTER);
 		}	

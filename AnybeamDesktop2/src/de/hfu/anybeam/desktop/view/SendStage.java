@@ -61,7 +61,7 @@ public class SendStage extends ListStage {
 			model.addElement(new ClientListItem(c));
 		
 		if(allClients.size() == 0) {
-			model.addElement(new ListItem("No Clients Found"));
+			model.addElement(new ListItem("No Clients", null, true));
 		}
 		
 		//Test cases TODO Remove

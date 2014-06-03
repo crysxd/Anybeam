@@ -21,25 +21,25 @@ public abstract class Preference {
 	
 	public String getSummary() {
 		if(summary.equals("@value"))
-			return this.getStringValue();
+			return this.getValue();
 		else
 			return summary;
+	}
+	
+	public String getPlainSummary() {
+		return this.summary;
+		
 	}
 	
 	public String getValue() {
 		return value;
 	}
 	
-	public String getStringValue() {
-		if(this.getValue() != null)
-			return this.getValue().toString();
-		else
-			return "null";
-	}
-	
 	protected void setValue(String value) {
 		this.value = value;
 	}
+	
+	public abstract PreferenceEditView createEditView();
 	
 	
 

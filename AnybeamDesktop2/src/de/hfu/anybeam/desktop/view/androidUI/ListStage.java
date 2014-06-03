@@ -33,8 +33,8 @@ public abstract class ListStage extends Substage implements MouseListener, Mouse
 		this.LIST.setOpaque(false);
 		this.LIST.setCellRenderer(new ListStageCellRenderer());
 		this.LIST.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.LIST.setModel(new DefaultListModel<ListItem>());
-		
+		this.LIST.setFixedCellWidth(300);
+
 		//Create JScrollPane
 		this.LIST_SCROLLER = new JScrollPane(this.LIST);
 		this.LIST_SCROLLER.setBorder(null);
@@ -42,7 +42,7 @@ public abstract class ListStage extends Substage implements MouseListener, Mouse
 		this.LIST_SCROLLER.setOpaque(false);
 		this.LIST_SCROLLER.getVerticalScrollBar().setPreferredSize(new Dimension(0,1));
 		this.LIST_SCROLLER.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
+
 		//Add MouseListener
 		this.LIST.addMouseListener(this);
 		this.LIST.addMouseMotionListener(this);

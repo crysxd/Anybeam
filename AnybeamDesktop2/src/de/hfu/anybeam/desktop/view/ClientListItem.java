@@ -7,6 +7,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 
 import de.hfu.anybeam.desktop.view.androidUI.ListItem;
@@ -36,12 +37,11 @@ public class ClientListItem extends ListItem {
 	}
 	
 	@Override
-	public JComponent createView(boolean isSelected,
-			boolean paintBottomLineBorder) {
+	public JComponent createView(JList<?> list, boolean isSelected, boolean paintBottomLineBorder) {
 		
 		
 		//Create empty container
-		JPanel con = this.createEmptyContainer(paintBottomLineBorder, isSelected);
+		JPanel con = this.createEmptyContainer(list, paintBottomLineBorder, isSelected);
 		
 		//Main label
 		JLabel l = new JLabel();
@@ -66,7 +66,7 @@ public class ClientListItem extends ListItem {
 		con.add(l, BorderLayout.CENTER);
 
 		//Set preferred size (width does not matter)
-		con.setPreferredSize(new Dimension(1, 60));
+		con.setPreferredSize(new Dimension(1, 70));
 		
 		//Return container
 		return con;

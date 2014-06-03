@@ -37,7 +37,7 @@ public class ActionbarProgressIndicator extends JPanel implements Runnable {
 	@Override
 	public void paint(Graphics g) {
 		g.drawImage(ANIMATION_PHASE_IMAGES.get(this.currentAnimationphase), 0, 0, this.getWidth(), this.getHeight(), null);
-		System.out.println("repaint");
+
 	}
 	
 	public synchronized void start() {

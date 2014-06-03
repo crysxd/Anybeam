@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.border.EmptyBorder;
 
-import de.hfu.anybeam.desktop.view.androidUI.ActionbarButton;
 import de.hfu.anybeam.desktop.view.androidUI.AndroidUI;
 import de.hfu.anybeam.desktop.view.androidUI.Stage;
 import de.hfu.anybeam.desktop.view.resources.R;
@@ -18,7 +17,9 @@ public class StartStage extends Stage implements ActionListener {
 	
 	private final JButton SEND_CLIPBOARD_BUTTON = new BigButton("Beam Clipboard", R.getImage("ic_action_send_clipboard.png"));;
 	private final JButton SEND_FILE_BUTTON = new BigButton("Beam File", R.getImage("ic_action_send_file.png"));
-	private final ActionbarButton SETTINGS_BUTTON = new ActionbarButton(R.getImage("ic_action_settings.png"));
+	private final JButton SEND_TEXT_BUTTON = new BigButton("Beam Text", R.getImage("ic_action_edit.png"));
+	private final JButton SETTINGS_BUTTON = new BigButton("Settings", R.getImage("ic_action_settings.png"));
+//	private final ActionbarButton SETTINGS_BUTTON = new ActionbarButton(R.getImage("ic_action_settings.png"));
 
 	private final SettingsStage SETTINGS_STAGE;
 	private final SendStage SEND_STAGE;
@@ -31,7 +32,7 @@ public class StartStage extends Stage implements ActionListener {
 		this.SEND_STAGE = new SendStage(this);
 		
 		//Add Settings action and add ActionListener
-		this.addAction(this.SETTINGS_BUTTON);
+//		this.addAction(this.SETTINGS_BUTTON);
 	
 		
 		//Border and Layout
@@ -41,10 +42,13 @@ public class StartStage extends Stage implements ActionListener {
 		//Add Buttons
 		this.add(this.SEND_CLIPBOARD_BUTTON);
 		this.add(this.SEND_FILE_BUTTON);
+		this.add(this.SEND_TEXT_BUTTON);
+		this.add(this.SETTINGS_BUTTON);
 		
 		//Add ActionListener
 		this.SEND_CLIPBOARD_BUTTON.addActionListener(this);
 		this.SEND_FILE_BUTTON.addActionListener(this);
+		this.SEND_TEXT_BUTTON.addActionListener(this);
 		this.SETTINGS_BUTTON.addActionListener(this);
 	}
 	
@@ -73,6 +77,12 @@ public class StartStage extends Stage implements ActionListener {
 		
 		//If the start stage's send clipboard button was pressed -> go to send stage
 		if(e.getSource() == this.SEND_CLIPBOARD_BUTTON) {
+			this.getAndroidUI().enterStage(this.SEND_STAGE);
+			//TODO set send content
+		}
+		
+		//If the start stage's send text button was pressed -> go to send stage
+		if(e.getSource() == this.SEND_TEXT_BUTTON) {
 			this.getAndroidUI().enterStage(this.SEND_STAGE);
 			//TODO set send content
 		}

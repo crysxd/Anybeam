@@ -22,6 +22,6 @@ public class ListStageCellRenderer extends DefaultListCellRenderer {
 			paintBottomLineBorder = !(list.getModel().getElementAt(index+1) instanceof ListSectionHeaderItem);
 
 		//Create and return View
-		return item.createView(isSelected, paintBottomLineBorder);
+		return item.createView(list, isSelected, paintBottomLineBorder);
 	}
 }

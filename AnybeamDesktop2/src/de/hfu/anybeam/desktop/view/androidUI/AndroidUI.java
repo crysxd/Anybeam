@@ -37,8 +37,8 @@ public class AndroidUI extends TrayWindow {
 		//Build view
 		this.setLayout(new BorderLayout());
 
-		//Set initial size (width will be preserved) (16:9)
-		this.setSize(320, 570);
+		//Set initial size (width will be preserved)
+		this.setSize(320, 520);
 
 		//Actionbar
 		this.ACTION_BAR = new Actionbar(R.getImage("ic_actionbar.png"), ViewUtils.ANYBEAM_GREEN, "", Color.white);
@@ -51,16 +51,13 @@ public class AndroidUI extends TrayWindow {
 		this.add(this.MAIN_PANEL, BorderLayout.CENTER);
 		
 		//Set background (Android holo light)
-		this.MAIN_PANEL.setBackground(Color.decode("#f3f3f3"));
+		this.MAIN_PANEL.setBackground(new Color(250, 250, 250));
 
 		//BottomBar
 		this.BOTTOM_BAR = new JPanel();
 		this.BOTTOM_BAR.setLayout(new BorderLayout());
 		this.BOTTOM_BAR.setBackground(new Color(0, 0, 0, 0.075f));
 		this.add(this.BOTTOM_BAR, BorderLayout.SOUTH);
-		
-		//Controlbar TODO make usable
-		this.BOTTOM_BAR.add(new Controlbar(), BorderLayout.SOUTH);
 		
 		//Set default bottom bar (may be null)
 		this.setBottomBar(bottomBar);

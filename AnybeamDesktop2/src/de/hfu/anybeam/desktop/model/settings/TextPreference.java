@@ -16,4 +16,14 @@ public class TextPreference extends Preference {
 			throw new IllegalArgumentException("String is too long!");
 	}
 
+	public int getMaxLength() {
+		return this.maxLegth;
+	}
+	
+	@Override
+	public PreferenceEditView createEditView() {
+		return new TextPreferenceEditView(this);
+		
+	}
+
 }

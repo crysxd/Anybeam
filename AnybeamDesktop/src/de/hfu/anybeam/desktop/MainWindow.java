@@ -67,7 +67,6 @@ public class MainWindow extends JDialog implements ActionListener, MouseListener
 
 		//Window setup
 		this.setResizable(false);
-		this.setAlwaysOnTop(true);
 		this.setSize(400, 300);
 		
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
