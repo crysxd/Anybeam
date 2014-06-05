@@ -1,6 +1,5 @@
 package de.hfu.anybeam.android.fragments;
 
-import de.hfu.anybeam.android.R;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -11,7 +10,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
-import android.util.Log;
+import de.hfu.anybeam.android.R;
 
 /**
  * Fragment to display the settings.xml
@@ -100,7 +99,15 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		} else if (preference instanceof EditTextPreference) {
 			EditTextPreference editTextPreference = (EditTextPreference) preference;
 			
-			editTextPreference.setSummary(editTextPreference.getText());				
+			//Update summary to current value 
+			if (editTextPreference.getKey().equals("group_password")) { //Is Password
+				editTextPreference.setSummary(getString(R.string.settings_pref_group_password_summary));
+			} else if (editTextPreference.getKey().equals("display_time")) { //Is display time
+				editTextPreference.setSummary(editTextPreference.getText() + " "
+						+ getString(R.string.settings_pref_display_time_summary));
+			} else {
+				editTextPreference.setSummary(editTextPreference.getText());
+			}
 		}
 	}
 	

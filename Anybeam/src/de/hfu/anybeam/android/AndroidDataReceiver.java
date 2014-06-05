@@ -155,17 +155,21 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			}
 			mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_clipboard));
 			
-			//Remove notification after 3 seconds
-			new Thread() {
-				public void run() {
-					try {
-						sleep(3000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-					mManager.cancel(e.getTransmissionId());
-				};
-			}.start();
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			final Integer time = Integer.parseInt(prefs.getString("display_time", "5"));
+			if (time > 0) {
+				//Remove notification after time seconds
+				new Thread() {
+					public void run() {
+						try {
+							sleep(time * 1000);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+						mManager.cancel(e.getTransmissionId());
+					};
+				}.start();				
+			}
 			
 		} else if (out instanceof FileOutputStream) {
 			//File to save
@@ -179,6 +183,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_file)); 
 			mBuilder.setContentText(e.getResourceName());
 			mBuilder.setContentIntent(pendingIntent);
+			mBuilder.setAutoCancel(true);
 		}
 		
 		mManager.notify(e.getTransmissionId(), mBuilder.build());

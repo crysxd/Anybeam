@@ -31,7 +31,7 @@
         <!-- The Send Activity -->
         <activity
             android:name="de.hfu.anybeam.android.SendActivity"
-            android:label="@string/send_title" >
+            android:label="@string/app_name" >
             
             <!-- Share File -->
             <intent-filter>

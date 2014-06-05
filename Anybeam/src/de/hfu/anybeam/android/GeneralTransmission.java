@@ -2,6 +2,8 @@ package de.hfu.anybeam.android;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import de.hfu.anybeam.networkCore.AbstractTransmissionAdapter;
@@ -67,17 +69,21 @@ public class GeneralTransmission implements AbstractTransmissionAdapter {
 					.getSystemService(Context.NOTIFICATION_SERVICE);
 			mManager.notify(e.getTransmissionId(), mBuilder.build());
 			
-			//Remove notification after 5 seconds
-			new Thread() {
-				public void run() {
-					try {
-						sleep(5000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-					mManager.cancel(e.getTransmissionId());
-				};
-			}.start();
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			final Integer time = Integer.parseInt(prefs.getString("display_time", "5"));
+			if (time > 0) {
+				//Remove notification after time seconds
+				new Thread() {
+					public void run() {
+						try {
+							sleep(time * 1000);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+						mManager.cancel(e.getTransmissionId());
+					};
+				}.start();				
+			}
 		}
 	
 
