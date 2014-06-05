@@ -2,6 +2,7 @@ package de.hfu.anybeam.desktop.view;
 
 import java.awt.AWTException;
 import java.awt.Image;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -50,15 +51,21 @@ public class  AnybeamDesktopView {
 	}
 	
 	public void updateSettingsDisplayed(Settings s) {
+		this.START_STAGE.getSettingsStage().updateSettingsDisplayed(s);
 		
 	}
 	
 	public void updateDevicesDisplayed(List<Client> l) {
-		
+		this.START_STAGE.getSendStage().updateClientList(l);
+
 	}
 	
 	public void setBottomBarInformation(TransmissionEvent e) {
 		
+	}
+	
+	public void tellControlToSendData(Client target, InputStream data, String resourceName, long length) {
+		this.MY_CONTROL.send(target, data, resourceName, length);
 	}
 
 }
