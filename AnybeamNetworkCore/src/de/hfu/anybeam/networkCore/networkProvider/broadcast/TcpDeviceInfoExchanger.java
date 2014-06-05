@@ -2,22 +2,14 @@ package de.hfu.anybeam.networkCore.networkProvider.broadcast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.InvalidKeyException;
-
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
-import javax.crypto.spec.SecretKeySpec;
 
 import de.hfu.anybeam.networkCore.Client;
-import de.hfu.anybeam.networkCore.EncryptionType;
 import de.hfu.anybeam.networkCore.UrlParameterBundle;
 
 public class TcpDeviceInfoExchanger implements Runnable {
@@ -46,24 +38,25 @@ public class TcpDeviceInfoExchanger implements Runnable {
 
 			Socket s = null;
 			OutputStream out = null;
-			InputStream in = null;
-			BufferedReader inReader = null;
+			BufferedReader in = null;
 			try {
 				s = this.SERVER_SOCKET.accept();
 
 				System.out.println("connection!");
 				
 				//Create streams
-				in = this.buildCipherInputStream(s.getInputStream());
-				out = this.buildCipherOutputStream(s.getOutputStream());
-				
-				//Create Reader
-				inReader = new BufferedReader(new InputStreamReader(in));
+//				out = new CipherOutputStream(
+//						s.getOutputStream(), this.MY_OWNER.getNetworkEnvironment().getEncryptionCipher());
+//				in = new BufferedReader(new InputStreamReader(new CipherInputStream(
+//						s.getInputStream(), this.MY_OWNER.getNetworkEnvironment().getDecryptionCipher())));
+
+				out = s.getOutputStream();
+				in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 				
 				System.out.println("Waiting...");
 
 				//Receive data and create client
-				UrlParameterBundle bundle = new UrlParameterBundle(inReader.readLine());
+				UrlParameterBundle bundle = new UrlParameterBundle(in.readLine());
 				System.out.println("Received: " + bundle.generateUrlString());
 				
 				//Try to read address
@@ -100,8 +93,8 @@ public class TcpDeviceInfoExchanger implements Runnable {
 			} finally {
 				//close everything
 				try {
-					if(inReader != null)
-						inReader.close();
+					if(in != null)
+						in.close();
 
 					if(out != null)
 						out.close();
@@ -128,8 +121,7 @@ public class TcpDeviceInfoExchanger implements Runnable {
 	public Client sendRegisterToDevice(InetAddress address) throws Exception {
 		Socket s = null;
 		OutputStream out = null;
-		InputStream in = null;
-		BufferedReader inReader = null;
+		BufferedReader in = null;
 		try {
 			//Create data to send
 			UrlParameterBundle bundle = this.MY_OWNER.getNetworkEnvironment().createRegisterPayload();
@@ -145,9 +137,8 @@ public class TcpDeviceInfoExchanger implements Runnable {
 //					s.getOutputStream(), this.MY_OWNER.getNetworkEnvironment().getEncryptionCipher());
 //			in = new BufferedReader(new InputStreamReader(new CipherInputStream(
 //					s.getInputStream(), this.MY_OWNER.getNetworkEnvironment().getDecryptionCipher())));
-			out = this.buildCipherOutputStream(s.getOutputStream());
-			in = this.buildCipherInputStream(s.getInputStream());
-			inReader = new BufferedReader(new InputStreamReader(in));
+			out = s.getOutputStream();
+			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			
 			//Send data
 			out.write(bundle.generateUrlString().getBytes());
@@ -156,10 +147,10 @@ public class TcpDeviceInfoExchanger implements Runnable {
 			System.out.println("Send: " + bundle.generateUrlString());
 
 			//Receive data and create client
-			bundle = new UrlParameterBundle(inReader.readLine());
+			bundle = new UrlParameterBundle(in.readLine());
 
 			//close everything
-			inReader.close();
+			in.close();
 			out.close();
 			s.close();
 
@@ -197,7 +188,7 @@ public class TcpDeviceInfoExchanger implements Runnable {
 
 			//Create streams
 //			out = new CipherOutputStream(s.getOutputStream(), this.MY_OWNER.getNetworkEnvironment().getEncryptionCipher());
-			out = this.buildCipherOutputStream(s.getOutputStream());
+			out = s.getOutputStream();
 
 			//Send data
 			out.write(bundle.generateUrlString().getBytes());
@@ -212,44 +203,5 @@ public class TcpDeviceInfoExchanger implements Runnable {
 			if(s != null)
 				s.close();
 		}
-	}
-	
-	
-	private InputStream buildCipherInputStream(InputStream in) throws InvalidKeyException {
-		if(this.getEncryptionType() != EncryptionType.NONE) {
-			Cipher c = this.getCipher();
-			c.init(Cipher.DECRYPT_MODE, this.getSecretKeySpec());
-			return new CipherInputStream(in, c);
-			
-		} else {
-			return in;
-			
-		}
-
-	}
-	
-	private OutputStream buildCipherOutputStream(OutputStream out) throws InvalidKeyException {
-		if(this.getEncryptionType() != EncryptionType.NONE) {
-			Cipher c = this.getCipher();
-			c.init(Cipher.ENCRYPT_MODE, this.getSecretKeySpec());
-			return new CipherOutputStream(out, c);
-			
-		} else {
-			return out;
-			
-		}
-
-	}
-	
-	private Cipher getCipher() {
-		return this.getEncryptionType().createCipher();
-	}
-	
-	private EncryptionType getEncryptionType() {
-		return this.MY_OWNER.getNetworkEnvironment().getEncryptionType();
-	}
-	
-	private SecretKeySpec getSecretKeySpec() {
-		return this.getEncryptionType().getSecretKeySpec(this.MY_OWNER.getNetworkEnvironment().getEncryptionKey());
 	}
 }

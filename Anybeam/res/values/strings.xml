@@ -19,6 +19,7 @@
     <string name="default_port_broadcast">1337</string>
     <string name="default_encyption_type">AES128</string>
     <string name="default_device_type">TYPE_SMARTPHONE</string>
+    <string name="default_display_time">5</string>
     <string name="settings_title">Settings</string>
     <string name="settings_category_group">Group Settings</string>
     <string name="settings_category_group_summary">All group settings must be the same on all your devices.</string>
@@ -33,12 +34,14 @@
     <string name="settings_category_general">General Preferences</string>
     <string name="settings_pref_auto_clipboard">Auto Clipboard</string>
     <string name="settings_pref_auto_clipboard_summary">Share clipboard between devices</string>
+    <string name="settings_pref_display_time">Notification display time</string>
+    <string name="settings_pref_display_time_summary">seconds (0 = unlimited)</string>
     <string name="settings_category_about">About</string>
     <string name="settings_category_about_summary">Creadet and developed by Christian Würthner und Jan-Henrik Preuß Furtwangen university 2014</string>
     <string name="settings_category_icons">Icons</string>    
     <string name="settings_pref_port_error_title">Invalid Port</string>
     <string name="settings_pref_port_error_message">The port must be an integer between 1024 and 65535</string>
-    <string name="send_title">Anybeam - Share</string>
+    <string name="send_title">Select Device</string>
     <string name="send_clients_not_found">No Clients Found</string>
     <string name="send_clipboard_error">The clipboard dose not contain text to beam</string>
     <string name="send_image_error">Fehlermeldung Fehlt!</string>

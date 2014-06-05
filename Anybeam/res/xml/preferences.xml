@@ -10,7 +10,7 @@
 
         <EditTextPreference
             android:defaultValue="@string/default_port_broadcast"
-            android:inputType="numberDecimal"
+            android:inputType="number"
             android:key="port_broadcast"
             android:title="@string/settings_pref_broadcast_port" />
         <EditTextPreference
@@ -33,7 +33,7 @@
             android:title="@string/settings_pref_client_name" />
         <EditTextPreference
             android:defaultValue="@string/default_port_data"
-            android:inputType="numberDecimal"
+            android:inputType="number"
             android:key="port_data"
             android:title="@string/settings_pref_data_port" />
 
@@ -52,6 +52,12 @@
             android:key="gen_auto_clipboard"
             android:summary="@string/settings_pref_auto_clipboard_summary"
             android:title="@string/settings_pref_auto_clipboard" />
+        <EditTextPreference
+            android:defaultValue="@string/default_display_time"
+            android:inputType="number"
+            android:key="display_time"
+            android:title="@string/settings_pref_display_time" 
+        	android:summary="@string/settings_pref_display_time_summary" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_category_about" >
         <Preference

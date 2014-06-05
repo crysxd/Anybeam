@@ -38,13 +38,16 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
+		setTitle(R.string.send_title);
 		
+		//Start loading animation
 		ImageView ivSearching = (ImageView) findViewById(R.id.ivSearching);
 		AnimationDrawable frameAnimation = (AnimationDrawable) ivSearching.getDrawable();
 		frameAnimation.setCallback(ivSearching);
 		frameAnimation.setVisible(true, true);
 		frameAnimation.start();
 		
+		//Load Settings
 		try {
 			NetworkEnvironmentManager.addNetworkEnvironmentListener(this);
 			NetworkEnvironmentManager.getNetworkEnvironment(this).startClientSearch(365, TimeUnit.DAYS, 3, TimeUnit.SECONDS);
