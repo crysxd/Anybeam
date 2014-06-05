@@ -5,10 +5,13 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Window;
 import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -25,11 +28,11 @@ public class AndroidUI extends TrayWindow {
 	private JComponent bottomBarContent;
 	private Stage startStage;
 	private Stage currentStage;
-	
+
 	public AndroidUI(Image trayIcon) throws UnsupportedOperationException, AWTException {
 		this(trayIcon, null);
 	}
-	
+
 	public AndroidUI(Image trayIcon, JComponent bottomBar) throws UnsupportedOperationException, AWTException {
 		//Call super constructor with right icon
 		super(trayIcon);
@@ -49,7 +52,7 @@ public class AndroidUI extends TrayWindow {
 		this.MAIN_PANEL.setLayout(new CardLayout());
 		this.MAIN_PANEL.setOpaque(true);
 		this.add(this.MAIN_PANEL, BorderLayout.CENTER);
-		
+
 		//Set background (Android holo light)
 		this.MAIN_PANEL.setBackground(new Color(250, 250, 250));
 
@@ -58,13 +61,13 @@ public class AndroidUI extends TrayWindow {
 		this.BOTTOM_BAR.setLayout(new BorderLayout());
 		this.BOTTOM_BAR.setBackground(new Color(0, 0, 0, 0.075f));
 		this.add(this.BOTTOM_BAR, BorderLayout.SOUTH);
-		
+
 		//Set default bottom bar (may be null)
 		this.setBottomBar(bottomBar);
-		
+
 		//Init start stage
 		this.startStage = new Stage(this) {
-			
+
 			private static final long serialVersionUID = 1644552089176880370L;
 
 			@Override
@@ -74,30 +77,30 @@ public class AndroidUI extends TrayWindow {
 		};
 
 	}
-	
+
 	public void setStartStage(Stage startStage) {
 		this.startStage = startStage;
 		this.enterStartStage();
 	}
-	
+
 	public Stage getStartStage() {
 		return startStage;
 	}
-	
-	
+
+
 	public void setBottomBar(JComponent bottomBar) {
 		if(this.getBottomBar() != null)
 			this.BOTTOM_BAR.remove(this.getBottomBar());
 
 		this.bottomBarContent = bottomBar;
-		
+
 		if(this.bottomBarContent != null) {
 			this.bottomBarContent.setBorder(new EmptyBorder(5, 5, 5, 5));
 			this.BOTTOM_BAR.add(bottomBar);
 			this.bottomBarContent.setOpaque(false);
 		}
 	}
-	
+
 	public JComponent getBottomBar() {
 		return bottomBarContent;
 	}
@@ -106,7 +109,7 @@ public class AndroidUI extends TrayWindow {
 	public void enterStartStage() {
 		this.enterStage(this.startStage);
 	}
-	
+
 	public Actionbar getActionbar() {
 		return this.ACTION_BAR;
 	}
@@ -116,12 +119,6 @@ public class AndroidUI extends TrayWindow {
 		if(this.currentStage != null)
 			this.currentStage.onPause();
 		
-		//Setup actions
-		this.ACTION_BAR.clearActions();
-		for(JButton b : s.getActions())
-			this.ACTION_BAR.addAction(b);
-		this.ACTION_BAR.repaint();
-
 		//Set title
 		this.ACTION_BAR.setTitle(s.getTitle());
 
@@ -132,8 +129,46 @@ public class AndroidUI extends TrayWindow {
 		CardLayout l = (CardLayout) this.MAIN_PANEL.getLayout();
 		l.show(this.MAIN_PANEL, s.getTitle());
 
+		//Save new action
 		this.currentStage = s;
+		
+		//setup actions
+		this.updateActions();
+
+
 		this.currentStage.onResume();
 
+	}
+
+	public void updateActions() {
+		//Clear actions
+		this.ACTION_BAR.clearActions();
+		
+		//Return if current stage is null
+		if(this.currentStage == null)
+			return;
+		
+		//Setup actions
+		for(JButton b : this.currentStage.getActions())
+			this.ACTION_BAR.addAction(b);
+		this.ACTION_BAR.repaint();
+
+	}
+
+	public void showErrorDialog(String title, String message) {
+		this.setHideOnFocusLost(false);
+		JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+		this.setHideOnFocusLost(true);
+
+	}
+
+	public Stage getCurrentStage() {
+		return this.currentStage;
+		
+	}
+	
+	public void centerWindowOnThis(Window w) {
+		Rectangle p = new Rectangle(this.getLocationOnScreen(), this.getSize());
+		w.setLocation(p.x + p.width/2 - this.getWidth()/2, p.y + p.height/2 - this.getHeight()/2);
 	}
 }

@@ -1,5 +1,6 @@
 package de.hfu.anybeam.desktop.view;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,8 @@ public class SendStage extends ListStage {
 	private static final long serialVersionUID = -5701209528581829127L;
 
 	private final ActionbarButton REFRESH_BUTTON = new ActionbarButton(R.getImage("ic_action_refresh.png"));
-
+	private InputStream nextTransmissionSource;
+	
 	public SendStage(Stage parent) {
 		super(parent);
 		
@@ -40,14 +42,29 @@ public class SendStage extends ListStage {
 	public void onPause() {
 		super.onPause();	
 		this.getAndroidUI().getActionbar().setProgressIndicatorVisible(false);
+		this.nextTransmissionSource = null;
 		
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		//If Transmission source is not set -> Display error and return to parent stage
+		if(this.nextTransmissionSource == null) {
+			this.getAndroidUI().showErrorDialog("Internal Error", "SendStage::nextTransmissionSource is null. You found a bug :)");
+			this.getAndroidUI().enterStage(this.getParentStage());
+			return;
+			
+		}
+		
 		this.getAndroidUI().getActionbar().setProgressIndicatorVisible(true);
 
+	}
+	
+	public void setNextTransmissionSource(InputStream in) {
+		this.nextTransmissionSource = in;
+		
 	}
 
 	public void updateClientList(List<Client> allClients) {

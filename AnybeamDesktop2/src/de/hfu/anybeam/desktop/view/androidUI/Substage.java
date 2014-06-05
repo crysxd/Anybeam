@@ -36,6 +36,11 @@ public abstract class Substage extends Stage implements ActionListener {
 		
 	}
 	
+	public Stage getParentStage() {
+		return PARENT;
+		
+	}
+	
 	
 
 

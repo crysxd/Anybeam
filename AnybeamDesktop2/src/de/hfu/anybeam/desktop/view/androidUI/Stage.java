@@ -24,13 +24,17 @@ public abstract class Stage extends JPanel {
 	public void addAction(ActionbarButton action) {
 		if(!this.ACTIONS.contains(action)) {
 			this.ACTIONS.add(0, action);
-			this.getAndroidUI().enterStage(this);
+			
+			if(this.getAndroidUI().getCurrentStage() == this)
+				this.getAndroidUI().updateActions();
 		}
 	}
 	
 	public void removeAction(ActionbarButton action) {
 		this.ACTIONS.remove(action);
-		this.getAndroidUI().enterStage(this);
+		
+		if(this.getAndroidUI().getCurrentStage() == this)
+			this.getAndroidUI().updateActions();
 	}
 	
 	public List<ActionbarButton> getActions() {
