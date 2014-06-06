@@ -10,13 +10,11 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import de.hfu.anybeam.desktop.model.ClipboardUtils;
@@ -92,26 +90,20 @@ public class StartStage extends Stage implements ActionListener {
 
 		//If the start stage's send clipboard button was pressed -> go to send stage
 		if(e.getSource() == this.SEND_CLIPBOARD_BUTTON) {
-			try {
-				//Get Clipboard as stream
-				InputStream in = ClipboardUtils.getClipboardContentAsStream();
+			//Get Clipboard as stream
+			InputStream in = ClipboardUtils.getClipboardContentAsStream();
 
-				//If input is null -> cancel
-				if(in == null) {
-					this.getAndroidUI().showErrorDialog("Error", "The clipboard is empty. Copy text and retry.");
-					return;
+			//If input is null -> cancel
+			if(in == null) {
+				this.getAndroidUI().showErrorDialog("Error", "The clipboard is empty. Copy text and retry.");
+				return;
 
-				}
+			}
 
-				//Enter send stage
-				this.SEND_STAGE.setNextTransmissionSource(in, "*clipboard", in.available());
-				this.getAndroidUI().enterStage(this.SEND_STAGE);
-				
-			} catch (Exception e1) {
-				e1.printStackTrace();
-				this.getAndroidUI().showErrorDialog("Error", "Error sending clipboard.");
+			//Enter send stage
+			this.SEND_STAGE.setNextTransmissionSource(in);
+			this.getAndroidUI().enterStage(this.SEND_STAGE);
 
-			} 
 		}
 
 		//If the start stage's send text button was pressed -> go to send stage
@@ -131,7 +123,7 @@ public class StartStage extends Stage implements ActionListener {
 				}
 
 				//enter stage
-				this.SEND_STAGE.setNextTransmissionSource(new ByteArrayInputStream(text.getBytes()), "*clipboard", text.length());
+				this.SEND_STAGE.setNextTransmissionSource(new ByteArrayInputStream(text.getBytes()));
 				this.getAndroidUI().enterStage(this.SEND_STAGE);
 
 			} finally {
@@ -147,7 +139,7 @@ public class StartStage extends Stage implements ActionListener {
 				//Hide window (so it will be not on the screenshot)
 				this.getAndroidUI().setVisible(false);
 				this.getAndroidUI().setHideOnFocusLost(false);
-
+				
 				//Make screenshot and save to tmp file
 				File temp = File.createTempFile("screenshot", ".png");
 				BufferedImage image = new Robot().createScreenCapture(
@@ -158,11 +150,8 @@ public class StartStage extends Stage implements ActionListener {
 				this.getAndroidUI().setVisible(true);
 				this.getAndroidUI().toFront();
 
-				//Create Date and time String
-				String dateTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").format(new Date());
-
 				//enter stage, send file
-				this.SEND_STAGE.setNextTransmissionSource(temp, "screenshot (" + dateTime + ").png");
+				this.SEND_STAGE.setNextTransmissionSource(new FileInputStream(temp));
 				this.getAndroidUI().enterStage(this.SEND_STAGE);
 
 			} catch (Exception e1) {
@@ -171,15 +160,8 @@ public class StartStage extends Stage implements ActionListener {
 
 			} finally {
 				//TODO: this causes the window to disappear
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						StartStage.this.getAndroidUI().setHideOnFocusLost(true);
-
-					}
-
-				});
-
+				this.getAndroidUI().setHideOnFocusLost(true);
+				
 			}
 		}
 
@@ -206,7 +188,7 @@ public class StartStage extends Stage implements ActionListener {
 				File f = new File(fd.getDirectory(), filePath);
 
 				//enter stage, send file
-				this.SEND_STAGE.setNextTransmissionSource(f);
+				this.SEND_STAGE.setNextTransmissionSource(new FileInputStream(f));
 				this.getAndroidUI().enterStage(this.SEND_STAGE);
 
 			} catch(Exception e1) {

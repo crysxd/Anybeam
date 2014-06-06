@@ -27,25 +27,14 @@ public class PreferenceListItem extends ListItem {
 		this.MY_PREFERENCE = p;
 	}
 
-	public Preference getPreference() {
+	public Preference getSetting() {
 		return this.MY_PREFERENCE;
 
-	}
-	
-	@Override
-	public String getTitle() {
-		return MY_PREFERENCE.getName();
-		
-	}
-	
-	@Override
-	public String getSubtitle() {
-		return MY_PREFERENCE.getSummary();
-		
 	}
 
 	@Override
 	public JComponent createView(JList<?> list, boolean isSelected, boolean paintBottomLineBorder) {
+
 		JComponent p = (JPanel) super.createView(list, isSelected, paintBottomLineBorder);
 
 		//If MY_PREFERENCE is a BooleanPreference add a Checkbox to display the current state

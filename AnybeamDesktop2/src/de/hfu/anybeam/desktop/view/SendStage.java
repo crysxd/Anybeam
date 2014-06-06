@@ -1,21 +1,19 @@
 package de.hfu.anybeam.desktop.view;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
 
-import de.hfu.anybeam.desktop.Control;
 import de.hfu.anybeam.desktop.view.androidUI.ActionbarButton;
 import de.hfu.anybeam.desktop.view.androidUI.ListItem;
+import de.hfu.anybeam.desktop.view.androidUI.ListSectionHeaderItem;
 import de.hfu.anybeam.desktop.view.androidUI.ListStage;
 import de.hfu.anybeam.desktop.view.androidUI.Stage;
 import de.hfu.anybeam.desktop.view.resources.R;
 import de.hfu.anybeam.networkCore.Client;
+import de.hfu.anybeam.networkCore.DeviceType;
 
 public class SendStage extends ListStage {
 
@@ -23,8 +21,6 @@ public class SendStage extends ListStage {
 
 	private final ActionbarButton REFRESH_BUTTON = new ActionbarButton(R.getImage("ic_action_refresh.png"));
 	private InputStream nextTransmissionSource;
-	private String nextTransmissionName;
-	private long nextTransmissionLength;
 	
 	public SendStage(Stage parent) {
 		super(parent);
@@ -45,13 +41,8 @@ public class SendStage extends ListStage {
 	@Override
 	public void onPause() {
 		super.onPause();	
-
-		//Leave active search mode
-		Control.getControl().setActiveSearchModeEnabled(false);
-		
-		//hide Progressbar
 		this.getAndroidUI().getActionbar().setProgressIndicatorVisible(false);
-
+		this.nextTransmissionSource = null;
 		
 	}
 	
@@ -62,35 +53,17 @@ public class SendStage extends ListStage {
 		//If Transmission source is not set -> Display error and return to parent stage
 		if(this.nextTransmissionSource == null) {
 			this.getAndroidUI().showErrorDialog("Internal Error", "SendStage::nextTransmissionSource is null. You found a bug :)");
-			this.returnToParent();
+			this.getAndroidUI().enterStage(this.getParentStage());
 			return;
 			
 		}
 		
-		//Enter active search mode
-		Control.getControl().setActiveSearchModeEnabled(true);
-		
-		//Enable Progressbar
 		this.getAndroidUI().getActionbar().setProgressIndicatorVisible(true);
 
 	}
 	
-	public void setNextTransmissionSource(InputStream in, String resourceName, long length) {
+	public void setNextTransmissionSource(InputStream in) {
 		this.nextTransmissionSource = in;
-		this.nextTransmissionName = resourceName;
-		this.nextTransmissionLength = length;
-		
-	}
-	
-	public void setNextTransmissionSource(File f, String resourceName) throws FileNotFoundException {
-		this.nextTransmissionSource = new FileInputStream(f);
-		this.nextTransmissionLength = f.length();
-		this.nextTransmissionName = f.getName();
-		
-	}
-	
-	public void setNextTransmissionSource(File f) throws FileNotFoundException {
-		this.setNextTransmissionSource(f, f.getName());
 		
 	}
 
@@ -99,13 +72,27 @@ public class SendStage extends ListStage {
 		//Create new model
 		DefaultListModel<ListItem> model = new DefaultListModel<ListItem>();
 
+		model.addElement(new ListSectionHeaderItem("Actual found devices"));
 		//Add all data
 		for(Client c : allClients)
 			model.addElement(new ClientListItem(c));
 		
 		if(allClients.size() == 0) {
-			model.addElement(new ListItem("No Clients", null, true, false));
+			model.addElement(new ListItem("No Clients", null, true));
 		}
+		
+		//Test cases TODO Remove
+		model.addElement(new ListSectionHeaderItem("Test cases"));
+		model.addElement(new ClientListItem(new Client("Desktop", "id", "os", DeviceType.TYPE_DESKTOP)));
+		model.addElement(new ClientListItem(new Client("Laptop", "id", "os", DeviceType.TYPE_LAPTOP)));
+		model.addElement(new ClientListItem(new Client("Smartphone", "id", "os", DeviceType.TYPE_SMARTPHONE)));
+		model.addElement(new ClientListItem(new Client("Tablet", "id", "os", DeviceType.TYPE_TABLET)));
+		model.addElement(new ClientListItem(new Client("Unknown", "id", "os", DeviceType.TYPE_UNKNOWN)));
+		model.addElement(new ClientListItem(new Client("Desktop", "id", "os", DeviceType.TYPE_DESKTOP)));
+		model.addElement(new ClientListItem(new Client("Laptop", "id", "os", DeviceType.TYPE_LAPTOP)));
+		model.addElement(new ClientListItem(new Client("Smartphone", "id", "os", DeviceType.TYPE_SMARTPHONE)));
+		model.addElement(new ClientListItem(new Client("Tablet", "id", "os", DeviceType.TYPE_TABLET)));
+		model.addElement(new ClientListItem(new Client("Unknown", "id", "os", DeviceType.TYPE_UNKNOWN)));
 		
 		//Set model
 		this.getList().setModel(model);
@@ -114,19 +101,7 @@ public class SendStage extends ListStage {
 
 	@Override
 	public void itemClicked(int index, ListItem item) {
-		//If a Client was pressed
-		if(item instanceof ClientListItem) {
-			//send data
-			Control.getControl().send(
-					((ClientListItem) item).getClient(), 
-					this.nextTransmissionSource, 
-					this.nextTransmissionName, 
-					this.nextTransmissionLength);
-			
-			//Return to parent
-			this.returnToParent();
-
-		}
+		// TODO Auto-generated method stub
 		
 	}
 }

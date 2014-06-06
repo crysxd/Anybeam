@@ -26,19 +26,18 @@ public class SettingsStage extends ListStage {
 		//Create legal notices stage
 		this.LEGAL_NOTICES = new LegalNoticesStage(this);
 
+		this.updateSettingsDisplayed();
 	}
 
 
 
-	public void updateSettingsDisplayed(Settings s) {
-		//Save scrollbar position
-		int scrollbarPosition = this.getListScroller().getVerticalScrollBar().getValue();
-		
+	public void updateSettingsDisplayed() {
 		//Clear
-		DefaultListModel<ListItem> m = new DefaultListModel<>();
+		DefaultListModel<ListItem> m = new DefaultListModel<ListItem>();
 		this.getList().setModel(m);
 
 		//Get Settings and Groups
+		Settings s = Settings.getSettings();
 		List<PreferencesGroup> groups = s.getGroups();
 
 		//Iterate through groups
@@ -61,8 +60,6 @@ public class SettingsStage extends ListStage {
 		m.addElement(new ListSectionHeaderItem("About", "Hier eintragen! fisejfi jesifjie dfh dshfhds fhdsfd fdsh fdhsfh dsfhds fshdj fdshh fds hf dsfhsh dfdsh fdsfh dsf dshfhds fdsf dyyyyyyyyshf dsf dhsfdsfdd sfh dsf dsh fdhs fhds fh dsfdsh  dsfh dsf hds fh dsfh hds f dhs fhds fds fhs dfh dsfds sjfijesifjeijf ise sfjise fj osi fjse fdsd fds fjdsj fdsijfids jifdsi sjfijdsfijso idfidsjfidsj fis jfs jdso ifjosi dyyyyyyyyyyyyyyyj"));
 		m.addElement(new ListItem(this.LEGAL_NOTICES_ID));
 
-		//Reset scrollbar
-		this.getListScroller().getVerticalScrollBar().setValue(scrollbarPosition);
 	}
 
 
@@ -89,16 +86,12 @@ public class SettingsStage extends ListStage {
 
 		//If a editable SettingsItem is clicked
 		else if(item instanceof PreferenceListItem) {
-			//Get preference
-			Preference p = ((PreferenceListItem) item).getPreference();
+			Preference p = ((PreferenceListItem) item).getSetting();
 
-			//Show edit view
 			this.getAndroidUI().setHideOnFocusLost(false);
 			new PreferenceEditorDialog(this.getAndroidUI(), p);
 			this.getAndroidUI().setHideOnFocusLost(true);
-			
-			//Reselect the item (this will refresh the displayed values)
-			this.getList().setSelectedIndex(index);
+			this.updateSettingsDisplayed();
 
 		}	
 	}

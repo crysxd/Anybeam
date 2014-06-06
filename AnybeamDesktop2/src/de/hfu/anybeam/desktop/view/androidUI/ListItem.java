@@ -28,9 +28,8 @@ public class ListItem {
 	
 	
 	private String title;
-	private String subtitle = "";
-	private boolean centered = false;
-	private boolean selectable = true;
+	private String subtitle;
+	private boolean centered;
 
 	public ListItem(String title) {
 		this.title = title;
@@ -47,13 +46,6 @@ public class ListItem {
 		this.subtitle = subtitle;
 		this.centered = centered;
 	}
-	
-	public ListItem(String title, String subtitle, boolean centered, boolean selectable) {
-		this.title = title;
-		this.subtitle = subtitle;
-		this.centered = centered;
-		this.selectable = selectable;
-	}
 
 	public String getTitle() {
 		return this.title;
@@ -69,14 +61,6 @@ public class ListItem {
 	
 	public void setTitle(String title) {
 		this.title = title;
-	}
-	
-	public boolean isSelectable() {
-		return selectable;
-	}
-	
-	public void setSelectable(boolean selectable) {
-		this.selectable = selectable;
 	}
 	
 	public JComponent createView(JList<?> list, boolean isSelected, boolean paintBottomLineBorder) {
@@ -117,7 +101,7 @@ public class ListItem {
 			comp.setBorder(DEFAULT_BORDER);
 		
 		//Set background
-		if(isSelected && this.selectable)
+		if(isSelected)
 			comp.setBackground(new Color(0, 0, 0, 0.05f));
 		else
 			comp.setOpaque(false);

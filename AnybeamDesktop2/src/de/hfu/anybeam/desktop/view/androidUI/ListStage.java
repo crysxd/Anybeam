@@ -63,14 +63,8 @@ public abstract class ListStage extends Substage implements MouseListener, Mouse
 		int index = this.LIST.locationToIndex(e.getPoint());
 		ListItem item = m.get(index);
 		
-		//Get clicked element and call itemClicked (if the item is selectable)
-		if(item.isSelectable())
-			this.itemClicked(index, item);
-		
-	}
-	
-	public JScrollPane getListScroller() {
-		return this.LIST_SCROLLER;
+		//Get clicked element and call itemClicked
+		this.itemClicked(index, item);
 		
 	}
 

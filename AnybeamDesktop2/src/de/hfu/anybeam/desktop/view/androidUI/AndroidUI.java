@@ -77,20 +77,6 @@ public class AndroidUI extends TrayWindow {
 		};
 
 	}
-	
-	@Override
-	public void setVisible(boolean b) {
-		super.setVisible(b);
-		
-		if(this.currentStage == null)
-			return;
-		
-		if(b)
-			this.currentStage.onResume();
-		
-		else
-			this.currentStage.onPause();
-	}
 
 	public void setStartStage(Stage startStage) {
 		this.startStage = startStage;
