@@ -188,7 +188,7 @@ public class InfoPanel extends JPanel implements ActionListener {
 
 		//If the close button was pressed
 		if(e.getSource() == this.CLOSE_BUTTON) {
-			this.setVisible(true);
+			this.setVisible(false);
 
 		}
 

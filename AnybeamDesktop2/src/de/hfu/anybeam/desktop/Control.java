@@ -77,25 +77,26 @@ public class Control {
 
 			@Override
 			public void transmissionStarted(TransmissionEvent e) {
-				// TODO Auto-generated method stub
+				Control.getControl().displayDownloadStatus(e);
 
 			}
 
 			@Override
 			public void transmissionProgressChanged(TransmissionEvent e) {
-				// TODO Auto-generated method stub
+				Control.getControl().displayDownloadStatus(e);
 
 			}
 
 			@Override
 			public void transmissionFailed(TransmissionEvent e) {
-				// TODO Auto-generated method stub
+				Control.getControl().displayDownloadStatus(e);
 
 			}
 
 			@Override
 			public void transmissionDone(TransmissionEvent e) {
-				System.out.println("Done");				
+				Control.getControl().displayDownloadStatus(e);
+				
 			}
 		});
 		

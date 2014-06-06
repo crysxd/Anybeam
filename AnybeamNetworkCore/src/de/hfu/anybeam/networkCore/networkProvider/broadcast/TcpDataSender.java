@@ -157,7 +157,6 @@ public class TcpDataSender extends AbstractTransmission {
 				this.increaseTransmittedLength(transmittedInCurrentInterval);
 				transmittedInCurrentInterval = 0;
 			}
-			System.out.println("sending");
 
 		}
 		
