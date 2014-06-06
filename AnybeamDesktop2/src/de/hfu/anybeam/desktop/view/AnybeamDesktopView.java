@@ -2,11 +2,10 @@ package de.hfu.anybeam.desktop.view;
 
 import java.awt.AWTException;
 import java.awt.Image;
-import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import de.hfu.anybeam.desktop.Control;
 import de.hfu.anybeam.desktop.view.androidUI.AndroidUI;
@@ -54,21 +53,17 @@ public class  AnybeamDesktopView {
 
 	}
 	
-	public void setBottomBarInformation(TransmissionEvent e, String status) {
-		this.INFO_PANEL.setVisible(true);
-		this.INFO_PANEL.setTitle(e.getResourceName());
-		this.INFO_PANEL.setSubTitle(status + " (" + e.getAverageSpeed() + " B/s)");
-		this.INFO_PANEL.setProgressbarEnabled(true);
-		this.INFO_PANEL.setProgressbarPercentage(e.getPercentDone());
-		
-	}
-	
-	public void setBottomBarInformation(File f) {
-		this.INFO_PANEL.setVisible(true);
-		this.INFO_PANEL.setTitle(f.getName());
-		this.INFO_PANEL.setSubTitle("Last download");
-		this.INFO_PANEL.setProgressbarEnabled(false);
-		
+	public void setBottomBarInformation(TransmissionEvent e) {
+		final TransmissionEvent E = e;
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				AnybeamDesktopView.this.INFO_PANEL.setVisible(true);
+				AnybeamDesktopView.this.INFO_PANEL.display(E);
+				
+			}
+		});
 	}
 	
 	public void tellControlToSendData(Client target, InputStream data, String resourceName, long length) {

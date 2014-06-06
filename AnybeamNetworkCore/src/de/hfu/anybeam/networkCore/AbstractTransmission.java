@@ -42,13 +42,18 @@ public abstract class AbstractTransmission extends Thread {
 	
 	//A AvergaList object storing the last x speed measurements to calculate a average speed
 	private final AverageList SPEED_AVERGAE = new AverageList(15);
+	
+	//a flag indicating if this transmission is a download or a upload
+	private final boolean IS_DOWNLOAD;
 
 	/**
 	 * Creates a new AbstarctTransmission instance.
 	 * @param adapter The {@link AbstractTransmissionAdapter} that should be informed about progress updates or null
+	 * @param a flag indicating if this transmission is a download or a upload
 	 */
-	public AbstractTransmission(AbstractTransmissionAdapter adapter) {
+	public AbstractTransmission(AbstractTransmissionAdapter adapter, boolean isDownload) {
 		this.ADAPTER = adapter;
+		this.IS_DOWNLOAD = isDownload;
 
 		synchronized (AbstractTransmission.class) {
 			this.TRANSMISSION_ID = AbstractTransmission.nextTransmissionId++;
@@ -60,6 +65,9 @@ public abstract class AbstractTransmission extends Thread {
 		try {
 			this.lastTransmittedLengthIncrease = System.nanoTime();
 			this.transmit();
+			
+			this.transmittedLength = this.getTotalLength();
+			
 			if(this.ADAPTER != null)
 				this.ADAPTER.transmissionDone(this.createTransmissionEvent(null));
 
@@ -140,7 +148,7 @@ public abstract class AbstractTransmission extends Thread {
 	 */
 	protected TransmissionEvent createTransmissionEvent(Exception e) {
 		return new TransmissionEvent(this.getTransmissionId(), this.getTotalLength(), this.getTransmittedLength(), 
-				this.getResourceName(), e, this.getAveragSpeed(), this);
+				this.getResourceName(), e, this.getAveragSpeed(), this, this.IS_DOWNLOAD);
 	}
 
 	/**
@@ -206,7 +214,7 @@ public abstract class AbstractTransmission extends Thread {
 		this.SPEED_AVERGAE.add(speed);
 
 		//if an adapter is available and if the last progress update is older than 500ms
-		if(this.ADAPTER != null && (this.lastProgressUpdate == 0 || time - this.lastProgressUpdate > 500000000)) {
+		if(this.ADAPTER != null && (this.lastProgressUpdate == 0 || time - this.lastProgressUpdate > 100000000)) {
 			this.lastProgressUpdate = time;
 			this.ADAPTER.transmissionProgressChanged(this.createTransmissionEvent(null));
 		}

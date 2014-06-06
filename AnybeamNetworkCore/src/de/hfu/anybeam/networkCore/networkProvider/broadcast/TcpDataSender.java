@@ -98,7 +98,7 @@ public class TcpDataSender extends AbstractTransmission {
 	public TcpDataSender(InputStream inputStream, long inputStreamLength, String inputName, 
 			EncryptionType encryptionType, byte[] encryptionKey, 
 			int receiverPort, InetAddress receiverAddress, AbstractTransmissionAdapter adapter, String senderClientId) {
-		super(adapter);
+		super(adapter, false);
 		
 		this.RECEIVER_ADDRESS = receiverAddress;
 		this.RECEIVER_PORT = receiverPort;

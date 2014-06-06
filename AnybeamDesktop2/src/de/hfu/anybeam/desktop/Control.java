@@ -124,13 +124,8 @@ public class Control {
 	}
 	
 	public void displayDownloadStatus(TransmissionEvent e) {
-		this.VIEW.setBottomBarInformation(e, "Downloading...");
+		this.VIEW.setBottomBarInformation(e);
 		
-	}
-	
-	public void displayDownloadDoneStatus(File f) {
-		this.VIEW.setBottomBarInformation(f);
-
 	}
 
 }

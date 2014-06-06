@@ -1,5 +1,8 @@
 package de.hfu.anybeam.networkCore;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -40,14 +43,13 @@ class AverageList extends Vector<Double> {
 	 * @return the calculated average
 	 */
 	public synchronized double getAverage() {
-		//TODO: Use better average calculation algorithm
-		double sum = 0;
+		List<Double> copy = new ArrayList<>(this);
+		Collections.sort(copy);
 		
-		for(Double d : this) {
-			sum += d;
-		}
+		if(copy.size() == 0)
+			return 0;
 		
-		return sum/this.size();
+		return copy.get(copy.size()/2);
 	}
 
 }

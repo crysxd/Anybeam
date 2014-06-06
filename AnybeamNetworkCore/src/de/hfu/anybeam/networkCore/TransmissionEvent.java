@@ -29,6 +29,12 @@ public class TransmissionEvent {
 	//The transmission's average spped
 	private final double AVERAGE_SPEED;
 	
+	//The flag indicating if the transmission is a download (true) or a upload (false)
+	private final boolean IS_DOWNLOAD;
+	
+	//Timestamp showing the time this instance was created
+	private final long CREATION_TIME;
+	
 	/**
 	 * Creates a new {@link TransmissionEvent} object.
 	 * @param transmissionId the unique transmission id of the transmissions
@@ -39,8 +45,8 @@ public class TransmissionEvent {
 	 * @param averageSpeed the average speed of the transmission in Bytes/second
 	 * @param handler
 	 */
-	TransmissionEvent(int transmissionId, long resourceLength, long transmittedLength, 
-			String resourceName, Exception error, double averageSpeed, AbstractTransmission handler) {
+	protected TransmissionEvent(int transmissionId, long resourceLength, long transmittedLength, 
+			String resourceName, Exception error, double averageSpeed, AbstractTransmission handler, boolean isDownload) {
 		this.TRANSMISSON_ID = transmissionId;
 		this.TOTAL_LENGTH = resourceLength;
 		this.TRASMITTED_LENGTH = transmittedLength;
@@ -48,6 +54,8 @@ public class TransmissionEvent {
 		this.TRANSMISSION_HANDLER = handler;
 		this.AVERAGE_SPEED = averageSpeed;
 		this.EXCEPTION = error;
+		this.IS_DOWNLOAD = isDownload;
+		this.CREATION_TIME = System.currentTimeMillis();
 	}
 
 	/**
@@ -120,6 +128,43 @@ public class TransmissionEvent {
 	 */
 	public double getAverageSpeed() {
 		return AVERAGE_SPEED;
+		
+	}
+	
+	/**
+	 * Returns if the {@link AbstractTransmission} represents a download or a upload.
+	 * @return true is if the {@link AbstractTransmission} represents a download, false otherwise.
+	 */
+	public boolean isDownload() {
+		return this.IS_DOWNLOAD;
+
+	}
+	
+	/**
+	 * Returns if this  the {@link AbstractTransmission} is done.
+	 * @return true, if this  the {@link AbstractTransmission} is done
+	 */
+	public boolean isDone() {
+		return this.getPercentDone() == 1.;
+		
+	}
+	
+	/**
+	 * Returns if this  the {@link AbstractTransmission} was successful. The transmission may not be finished yet.
+	 * @return true, if this  the {@link AbstractTransmission} was successful
+	 * @see #isDone()
+	 */
+	public boolean isSucessfull() {
+		return this.getException() == null;
+		
+	}
+	
+	/**
+	 * Returns the time when this instance was created.
+	 * @return the time when this instance was created
+	 */
+	public long getTime() {
+		return this.CREATION_TIME;
 		
 	}
 }

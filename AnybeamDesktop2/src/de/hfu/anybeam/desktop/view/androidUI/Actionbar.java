@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,7 +25,7 @@ public class Actionbar extends JPanel {
 	private final JPanel ACTION_PANEL;
 	private final ActionbarProgressIndicator PROGRSS_INDICATOR;
 	
-	public Actionbar(BufferedImage image, Color backgroundColor, String title, Color textColor) {
+	public Actionbar(Image image, Color backgroundColor, String title, Color textColor) {
 		//Set Backgorund Color
 		this.setBackground(backgroundColor);
 

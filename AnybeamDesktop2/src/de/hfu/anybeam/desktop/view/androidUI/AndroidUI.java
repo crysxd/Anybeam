@@ -54,11 +54,11 @@ public class AndroidUI extends TrayWindow {
 
 		//Set background (Android holo light)
 		this.MAIN_PANEL.setBackground(new Color(250, 250, 250));
-
+		
 		//BottomBar
 		this.BOTTOM_BAR = new ShadowInsetPanel();
 		this.BOTTOM_BAR.setLayout(new BorderLayout());
-		this.BOTTOM_BAR.setBackground(new Color(0, 0, 0, 0.075f));
+		this.BOTTOM_BAR.setBackground(new Color(240, 240, 240));
 		this.add(this.BOTTOM_BAR, BorderLayout.SOUTH);
 
 		//Set default bottom bar (may be null)
@@ -110,6 +110,7 @@ public class AndroidUI extends TrayWindow {
 		if(this.bottomBarContent != null) {
 			this.BOTTOM_BAR.add(bottomBar);
 			this.bottomBarContent.setOpaque(false);
+			
 		}
 	}
 

@@ -1,9 +1,8 @@
 package de.hfu.anybeam.desktop.view;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -18,8 +17,8 @@ import de.hfu.anybeam.desktop.view.resources.R;
 public class PreferenceListItem extends ListItem {
 
 	private final Preference MY_PREFERENCE;
-	private static final ImageIcon CHECKBOX_CHECKED = new ImageIcon(ViewUtils.resizeImage(R.getImage("ic_checkbox_checked.png"), new Dimension(20, 20)));
-	private static final ImageIcon CHECKBOX_UNCHECKED = new ImageIcon(ViewUtils.resizeImage(R.getImage("ic_checkbox_unchecked.png"), new Dimension(20, 20)));
+	private static final Icon CHECKBOX_CHECKED = R.getIcon("ic_checkbox_checked.png", 20, 20);
+	private static final Icon CHECKBOX_UNCHECKED = R.getIcon("ic_checkbox_unchecked.png", 20, 20);
 
 	public PreferenceListItem(Preference p) {
 		super(p.getName(), p.getSummary());

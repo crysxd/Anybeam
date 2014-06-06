@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+import java.awt.Image;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -18,19 +18,19 @@ public class AnybeamWindow extends JDialog {
 
 	private static final int PADDING = 25;
 
-	private static final BufferedImage TOP_LEFT = R.getImage("top_left.png");
-	private static final BufferedImage TOP = R.getImage("top.png");
-	private static final BufferedImage TOP_RIGHT = R.getImage("top_right.png");
+	private static final Image TOP_LEFT = R.getImage("top_left.png");
+	private static final Image TOP = R.getImage("top.png");
+	private static final Image TOP_RIGHT = R.getImage("top_right.png");
 
-	private static final BufferedImage LEFT = R.getImage("left.png");
+	private static final Image LEFT = R.getImage("left.png");
 
-	private static final BufferedImage RIGHT = R.getImage("right.png");
+	private static final Image RIGHT = R.getImage("right.png");
 
-	private static final BufferedImage BOTTOM_LEFT = R.getImage("bottom_left.png");
-	private static final BufferedImage BOTTOM = R.getImage("bottom.png");
-	private static final BufferedImage BOTTOM_RIGHT = R.getImage("bottom_right.png");
+	private static final Image BOTTOM_LEFT = R.getImage("bottom_left.png");
+	private static final Image BOTTOM = R.getImage("bottom.png");
+	private static final Image BOTTOM_RIGHT = R.getImage("bottom_right.png");
 
-	private static final BufferedImage BODY = R.getImage("body.png");
+	private static final Image BODY = R.getImage("body.png");
 
 	private Color backgroundColor = new Color(1, 1, 1, 0.85f);
 

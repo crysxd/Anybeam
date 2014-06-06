@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import de.hfu.anybeam.desktop.view.resources.R;
@@ -40,10 +39,10 @@ public class ViewUtils {
 		b.setBorder(null);
 		
 		//Set icons
-		b.setIcon(			new ImageIcon(ViewUtils.resizeImage(R.getImage("ic_action_" + name + "_default.png"), size)));
-		b.setPressedIcon(	new ImageIcon(ViewUtils.resizeImage(R.getImage("ic_action_" + name + "_pressed.png"), size)));
-		b.setRolloverIcon(	new ImageIcon(ViewUtils.resizeImage(R.getImage("ic_action_" + name + "_rollover.png"), size)));
-		
+		b.setIcon(R.getIcon("ic_action_" + name + "_default.png", size.width, size.height));
+		b.setPressedIcon(R.getIcon("ic_action_" + name + "_pressed.png", size.width, size.height));
+		b.setRolloverIcon(R.getIcon("ic_action_" + name + "_rollover.png", size.width, size.height));
+
 		//Set icon position
 		b.setIconTextGap(0);
 
@@ -72,6 +71,5 @@ public class ViewUtils {
 		return image.getScaledInstance(iconSize.width, iconSize.height, Image.SCALE_SMOOTH);
 
 	}
-
 
 }

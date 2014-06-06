@@ -16,11 +16,11 @@ import de.hfu.anybeam.networkCore.Client;
 
 public class ClientListItem extends ListItem {
 	
-	private static final Image ICON_TYPE_DESKTOP	=  ViewUtils.resizeImage(R.getImage("ic_device_computer.png"), new Dimension(42, 42));
-	private static final Image ICON_TYPE_LAPTOP 	=  ViewUtils.resizeImage(R.getImage("ic_device_laptop.png"), new Dimension(42, 42));
-	private static final Image ICON_TYPE_TABLET		=  ViewUtils.resizeImage(R.getImage("ic_device_tablet.png"), new Dimension(42, 42));
-	private static final Image ICON_TYPE_SMARTPHONE =  ViewUtils.resizeImage(R.getImage("ic_device_phone.png"), new Dimension(42, 42));
-	private static final Image ICON_TYPE_UNKNOWN 	=  ViewUtils.resizeImage(R.getImage("ic_device_unknown.png"), new Dimension(42, 42));
+	private static final Image ICON_TYPE_DESKTOP	=  R.getImage("ic_device_computer.png", 42, 42);
+	private static final Image ICON_TYPE_LAPTOP 	=  R.getImage("ic_device_laptop.png", 42, 42);
+	private static final Image ICON_TYPE_TABLET		=  R.getImage("ic_device_tablet.png", 42, 42);
+	private static final Image ICON_TYPE_SMARTPHONE =  R.getImage("ic_device_phone.png", 42, 42);
+	private static final Image ICON_TYPE_UNKNOWN 	=  R.getImage("ic_device_unknown.png", 42, 42);
 	
 	private final Client MY_CLIENT;
 	

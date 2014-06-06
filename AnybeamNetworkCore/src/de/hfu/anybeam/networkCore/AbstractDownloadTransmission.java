@@ -26,7 +26,7 @@ public abstract class AbstractDownloadTransmission extends AbstractTransmission 
 	 * @param adapter The {@link AbstractDownloadTransmissionAdapter} that should be informed about progress updates or null
 	 */
 	public AbstractDownloadTransmission(AbstractDownloadTransmissionAdapter adapter) {
-		super(adapter);
+		super(adapter, true);
 
 		this.ADAPTER = adapter;
 	}

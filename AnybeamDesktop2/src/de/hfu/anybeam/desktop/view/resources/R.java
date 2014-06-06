@@ -1,7 +1,7 @@
 package de.hfu.anybeam.desktop.view.resources;
 
 import java.awt.Font;
-import java.awt.image.BufferedImage;
+import java.awt.Image;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 
 public class R {
 	
-	public static BufferedImage getImage(String name) {
+	public static Image getImage(String name) {
 		try {
 			return ImageIO.read(R.class.getResourceAsStream(name));
 		} catch(Exception e) {
@@ -17,14 +17,33 @@ public class R {
 			return null;
 		}
 	}
-
-	public static Icon getIcon(String name) {
-		BufferedImage i = R.getImage(name);
+	
+	public static Image getImage(String name, int width, int height) {
+		Image img = R.getImage(name);
 		
-		if(i == null)
+		if(img == null)
 			return null;
 		
-		return new ImageIcon(i);
+		return img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		
+	}
+
+	public static Icon getIcon(String name) {
+		Image img = R.getImage(name);
+		
+		if(img == null)
+			return null;
+		
+		return new ImageIcon(img);
+	}
+	
+	public static Icon getIcon(String name, int width, int height) {
+		Image img = R.getImage(name, width, height);
+		
+		if(img == null)
+			return null;
+		
+		return new ImageIcon(img);
 	}
 
 	public static Font getFont(String name, float size) {

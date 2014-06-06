@@ -53,25 +53,26 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 
 	@Override
 	public void transmissionStarted(TransmissionEvent e) {
-		Control.getControl().displayDownloadStatus(e);
+		this.updateProgressView(e);
 		
 	}
 
 	@Override
 	public void transmissionProgressChanged(TransmissionEvent e) {
-		Control.getControl().displayDownloadStatus(e);
+		this.updateProgressView(e);
 
 	}
 
 	@Override
 	public void transmissionDone(TransmissionEvent e) {
-		Control.getControl().displayDownloadStatus(e);
+		this.updateProgressView(e);
 
 	}
 
 	@Override
 	public void transmissionFailed(TransmissionEvent e) {
-
+		this.updateProgressView(e);
+		
 		if(e.getException() != null)
 			e.getException().printStackTrace();
 
@@ -122,7 +123,6 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 						Desktop.getDesktop().browse(new URI(s));
 						
 					} catch(Exception e1) {
-						e1.printStackTrace();
 						//Do nothing...
 						
 					}
@@ -149,7 +149,8 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 			}
 			
 			//Show file as lasz download
-			Control.getControl().displayDownloadDoneStatus(this.DOWNLOAD_FILES.get(e.getTransmissionId()));
+			this.updateProgressView(e);
+			
 		}
 
 		try {
@@ -167,6 +168,17 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 	
 	private boolean isAutoOpenFilesEnabled() {
 		return Boolean.valueOf(Settings.getSettings().getPreference("gen_auto_open_files").getValue());
+		
+	}
+	
+	private void updateProgressView(TransmissionEvent e) {
+		//If the TRansmission is a File transmission -> create a FileTransmissionEvent
+		if(	this.DOWNLOAD_FILES.containsKey(e.getTransmissionId())) {
+			e = new FileTransmissionEvent(e, this.DOWNLOAD_FILES.get(e.getTransmissionId()));
+		}
+		
+		//Tell Control
+		Control.getControl().displayDownloadStatus(e);
 		
 	}
 	
