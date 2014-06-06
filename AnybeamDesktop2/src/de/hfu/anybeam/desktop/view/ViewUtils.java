@@ -7,7 +7,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -70,10 +69,7 @@ public class ViewUtils {
 	}
 
 	public static Image resizeImage(Image image, Dimension iconSize) {
-		Image sizedImage = new BufferedImage(iconSize.width, iconSize.height, BufferedImage.TYPE_INT_ARGB);
-		ViewUtils.prepareGraphics(sizedImage.getGraphics()).drawImage(image, 0, 0, iconSize.width, iconSize.height, null);
-		
-		return sizedImage;
+		return image.getScaledInstance(iconSize.width, iconSize.height, Image.SCALE_SMOOTH);
 
 	}
 

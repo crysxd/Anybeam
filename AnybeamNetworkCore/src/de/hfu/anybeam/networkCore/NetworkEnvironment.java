@@ -914,17 +914,7 @@ public class NetworkEnvironment {
 			this.osName = osName;
 			return this;
 		}
-
-		/**
-		 * Sets the local Id to identify a client
-		 * @param localID the local Id
-		 * @return the {@link Builder} object to chain commands
-		 */
-		public Builder setLocalID(String localID) {
-			this.localID = localID;
-			return this;
-		}
-
+		
 		/**
 		 * Sets the encryption key
 		 * @param encryptionKey the encryption key

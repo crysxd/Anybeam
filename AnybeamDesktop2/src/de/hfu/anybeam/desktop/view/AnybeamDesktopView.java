@@ -2,16 +2,15 @@ package de.hfu.anybeam.desktop.view;
 
 import java.awt.AWTException;
 import java.awt.Image;
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import de.hfu.anybeam.desktop.Control;
 import de.hfu.anybeam.desktop.model.settings.Settings;
 import de.hfu.anybeam.desktop.view.androidUI.AndroidUI;
-import de.hfu.anybeam.desktop.view.androidUI.ShadowInsetPanel;
 import de.hfu.anybeam.desktop.view.resources.R;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
@@ -44,8 +43,7 @@ public class  AnybeamDesktopView {
 		this.MAIN_WIDNOW.setStartStage(this.START_STAGE);
 		
 		//Basic bottom bar TODO improve
-		JPanel p = new ShadowInsetPanel();
-		p.add(new JLabel("Status will be here!"));
+		JPanel p = new InfoPanel();
 		this.MAIN_WIDNOW.setBottomBar(p);
 		
 	}
@@ -61,6 +59,10 @@ public class  AnybeamDesktopView {
 	}
 	
 	public void setBottomBarInformation(TransmissionEvent e) {
+		
+	}
+	
+	public void setBottomBarInformation(File f) {
 		
 	}
 	

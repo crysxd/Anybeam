@@ -7,8 +7,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-import de.hfu.anybeam.desktop.Control;
-
 @XmlType
 public abstract class Preference {
 	
@@ -42,6 +40,11 @@ public abstract class Preference {
 	
 	public String getValue() {
 		return value;
+	}
+	
+	public String getId() {
+		return id;
+		
 	}
 	
 	protected void setValue(String value) {

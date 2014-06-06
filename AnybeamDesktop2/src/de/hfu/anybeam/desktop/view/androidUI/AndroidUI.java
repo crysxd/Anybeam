@@ -13,7 +13,6 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import de.hfu.anybeam.desktop.view.ViewUtils;
 import de.hfu.anybeam.desktop.view.resources.R;
@@ -41,7 +40,7 @@ public class AndroidUI extends TrayWindow {
 		this.setLayout(new BorderLayout());
 
 		//Set initial size (width will be preserved)
-		this.setSize(320, 520);
+		this.setSize(320, 570);
 
 		//Actionbar
 		this.ACTION_BAR = new Actionbar(R.getImage("ic_actionbar.png"), ViewUtils.ANYBEAM_GREEN, "", Color.white);
@@ -57,7 +56,7 @@ public class AndroidUI extends TrayWindow {
 		this.MAIN_PANEL.setBackground(new Color(250, 250, 250));
 
 		//BottomBar
-		this.BOTTOM_BAR = new JPanel();
+		this.BOTTOM_BAR = new ShadowInsetPanel();
 		this.BOTTOM_BAR.setLayout(new BorderLayout());
 		this.BOTTOM_BAR.setBackground(new Color(0, 0, 0, 0.075f));
 		this.add(this.BOTTOM_BAR, BorderLayout.SOUTH);
@@ -109,7 +108,6 @@ public class AndroidUI extends TrayWindow {
 		this.bottomBarContent = bottomBar;
 
 		if(this.bottomBarContent != null) {
-			this.bottomBarContent.setBorder(new EmptyBorder(5, 5, 5, 5));
 			this.BOTTOM_BAR.add(bottomBar);
 			this.bottomBarContent.setOpaque(false);
 		}
