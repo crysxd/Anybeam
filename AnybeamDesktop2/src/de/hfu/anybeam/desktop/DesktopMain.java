@@ -18,7 +18,8 @@ public class DesktopMain {
 					e.printStackTrace();
 					
 				} 
-				new Control();
+				
+				Control.getControl();
 				
 			}
 		});

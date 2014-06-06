@@ -18,12 +18,12 @@ public class ListSectionHeaderItem extends ListItem {
 	private static final Color SECTION_HEADER_COLOR = new Color(50, 50, 50);
 	
 	public ListSectionHeaderItem(String sectionTitle) {
-		super(sectionTitle);
+		this(sectionTitle, null);
 	}
 	
 	
 	public ListSectionHeaderItem(String sectionTitle, String sectionDescription) {
-		super(sectionTitle, sectionDescription);
+		super(sectionTitle, sectionDescription, false, false);
 	}
 	
 	@Override

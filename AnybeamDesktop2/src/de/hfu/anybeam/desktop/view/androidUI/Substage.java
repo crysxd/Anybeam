@@ -30,7 +30,7 @@ public abstract class Substage extends Stage implements ActionListener {
 	
 		//Go back if back button was pressed
 		if(e.getSource() == this.backButton) {
-			this.getAndroidUI().enterStage(this.PARENT);
+			this.returnToParent();
 			
 		}
 		
@@ -41,6 +41,10 @@ public abstract class Substage extends Stage implements ActionListener {
 		
 	}
 	
+	public void returnToParent() {
+		this.getAndroidUI().enterStage(this.getParentStage());
+		
+	}
 	
 
 

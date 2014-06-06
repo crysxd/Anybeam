@@ -9,11 +9,14 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import de.hfu.anybeam.desktop.Control;
+
 @XmlRootElement(name="Settings")
 public class Settings {
 	
 	/*
 	 * Static content
+	 * Use Singelton to prefent multiple Settings objects destroying the settings file through parallel access
 	 */
 	private static Settings singleton;
 	//TODO Save in convinient location
@@ -67,6 +70,22 @@ public class Settings {
 	
 	public String getString(String id) {
 		return null;
+	}
+
+	public void preferenceWasChanged(Preference preference) {
+		//Save settings
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(Settings.class, PreferencesGroup.class, Preference.class, TextPreference.class, IntegerPreference.class, BooleanPreference.class, ListPreference.class);
+			jaxbContext.createMarshaller().marshal(this, xmlFile);
+
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+		
+		//Tell Control
+		Control.getControl().preferenceWasChanged(preference);
+
+		
 	}
 
 }
