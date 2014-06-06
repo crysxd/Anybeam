@@ -27,7 +27,7 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter{
 			reciver = new TcpDataReceiver(
 					environment.getEncryptionType(), 
 					environment.getEncryptionKey(), 
-					1338, //TODO Load from Preferences 
+					1337, //TODO Load from Preferences 
 					this);
 		} catch (Exception e) {
 			e.printStackTrace();

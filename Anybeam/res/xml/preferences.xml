@@ -47,35 +47,34 @@
     <PreferenceCategory
         android:key="general_settings"
         android:title="@string/settings_category_general" >
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="gen_auto_clipboard"
-            android:summary="@string/settings_pref_auto_clipboard_summary"
-            android:title="@string/settings_pref_auto_clipboard" />
         <EditTextPreference
             android:defaultValue="@string/default_display_time"
             android:inputType="number"
             android:key="display_time"
             android:title="@string/settings_pref_display_time" 
         	android:summary="@string/settings_pref_display_time_summary" />
+        <EditTextPreference 
+            android:defaultValue="@string/default_data_folder"
+            android:key="data_folder"
+            android:title="@string/settings_pref_data_folder"
+            android:summary="@string/settings_pref_data_folder_summary"/>
+        <CheckBoxPreference 
+            android:key="auto_url" 
+            android:title="@string/settings_pref_auto_url"
+            android:summary="@string/settings_pref_auto_url_summary"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/settings_category_about" >
-        <Preference
-            android:enabled="false"
-            android:selectable="false"
-            android:summary="@string/settings_category_about_summary"
-            android:title="@string/app_name" />
+    <PreferenceCategory android:title="@string/settings_category_other" >
 
-        <PreferenceScreen android:title="@string/settings_category_icons" >
+        <PreferenceScreen android:title="@string/settings_category_about" >
             <Preference
-                android:summary="Some Text about our beautiful icons :D"
-                android:title="@string/settings_category_icons" />
+                android:summary="@string/settings_category_about_summary"
+                android:title="@string/app_name" />
         </PreferenceScreen>
         
         <PreferenceScreen android:title="Legal Notices" >
             <Preference
                 android:summary="LEGALBAHBAH"
-                android:title="@string/settings_category_icons" />
+                android:title="Todo" />
         </PreferenceScreen>
         
     </PreferenceCategory>

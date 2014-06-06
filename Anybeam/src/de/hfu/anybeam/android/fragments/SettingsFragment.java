@@ -105,6 +105,9 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 			} else if (editTextPreference.getKey().equals("display_time")) { //Is display time
 				editTextPreference.setSummary(editTextPreference.getText() + " "
 						+ getString(R.string.settings_pref_display_time_summary));
+			} else if (editTextPreference.getKey().equals("data_folder")) { //Is data folder
+				editTextPreference.setSummary(getString(R.string.settings_pref_data_folder_summary) 
+						+ editTextPreference.getText());
 			} else {
 				editTextPreference.setSummary(editTextPreference.getText());
 			}

@@ -21,7 +21,7 @@ public class NetworkEnvironmentManager {
 			networkEnvironment = buildNetworkEnvironment();
 			
 		if (localNetworkProvider == null) 
-			localNetworkProvider = new LocalNetworkProvider(networkEnvironment, 1339, 1338);
+			localNetworkProvider = new LocalNetworkProvider(networkEnvironment, 1337, 1338);
 		
 		if (desktopDataReciver == null)
 			desktopDataReciver = new DesktopDataReciver();
@@ -80,7 +80,7 @@ public class NetworkEnvironmentManager {
 
 	public static NetworkEnvironment buildNetworkEnvironment() {
 	
-		EncryptionType et = EncryptionType.AES256;
+		EncryptionType et = EncryptionType.AES128;
 		
 		try {
 			return new NetworkEnvironment.Builder(et, et.getSecretKeyFromPassword("anybeamRockt1137"))

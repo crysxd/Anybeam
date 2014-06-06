@@ -104,7 +104,10 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			return new ByteArrayOutputStream();
 		} 
 		
-		String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/";
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+				+ prefs.getString("data_folder", "Download") + "/";
 	    Log.i("Transmission", "Path: " + fullPath);
 		File dir = new File(fullPath);
 		if (!dir.exists()) {
@@ -123,7 +126,6 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	        Log.e("saveToExternalStorage()", e1.getMessage());
 	        return null;
 	    }
-		
 	}
 
 	@Override
@@ -139,13 +141,51 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 		
 		
 		if (out instanceof ByteArrayOutputStream && e.getResourceName().equals("*clipboard")) {
-			Looper.prepare();
 			//Clipboard Text
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			Looper.prepare();
 			
 			//Get String from stream
 			ByteArrayOutputStream bo = (ByteArrayOutputStream) out;	
 			String value = new String(bo.toByteArray());
 			ClipboardUtils.copyToClipboard(context, "Text", value);
+						
+			try { 
+				//if URL keep Notification and set intent
+				mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_url));
+				Uri url = Uri.parse(value);
+				Intent intent = new Intent();
+				intent.setAction(android.content.Intent.ACTION_VIEW);
+				intent.setData(url);
+				
+				if (prefs.getBoolean("auto_url", false)) { //if auto open url is enabled
+					context.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+					return;
+				} 
+				
+				PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);					
+				mBuilder.setContentIntent(pendingIntent);
+			
+			} catch (Exception e2) {
+				//Catch: not an URL
+				
+				mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_clipboard));
+				final Integer time = Integer.parseInt(prefs.getString("display_time", "5"));
+				if (time > 0) {
+					//Remove notification after time seconds
+					new Thread() {
+						public void run() {
+							try {
+								sleep(time * 1000);
+							} catch (InterruptedException e1) {
+								e1.printStackTrace();
+							}
+							mManager.cancel(e.getTransmissionId());
+						};
+					}.start();				
+				}
+				e2.printStackTrace();
+			}
 			
 			//Shorten content text
 			if (value.length() > 40) {
@@ -153,23 +193,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			}else {
 				mBuilder.setContentText(value);
 			}
-			mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_clipboard));
 			
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-			final Integer time = Integer.parseInt(prefs.getString("display_time", "5"));
-			if (time > 0) {
-				//Remove notification after time seconds
-				new Thread() {
-					public void run() {
-						try {
-							sleep(time * 1000);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
-						mManager.cancel(e.getTransmissionId());
-					};
-				}.start();				
-			}
 			
 		} else if (out instanceof FileOutputStream) {
 			//File to save
