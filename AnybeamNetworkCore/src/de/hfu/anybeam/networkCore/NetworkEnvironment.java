@@ -33,17 +33,17 @@ public class NetworkEnvironment {
 	public static final double VERSION 				= 0.17;
 
 	//All fields used in the header
-	private static String HEADER_FIELD_ID 			= "ID";
-	private static String HEADER_FIELD_VERSION 		= "VERSION";
-	private static String HEADER_FIELD_OS_NAME 		= "OS_NAME";
-	private static String HEADER_FIELD_DEVICE_NAME 	= "DEVICE_NAME";
-	private static String HEADER_FIELD_DEVICE_TYPE 	= "DEVICE_TYPE";
-
+	public static String HEADER_FIELD_ID 			= "ID";
+	public static String HEADER_FIELD_VERSION 		= "VERSION";
+	public static String HEADER_FIELD_OS_NAME 		= "OS_NAME";
+	public static String HEADER_FIELD_DEVICE_NAME 	= "DEVICE_NAME";
+	public static String HEADER_FIELD_DEVICE_TYPE 	= "DEVICE_TYPE";
+    
 	//All methods used
-	private static String HEADER_FIELD_METHOD 		= "METHOD";
-	private static String METHOD_TYPE_REGISTER		= "REGISTER";
-	private static String METHOD_TYPE_UNREGISTER	= "UNREGISTER";
-	private static String METHOD_TYPE_ANSWER		= "ANSWER";
+	public static String HEADER_FIELD_METHOD 		= "METHOD";
+	public static String METHOD_TYPE_REGISTER		= "REGISTER";
+	public static String METHOD_TYPE_UNREGISTER		= "UNREGISTER";
+	public static String METHOD_TYPE_ANSWER			= "ANSWER";
 
 	//The device name
 	private final String DEVICE_NAME;
@@ -455,8 +455,9 @@ public class NetworkEnvironment {
 					try {
 
 						//While not interrupted or end time reached
-						while(System.currentTimeMillis()  < END_TIME) {	
+						while(System.currentTimeMillis() < END_TIME) {	
 							try {
+								System.out.println("Round!");
 								//Send signal ans sleep
 								NetworkEnvironment.this.registerOnNetwork();
 								Thread.sleep(PAUSE);

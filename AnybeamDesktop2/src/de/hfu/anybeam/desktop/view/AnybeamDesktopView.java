@@ -9,7 +9,6 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import de.hfu.anybeam.desktop.Control;
-import de.hfu.anybeam.desktop.model.settings.Settings;
 import de.hfu.anybeam.desktop.view.androidUI.AndroidUI;
 import de.hfu.anybeam.desktop.view.resources.R;
 import de.hfu.anybeam.networkCore.Client;
@@ -20,6 +19,7 @@ public class  AnybeamDesktopView {
 	private final Control MY_CONTROL;
 	private final AndroidUI MAIN_WIDNOW;
 	private final StartStage START_STAGE;
+	private final InfoPanel INFO_PANEL;
 	
 	public AnybeamDesktopView(Control c) throws UnsupportedOperationException, AWTException {
 		this.MY_CONTROL = c;
@@ -43,13 +43,9 @@ public class  AnybeamDesktopView {
 		this.MAIN_WIDNOW.setStartStage(this.START_STAGE);
 		
 		//Basic bottom bar TODO improve
-		JPanel p = new InfoPanel();
-		this.MAIN_WIDNOW.setBottomBar(p);
-		
-	}
-	
-	public void updateSettingsDisplayed(Settings s) {
-		this.START_STAGE.getSettingsStage().updateSettingsDisplayed(s);
+		this.INFO_PANEL = new InfoPanel();
+		this.INFO_PANEL.setVisible(false);
+		this.MAIN_WIDNOW.setBottomBar(this.INFO_PANEL);
 		
 	}
 	
@@ -58,11 +54,20 @@ public class  AnybeamDesktopView {
 
 	}
 	
-	public void setBottomBarInformation(TransmissionEvent e) {
+	public void setBottomBarInformation(TransmissionEvent e, String status) {
+		this.INFO_PANEL.setVisible(true);
+		this.INFO_PANEL.setTitle(e.getResourceName());
+		this.INFO_PANEL.setSubTitle(status + " (" + e.getAverageSpeed() + " B/s)");
+		this.INFO_PANEL.setProgressbarEnabled(true);
+		this.INFO_PANEL.setProgressbarPercentage(e.getPercentDone());
 		
 	}
 	
 	public void setBottomBarInformation(File f) {
+		this.INFO_PANEL.setVisible(true);
+		this.INFO_PANEL.setTitle(f.getName());
+		this.INFO_PANEL.setSubTitle("Last download");
+		this.INFO_PANEL.setProgressbarEnabled(false);
 		
 	}
 	

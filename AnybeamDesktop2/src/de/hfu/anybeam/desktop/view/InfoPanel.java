@@ -2,7 +2,9 @@ package de.hfu.anybeam.desktop.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -10,15 +12,15 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import de.hfu.anybeam.desktop.view.androidUI.ActionbarProgressIndicator;
-import de.hfu.anybeam.desktop.view.resources.R;
 
 public class InfoPanel extends JPanel {
 
 	private static final long serialVersionUID = 324432413436876988L;
 	
-	private final JLabel ICON_LABEL = new JLabel(new ImageIcon(ViewUtils.resizeImage(R.getImage("ic_action_send_file.png"), new Dimension(64, 64))));
-	private final JLabel TITLE_LABEL = new JLabel("Title text");
-	private final JLabel SUBTITLE_LABEL = new JLabel("Subtitle text");
+	private final JLabel ICON_LABEL = new JLabel();
+	private final JLabel TITLE_LABEL = new JLabel("--");
+	private final JLabel SUBTITLE_LABEL = new JLabel("--");
+	private final ActionbarProgressIndicator PROGRESS_BAR = new ActionbarProgressIndicator();
 	
 	public InfoPanel() {
 		//Set Opaque
@@ -33,19 +35,26 @@ public class InfoPanel extends JPanel {
 		//Build view
 		JPanel helper1 = new JPanel();
 		helper1.setLayout(new BorderLayout());
-		helper1.setOpaque(true);
-		helper1.setBorder(new EmptyBorder(8, 8, 8, 8));
+		helper1.setOpaque(false);
+		helper1.setBorder(new EmptyBorder(10, 8, 8, 8));
 		helper1.add(this.ICON_LABEL, BorderLayout.WEST);
-		
-		JPanel helper2 = new JPanel(new GridLayout(2, 1));
+
+		JPanel helper2 = new JPanel(new GridBagLayout());
 		helper2.setOpaque(false);
-		helper2.add(this.TITLE_LABEL, BorderLayout.NORTH);
-		helper2.add(this.SUBTITLE_LABEL, BorderLayout.SOUTH);
-		helper1.add(helper2, BorderLayout.CENTER);
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.LINE_START;
+		gbc.gridx=0;
+		gbc.gridy=0;
+		gbc.weightx=1;
+		gbc.fill=GridBagConstraints.HORIZONTAL;
 		
-		ActionbarProgressIndicator progress = new ActionbarProgressIndicator();
-		progress.start();
-		this.add(progress, BorderLayout.SOUTH);
+		helper2.add(this.TITLE_LABEL, gbc);
+		gbc.gridy=1;
+		helper2.add(this.SUBTITLE_LABEL, gbc);
+	
+		helper1.add(helper2, BorderLayout.CENTER);
+
+		this.add(this.PROGRESS_BAR, BorderLayout.SOUTH);
 		
 		this.add(helper1, BorderLayout.CENTER);
 		
@@ -56,6 +65,33 @@ public class InfoPanel extends JPanel {
 		this.SUBTITLE_LABEL.setVerticalAlignment(JLabel.TOP);
 		this.SUBTITLE_LABEL.setFont(ViewUtils.getDefaultFont().deriveFont(13f));
 
+	}
+	
+	public void setTitle(String title) {
+		this.TITLE_LABEL.setText(title);
+		
+	}
+	
+	public void setSubTitle(String subtitle) {
+		this.SUBTITLE_LABEL.setText(subtitle);
+		
+	}
+	
+	public void setIcon(Image icon) {
+		this.SUBTITLE_LABEL.setIcon(new ImageIcon(ViewUtils.resizeImage(icon, new Dimension(64, 64))));
+		
+	}
+	
+	public void setProgressbarEnabled(boolean b) {
+		if(b)
+			this.PROGRESS_BAR.start();
+		
+		else
+			this.PROGRESS_BAR.stop();
+		
+	}
+	
+	public void setProgressbarPercentage(double percent) {
 		
 	}
 

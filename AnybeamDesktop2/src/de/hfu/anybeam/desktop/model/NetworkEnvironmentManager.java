@@ -1,7 +1,5 @@
 package de.hfu.anybeam.desktop.model;
 
-import java.util.concurrent.TimeUnit;
-
 import de.hfu.anybeam.desktop.Control;
 import de.hfu.anybeam.desktop.model.settings.Settings;
 import de.hfu.anybeam.networkCore.Client;
@@ -43,8 +41,10 @@ public class NetworkEnvironmentManager implements NetworkEnvironmentListener{
 	}
 	
 	public void setActiveSearchModeEnabled(boolean flag) {
+		System.out.println("Active search:" + flag);
 		if(flag) {
-			this.MY_ENVIRONMENT.startClientSearch(365, TimeUnit.DAYS, 10, TimeUnit.SECONDS);
+			System.out.println("start");
+			this.MY_ENVIRONMENT.startClientSearch();
 			
 		} else {
 			this.MY_ENVIRONMENT.cancelClientSearch();

@@ -200,8 +200,8 @@ public class LocalNetworkProvider extends EnvironmentProvider implements UdpBroa
 					
 				} catch (Exception e) {
 					e.printStackTrace();
+					
 				}
-				
 			}
 		});
 		

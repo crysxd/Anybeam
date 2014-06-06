@@ -20,6 +20,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import de.hfu.anybeam.desktop.model.ClipboardUtils;
+import de.hfu.anybeam.desktop.model.settings.Settings;
 import de.hfu.anybeam.desktop.view.androidUI.ActionbarButton;
 import de.hfu.anybeam.desktop.view.androidUI.AndroidUI;
 import de.hfu.anybeam.desktop.view.androidUI.Stage;
@@ -160,9 +161,10 @@ public class StartStage extends Stage implements ActionListener {
 
 				//Create Date and time String
 				String dateTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").format(new Date());
-
+				String deviceName = Settings.getSettings().getPreference("client_name").getValue();
+				
 				//enter stage, send file
-				this.SEND_STAGE.setNextTransmissionSource(temp, "screenshot (" + dateTime + ").png");
+				this.SEND_STAGE.setNextTransmissionSource(temp, "screenshot@" + deviceName +  " (" + dateTime + ").png");
 				this.getAndroidUI().enterStage(this.SEND_STAGE);
 
 			} catch (Exception e1) {

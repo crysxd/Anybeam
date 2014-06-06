@@ -1,7 +1,7 @@
-package de.hfu.anybeam.desktop;
+package de.hfu.anybeam.desktop.model;
 
+import java.awt.Desktop;
 import java.awt.Toolkit;
-import java.awt.TrayIcon;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.ByteArrayOutputStream;
@@ -11,26 +11,39 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
+import de.hfu.anybeam.desktop.Control;
+import de.hfu.anybeam.desktop.model.settings.Settings;
 import de.hfu.anybeam.networkCore.AbstractDownloadTransmissionAdapter;
-import de.hfu.anybeam.networkCore.NetworkEnvironment;
+import de.hfu.anybeam.networkCore.EncryptionType;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
 import de.hfu.anybeam.networkCore.networkProvider.broadcast.TcpDataReceiver;
 
 public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
+	
 	private TcpDataReceiver reciver;
+	private final Map<Integer, File> DOWNLOAD_FILES = new HashMap<>();
 	
 	public DesktopDataReciver() {
-		try {
-			NetworkEnvironment environment = NetworkEnvironmentManager.getNetworkEnvironment();
+		try {	
+			//Get encryption and key
+			Settings s = Settings.getSettings();
+			EncryptionType encryption = EncryptionType.valueOf(s.getPreference("group_encryption_type").getValue());
+			byte[] key= encryption.getSecretKeyFromPassword(s.getPreference("group_password").getValue());
+			int transmissionport = Integer.valueOf(s.getPreference("port_data").getValue());
 			
 			reciver = new TcpDataReceiver(
-					environment.getEncryptionType(), 
-					environment.getEncryptionKey(), 
-					1337, //TODO Load from Preferences 
+					encryption,
+					key, 
+					transmissionport,
 					this);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 		}
 	}
 	
@@ -40,25 +53,24 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 
 	@Override
 	public void transmissionStarted(TransmissionEvent e) {
-		System.out.println("[" + e.getResourceName() + "] Started");
+		Control.getControl().displayDownloadStatus(e);
+		
 	}
 
 	@Override
 	public void transmissionProgressChanged(TransmissionEvent e) {
-		System.out.println("[" + e.getResourceName() + "] Progress: " + String.format("%.2f", e.getPercentDone()));
+		Control.getControl().displayDownloadStatus(e);
 
 	}
 
 	@Override
 	public void transmissionDone(TransmissionEvent e) {
-		System.out.println("[" + e.getResourceName() + "] Done");
-		MainWindow.trayIcon.displayMessage("Download done", "Downloaded \"" + e.getResourceName() + "\".", TrayIcon.MessageType.INFO);
+		Control.getControl().displayDownloadStatus(e);
 
 	}
 
 	@Override
 	public void transmissionFailed(TransmissionEvent e) {
-		System.out.println("[" + e.getResourceName() + "] Failed");
 
 		if(e.getException() != null)
 			e.getException().printStackTrace();
@@ -75,20 +87,27 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 		File downloads = new File(userHome, "Downloads");
 		File target = new File(downloads,e.getResourceName());
 
+		this.DOWNLOAD_FILES.put(e.getTransmissionId(), target);
+		
 		try {
 			return new FileOutputStream(target);
+			
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 			return null;
+			
 		}
 	}
 
 	@Override
 	public void closeOutputStream(TransmissionEvent e, OutputStream out) {
 		System.out.println("OutputStream closed");
-		if(out instanceof ByteArrayOutputStream && e.getResourceName().equals("*clipboard")) {
+		
+		//If a clipboard String was received
+		if(!this.DOWNLOAD_FILES.containsKey(e.getTransmissionId())) {
 			ByteArrayOutputStream clipboardOut = (ByteArrayOutputStream) out;
 			
+			//Put back in clipboard
 			try {
 				String s = new String(clipboardOut.toByteArray(), "UTF-8");
 				StringSelection selection = new StringSelection(s);
@@ -96,10 +115,41 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 				clipboard.setContents(selection, selection);
 				
 				System.out.println("[" + e.getResourceName() + "] Copied to clipboard: " + s);
+				
+				//If it is a link, open it (just try to parse)
+				if(this.isAutoOpenURLsEnabled()) {
+					try {
+						Desktop.getDesktop().browse(new URI(s));
+						
+					} catch(Exception e1) {
+						e1.printStackTrace();
+						//Do nothing...
+						
+					}
+				}
+			
 			} catch (UnsupportedEncodingException e1) {
 				e1.printStackTrace();
+				
 			}
 
+		} else {
+			//If it is a file. open it
+			if(this.isAutoOpenFilesEnabled() && 
+					out instanceof FileOutputStream && 
+					this.DOWNLOAD_FILES.containsKey(e.getTransmissionId())) {
+				try {
+					Desktop.getDesktop().open(this.DOWNLOAD_FILES.get(e.getTransmissionId()));
+					
+				} catch(Exception e1) {
+					e1.printStackTrace();
+					//Do nothing...
+					
+				}
+			}
+			
+			//Show file as lasz download
+			Control.getControl().displayDownloadDoneStatus(this.DOWNLOAD_FILES.get(e.getTransmissionId()));
 		}
 
 		try {
@@ -108,6 +158,16 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 			e1.printStackTrace();
 		}
 
+	}
+	
+	private boolean isAutoOpenURLsEnabled() {
+		return Boolean.valueOf(Settings.getSettings().getPreference("gen_auto_open_links").getValue());
+		
+	}
+	
+	private boolean isAutoOpenFilesEnabled() {
+		return Boolean.valueOf(Settings.getSettings().getPreference("gen_auto_open_files").getValue());
+		
 	}
 	
 }

@@ -55,11 +55,15 @@ public class SettingsStage extends ListStage {
 		}
 
 		this.ABOUT_NOTICES_STAGE = s;
+		
+		this.updateSettingsDisplayed();
 	}
 
 
 
-	public void updateSettingsDisplayed(Settings s) {
+	public void updateSettingsDisplayed() {
+		Settings s = Settings.getSettings();
+		
 		//Save scrollbar position
 		int scrollbarPosition = this.getListScroller().getVerticalScrollBar().getValue();
 

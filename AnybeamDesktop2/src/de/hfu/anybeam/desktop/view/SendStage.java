@@ -85,7 +85,7 @@ public class SendStage extends ListStage {
 	public void setNextTransmissionSource(File f, String resourceName) throws FileNotFoundException {
 		this.nextTransmissionSource = new FileInputStream(f);
 		this.nextTransmissionLength = f.length();
-		this.nextTransmissionName = f.getName();
+		this.nextTransmissionName = resourceName;
 		
 	}
 	

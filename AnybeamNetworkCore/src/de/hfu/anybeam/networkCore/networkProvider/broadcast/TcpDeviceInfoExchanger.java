@@ -45,11 +45,6 @@ public class TcpDeviceInfoExchanger implements Runnable {
 				System.out.println("connection!");
 				
 				//Create streams
-//				out = new CipherOutputStream(
-//						s.getOutputStream(), this.MY_OWNER.getNetworkEnvironment().getEncryptionCipher());
-//				in = new BufferedReader(new InputStreamReader(new CipherInputStream(
-//						s.getInputStream(), this.MY_OWNER.getNetworkEnvironment().getDecryptionCipher())));
-
 				out = s.getOutputStream();
 				in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 				
@@ -66,7 +61,7 @@ public class TcpDeviceInfoExchanger implements Runnable {
 					address = new InetSocketAddress(s.getInetAddress(), port);
 					
 				} catch(Exception e) {
-					e.printStackTrace();
+
 				}
 				
 				//Call NetworkEnvironment to handle infos
@@ -133,10 +128,6 @@ public class TcpDeviceInfoExchanger implements Runnable {
 			s.connect(socketAddress);
 
 			//Create streams
-//			out = new CipherOutputStream(
-//					s.getOutputStream(), this.MY_OWNER.getNetworkEnvironment().getEncryptionCipher());
-//			in = new BufferedReader(new InputStreamReader(new CipherInputStream(
-//					s.getInputStream(), this.MY_OWNER.getNetworkEnvironment().getDecryptionCipher())));
 			out = s.getOutputStream();
 			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			
@@ -181,7 +172,8 @@ public class TcpDeviceInfoExchanger implements Runnable {
 		try {
 			//Create data to send
 			UrlParameterBundle bundle = this.MY_OWNER.getNetworkEnvironment().createUnregisterPayload();
-
+			bundle.put(HEADER_FIELD_DATA_PORT, this.MY_OWNER.getTransmissionPort());
+			
 			//Connect
 			s = new Socket();
 			s.connect(new InetSocketAddress(address, this.MY_OWNER.getBroadcastPort()), 200);

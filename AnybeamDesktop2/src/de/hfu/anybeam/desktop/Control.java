@@ -1,12 +1,13 @@
 package de.hfu.anybeam.desktop;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import de.hfu.anybeam.desktop.model.DesktopDataReciver;
 import de.hfu.anybeam.desktop.model.NetworkEnvironmentManager;
 import de.hfu.anybeam.desktop.model.settings.Preference;
-import de.hfu.anybeam.desktop.model.settings.Settings;
 import de.hfu.anybeam.desktop.view.AnybeamDesktopView;
 import de.hfu.anybeam.networkCore.AbstractTransmissionAdapter;
 import de.hfu.anybeam.networkCore.Client;
@@ -19,7 +20,7 @@ public class Control {
 	 */
 	private static Control control;
 
-	public static Control getControl() {
+	public synchronized static Control getControl() {
 		if(control == null)
 			control = new Control();
 
@@ -31,7 +32,8 @@ public class Control {
 	 */
 	private final AnybeamDesktopView VIEW;
 	private final NetworkEnvironmentManager ENVIRONMEN_MANAEGR;
-
+	private final DesktopDataReciver DATA_RECEIVER;
+	
 	private Control() {
 		//Create NetworkEnvironment
 		NetworkEnvironmentManager manager = null;
@@ -60,9 +62,8 @@ public class Control {
 		//Set view
 		this.VIEW = v;
 
-		//Init view
-		this.updateSettingsDisplayed();
-
+		//Create DataReceiver
+		this.DATA_RECEIVER = new DesktopDataReciver();
 
 	}
 
@@ -107,11 +108,6 @@ public class Control {
 
 	}
 
-	public void updateSettingsDisplayed() {
-		this.VIEW.updateSettingsDisplayed(Settings.getSettings());
-
-	}
-
 	public void updateDevicesDisplayed(List<Client> l) {
 		this.VIEW.updateDevicesDisplayed(l);
 
@@ -124,7 +120,16 @@ public class Control {
 
 	public void setActiveSearchModeEnabled(boolean b) {
 		this.ENVIRONMEN_MANAEGR.setActiveSearchModeEnabled(b);
-		System.out.println("Active search: " + b);
+
+	}
+	
+	public void displayDownloadStatus(TransmissionEvent e) {
+		this.VIEW.setBottomBarInformation(e, "Downloading...");
+		
+	}
+	
+	public void displayDownloadDoneStatus(File f) {
+		this.VIEW.setBottomBarInformation(f);
 
 	}
 
