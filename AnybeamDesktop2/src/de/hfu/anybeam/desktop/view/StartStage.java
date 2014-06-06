@@ -153,7 +153,7 @@ public class StartStage extends Stage implements ActionListener {
 				BufferedImage image = new Robot().createScreenCapture(
 						new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
 				ImageIO.write(image, "png", temp);
-
+				
 				//Reshow window
 				this.getAndroidUI().setVisible(true);
 				this.getAndroidUI().toFront();

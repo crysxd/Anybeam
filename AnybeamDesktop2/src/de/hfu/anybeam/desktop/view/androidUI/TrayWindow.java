@@ -121,6 +121,7 @@ public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFo
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		this.setHideOnFocusLost(false);
+
 	}
 
 	@Override
