@@ -76,7 +76,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 		
 		//Notification to inform user about progress
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-			.setSmallIcon(R.drawable.ic_launcher)
+			.setSmallIcon(R.drawable.ic_notification)
 			.setWhen(System.currentTimeMillis())
 			.setProgress(100, (int) (e.getPercentDone() * 100), false)
 			.setContentTitle(context.getString(R.string.transmission_in_progress_title)) 

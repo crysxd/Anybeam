@@ -35,7 +35,7 @@ public class GeneralTransmission implements AbstractTransmissionAdapter {
 		
 		//Notification to inform user about progress
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-			.setSmallIcon(R.drawable.ic_launcher)
+			.setSmallIcon(R.drawable.ic_notification)
 			.setWhen(System.currentTimeMillis())
 			.setProgress(100, (int) (e.getPercentDone() * 100), false)
 			.setContentTitle(context.getString(R.string.transmission_out_progress_title)) 
@@ -55,18 +55,19 @@ public class GeneralTransmission implements AbstractTransmissionAdapter {
 
 	@Override
 	public void transmissionDone(final TransmissionEvent e) {
+		final NotificationManager mManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+
 		//if we have a file send a message
 		if (!(e.getResourceName().equals("*clipboard"))) { 
 			//Build notification
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-				.setSmallIcon(R.drawable.ic_launcher)
+				.setSmallIcon(R.drawable.ic_notification)
 				.setWhen(System.currentTimeMillis())
 				.setContentTitle(context.getString(R.string.transmission_out_done_title_file))
 				.setContentText(e.getResourceName());
 			
 			//Show notification
-			final NotificationManager mManager = (NotificationManager) context
-					.getSystemService(Context.NOTIFICATION_SERVICE);
 			mManager.notify(e.getTransmissionId(), mBuilder.build());
 			
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -84,8 +85,9 @@ public class GeneralTransmission implements AbstractTransmissionAdapter {
 					};
 				}.start();				
 			}
+		} else {
+			//remove only the notification
+			mManager.cancel(e.getTransmissionId());
 		}
-	
-
 	}
 }

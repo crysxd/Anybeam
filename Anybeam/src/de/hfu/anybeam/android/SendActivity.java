@@ -9,10 +9,13 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,9 +25,9 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
 import de.hfu.anybeam.networkCore.Client;
@@ -203,7 +206,7 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 				    String type = intent.getType();
 				    
 				    Client.SendTask builder = new Client.SendTask();
-
+				    
 				    if (Intent.ACTION_SEND.equals(action) && type != null) {
 				        if ("text/plain".equals(type)) {
 				        	// Handle text being sent
@@ -213,25 +216,37 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 				    	    	builder.setInputStreamLength(sharedText.length());
 				    	    	builder.setSourceName("*clipboard");
 				    	    }
-				        } else { 
-				        	// Handle file image being sent
-			        	    Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-			        	    if (fileUri != null) {
-			        	    	String path = Uri.decode(fileUri.toString()).replace("file:/", "");
+						} else {
+							//Handle file being sent
+							
+							Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+							String path = Uri.decode(fileUri.toString());																								
+							Log.i("Filepaht", path);
+				
+							if (path.startsWith("content")) {
+								//Image file from Gallery
+								builder.setInputStream(new FileInputStream(
+										new File(getRealPathFromURI(
+												getApplicationContext(),
+												fileUri))));
+								builder.setSourceName(getFilenameFromURI(
+										getApplicationContext(), fileUri));
+								builder.setInputStreamLength(new File(
+										getRealPathFromURI(
+												getApplicationContext(),
+												fileUri)).length());
+							}
 
-			        	    	Log.i("Filepaht", path);
-			        	        try {
-			        	        	builder.setInputStream(
-			        	        			new FileInputStream(
-			        	        				new File(path)));
-			        	        	builder.setSourceName(
-			        	        				getFilenameFromPath(path));
-			        	        	builder.setInputStreamLength(
-			        	        			new File(path).length());
-			        			} catch (FileNotFoundException e) {
-			        				e.printStackTrace();
-			        			} 
-				        	}
+							if (path.startsWith("file")) {
+								//File from file browser
+								path = path.replace("file:/", "");
+
+								builder.setInputStream(new FileInputStream(
+										new File(path)));
+								builder.setSourceName(getFilenameFromPath(path));
+								builder.setInputStreamLength(new File(path)
+										.length());
+							}
 				        }
 				    }
 				    
@@ -242,10 +257,46 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 					finish();
 				} catch (IndexOutOfBoundsException e) {
 					Log.w("ClientList", "ClientList is Empty");
-				} catch (Exception e) {
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} 
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+
+	/**
+	 * Function to find file in MediaStore
+	 * @param context the Application {@link Context}
+	 * @param contentUri the {@link Uri} for the File
+	 * @return the Path
+	 */
+	private String getRealPathFromURI(Context context, Uri contentUri) {
+		Cursor cursor = null;
+		try {
+			String[] proj = { MediaStore.Images.Media.DATA };
+			cursor = context.getContentResolver().query(contentUri, proj, null,
+					null, null);
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			return cursor.getString(column_index);
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+	}
+
+	/**
+	 * Function to find file name from the filepath
+	 * @param context the Application {@link Context}
+	 * @param contentUri the {@link Uri} for the File
+	 * @return the file name
+	 */
+	private String getFilenameFromURI(Context context, Uri contentUri) {
+		return getRealPathFromURI(context, contentUri).replaceAll("(.*[\\/])", "");
 	}
 }
