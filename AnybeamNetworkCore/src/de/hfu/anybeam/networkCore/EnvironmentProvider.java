@@ -21,11 +21,13 @@ public abstract class EnvironmentProvider implements Comparable<EnvironmentProvi
 		if (this.isDisposed) {
 			return;
 		}
+		
 		this.isDisposed = true;
 		//Send unregister to all known Clients
 		this.unregisterOnNetwork();
 		
 		this.disposeResources();
+		
 		this.getNetworkEnvironment().unregisterEnvironmentProvider(this);
 		
 	}

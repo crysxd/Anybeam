@@ -33,7 +33,7 @@ public abstract class AbstractDownloadTransmission extends AbstractTransmission 
 
 	protected OutputStream getTransmissionOutput(String clientId) {
 		if(this.transmissionOutput == null)
-			return this.ADAPTER.downloadStarted(this.createTransmissionEvent(null), clientId);
+			return this.ADAPTER.downloadStarted(this.createTransmissionEvent(null, true), clientId);
 		else
 			return this.transmissionOutput;
 	}
@@ -42,7 +42,7 @@ public abstract class AbstractDownloadTransmission extends AbstractTransmission 
 	protected void forceCloseTransmissionStream() throws IOException {
 		//Call adapter and request close of output
 		if(this.transmissionOutput != null)
-			this.ADAPTER.closeOutputStream(this.createTransmissionEvent(null), this.transmissionOutput);	
+			this.ADAPTER.closeOutputStream(this.createTransmissionEvent(null, false), this.transmissionOutput);	
 
 	}
 

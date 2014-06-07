@@ -35,6 +35,9 @@ public class TransmissionEvent {
 	//Timestamp showing the time this instance was created
 	private final long CREATION_TIME;
 	
+	//Flag indicating wheter this transmission is still in Progress
+	private final boolean IS_IN_PROGRESS;
+	
 	/**
 	 * Creates a new {@link TransmissionEvent} object.
 	 * @param transmissionId the unique transmission id of the transmissions
@@ -46,7 +49,7 @@ public class TransmissionEvent {
 	 * @param handler
 	 */
 	protected TransmissionEvent(int transmissionId, long resourceLength, long transmittedLength, 
-			String resourceName, Exception error, double averageSpeed, AbstractTransmission handler, boolean isDownload) {
+			String resourceName, Exception error, double averageSpeed, AbstractTransmission handler, boolean isDownload,boolean isInProgress) {
 		this.TRANSMISSON_ID = transmissionId;
 		this.TOTAL_LENGTH = resourceLength;
 		this.TRASMITTED_LENGTH = transmittedLength;
@@ -56,6 +59,7 @@ public class TransmissionEvent {
 		this.EXCEPTION = error;
 		this.IS_DOWNLOAD = isDownload;
 		this.CREATION_TIME = System.currentTimeMillis();
+		this.IS_IN_PROGRESS = isInProgress;
 	}
 
 	/**
@@ -145,7 +149,7 @@ public class TransmissionEvent {
 	 * @return true, if this  the {@link AbstractTransmission} is done
 	 */
 	public boolean isDone() {
-		return this.getPercentDone() == 1.;
+		return this.getPercentDone() >= 1.;
 		
 	}
 	
@@ -165,6 +169,27 @@ public class TransmissionEvent {
 	 */
 	public long getTime() {
 		return this.CREATION_TIME;
+		
+	}
+	
+
+	/**
+	 * Returns if the {@link AbstractTransmission} is still in progress.If is it not it was canceled or it failed.
+	 * @return true, if this  the {@link AbstractTransmission} is still in progress
+	 * @see #isCanceled()
+	 */
+	public boolean isInProgress() {
+		return this.IS_IN_PROGRESS;
+	}
+	
+	/**
+	 * Returns if the {@link AbstractTransmission} is canceled.
+	 * @return true, if this  the {@link AbstractTransmission} is canceled. False if it is still in progress or failed.
+	 * @see #isInProgress()
+	 * @see #isSucessfull()
+	 */
+	public boolean isCanceled() {
+		return !this.isInProgress() && this.getException() == null && !this.isDone();
 		
 	}
 }

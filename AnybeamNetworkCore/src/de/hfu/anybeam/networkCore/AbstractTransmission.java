@@ -66,18 +66,24 @@ public abstract class AbstractTransmission extends Thread {
 			this.lastTransmittedLengthIncrease = System.nanoTime();
 			this.transmit();
 			
-			this.transmittedLength = this.getTotalLength();
+//			this.transmittedLength = this.getTotalLength();
 			
-			if(this.ADAPTER != null)
-				this.ADAPTER.transmissionDone(this.createTransmissionEvent(null));
+			if(this.ADAPTER == null)
+				return;
+			
+			//Tell Adapter is Done if all bytes were transmitted
+			if(!this.isCanceled())
+				this.ADAPTER.transmissionDone(this.createTransmissionEvent(null, false));
+			
+			//Tell Adapter transmission was canceled
+			else {
+				this.ADAPTER.transmissionFailed(this.createTransmissionEvent(null, false));
+
+			}
 
 		} catch(Exception e) {
-			e.printStackTrace();
-			
-			this.isCanceled = true;
-			
 			if(this.ADAPTER != null)
-				this.ADAPTER.transmissionFailed(this.createTransmissionEvent(this.isCanceled ? null : e));
+				this.ADAPTER.transmissionFailed(this.createTransmissionEvent(this.isCanceled ? null : e, false));
 
 			if(!this.isCanceled)
 				e.printStackTrace();		
@@ -146,9 +152,9 @@ public abstract class AbstractTransmission extends Thread {
 	 * @param e an exception that occurred or null, if no exception occurred
 	 * @return the created {@link TransmissionEvent}
 	 */
-	protected TransmissionEvent createTransmissionEvent(Exception e) {
+	protected TransmissionEvent createTransmissionEvent(Exception e, boolean isInProgress) {
 		return new TransmissionEvent(this.getTransmissionId(), this.getTotalLength(), this.getTransmittedLength(), 
-				this.getResourceName(), e, this.getAveragSpeed(), this, this.IS_DOWNLOAD);
+				this.getResourceName(), e, this.getAveragSpeed(), this, this.IS_DOWNLOAD, isInProgress);
 	}
 
 	/**
@@ -216,7 +222,7 @@ public abstract class AbstractTransmission extends Thread {
 		//if an adapter is available and if the last progress update is older than 500ms
 		if(this.ADAPTER != null && (this.lastProgressUpdate == 0 || time - this.lastProgressUpdate > 100000000)) {
 			this.lastProgressUpdate = time;
-			this.ADAPTER.transmissionProgressChanged(this.createTransmissionEvent(null));
+			this.ADAPTER.transmissionProgressChanged(this.createTransmissionEvent(null, true));
 		}
 
 	}

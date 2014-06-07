@@ -1,9 +1,10 @@
 package de.hfu.anybeam.desktop;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import de.hfu.anybeam.desktop.model.DesktopDataReciver;
 import de.hfu.anybeam.desktop.model.NetworkEnvironmentManager;
@@ -35,19 +36,6 @@ public class Control {
 	private final DesktopDataReciver DATA_RECEIVER;
 	
 	private Control() {
-		//Create NetworkEnvironment
-		NetworkEnvironmentManager manager = null;
-		try {
-			manager = new NetworkEnvironmentManager();
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
-
-		}
-
-		//Set NetworkEnvironmentManager
-		this.ENVIRONMEN_MANAEGR = manager;
-
 		//Build View
 		AnybeamDesktopView v = null;
 		try {
@@ -55,6 +43,8 @@ public class Control {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "The main window could not be created.\n"
+					+ "Please check your system requierements and install the latest Java version.", "Anybeam - Fatal Error", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 
 		}
@@ -62,8 +52,14 @@ public class Control {
 		//Set view
 		this.VIEW = v;
 
-		//Create DataReceiver
+		//Set NetworkEnvironmentManager
+		this.ENVIRONMEN_MANAEGR = new NetworkEnvironmentManager();
+		
+		//Set DesktopDataReceiver
 		this.DATA_RECEIVER = new DesktopDataReciver();
+		
+		//Start both network service
+		this.restartNetworkServices();
 
 	}
 
@@ -115,8 +111,31 @@ public class Control {
 	}
 
 	public void preferenceWasChanged(Preference preference) {
-		System.out.println("Preference was changed");
+		restartNetworkServices();
 
+	}
+	
+	private void restartNetworkServices() {
+		try {
+			this.ENVIRONMEN_MANAEGR.restart();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			this.VIEW.showErrorDialog("Fatal Error", "An error occured starting the broadcast service.\n"
+					+ "Changing the broadcast port in settings might solve this problem.\n\n"
+					+ "This means you are not able to find any other devices in the local network.");
+			
+		}
+		
+		try {
+			this.DATA_RECEIVER.restart();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			this.VIEW.showErrorDialog("Fatal Error", "An error occured starting the download service.\n"
+					+ "Changing the data port in settings might solve this problem.\n\n"
+					+ "This means you are not able to receive any data.");
+		}
 	}
 
 	public void setActiveSearchModeEnabled(boolean b) {
@@ -125,6 +144,11 @@ public class Control {
 	}
 	
 	public void displayDownloadStatus(TransmissionEvent e) {
+		if(!e.isSucessfull())
+			this.VIEW.showErrorDialog("Transmission failed", "The current transmission failed.\n"
+					+ "If this happens multiple times, please see Settings > Help for further assistance.\n\n"
+					+ "Hint: Check your password and encryption type on all devices and make sure they are identically!");
+			
 		this.VIEW.setBottomBarInformation(e);
 		
 	}

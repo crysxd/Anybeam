@@ -14,6 +14,7 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -38,7 +39,7 @@ public class NetworkEnvironment {
 	public static String HEADER_FIELD_OS_NAME 		= "OS_NAME";
 	public static String HEADER_FIELD_DEVICE_NAME 	= "DEVICE_NAME";
 	public static String HEADER_FIELD_DEVICE_TYPE 	= "DEVICE_TYPE";
-    
+
 	//All methods used
 	public static String HEADER_FIELD_METHOD 		= "METHOD";
 	public static String METHOD_TYPE_REGISTER		= "REGISTER";
@@ -47,19 +48,19 @@ public class NetworkEnvironment {
 
 	//The device name
 	private final String DEVICE_NAME;
-	
+
 	//the type of the device
 	private final DeviceType DEVICE_TYPE;
-	
+
 	//the encrpytion type used
 	private final EncryptionType ENCRYPTION_TYPE;
-	
+
 	//the name of the os
 	private final String OS_NAME;
-	
+
 	//the id of the local device
 	private final String LOCAL_ID;
-	
+
 	//the encrpytion key used
 	private final byte[] ENCRYPTION_KEY;
 
@@ -80,7 +81,7 @@ public class NetworkEnvironment {
 
 	//The Future of the current task with the active search
 	private Future<?> clientSearchTask;
-	
+
 	//A Flag indicating if this instance is disposed
 	private boolean isDisposed = false;
 
@@ -102,34 +103,44 @@ public class NetworkEnvironment {
 		this.registerOnNetwork();
 	}
 
-	
+
 	public void registerEnvironmentProvider(EnvironmentProvider toAdd) {
-		if(toAdd.getNetworkEnvironment() != this)
-			throw new IllegalArgumentException("The EnvironmentProvider is already used by an other NetworkEnvironment instance!");
-		
-		this.PROVIDERS.add(toAdd);
+		try {
+			//lock
+			this.LOCK.writeLock().lock();
+
+			if(toAdd.getNetworkEnvironment() != this)
+				throw new IllegalArgumentException("The EnvironmentProvider is already used by an other NetworkEnvironment instance!");
+
+			this.PROVIDERS.add(toAdd);
+
+		} finally {
+			//unlock
+			this.LOCK.writeLock().unlock();
+
+		}
 	}
-	
+
 	public void unregisterEnvironmentProvider(EnvironmentProvider toRemove) {
 		try {
 			//lock
 			this.LOCK.writeLock().lock();
 
 			this.PROVIDERS.remove(toRemove);
-			
+
 			List<Client> clients = this.getClientsForProvider(toRemove);
 			for(Client c: clients) {
 				c.removeAddressForProvider(toRemove);
 				this.dispatchEvent("clientUpdated", new Class[]{Client.class}, c);
 
 			}
-			
+
 			try {
 				toRemove.dispose();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -163,9 +174,11 @@ public class NetworkEnvironment {
 			//Shutdown thread pool
 			this.THREAD_EXECUTOR.shutdownNow();
 
-			//dispose all providers
-			for(EnvironmentProvider p : this.PROVIDERS)
+			//dispose all providers 
+			//(duplicate to prevent ConcurrentModificationException as dispose() will call unregisterEnvironementProvider() which will modify this.PROVIDERS)
+			for(EnvironmentProvider p : new Vector<EnvironmentProvider>(this.PROVIDERS))
 				p.dispose();
+
 
 			//unregister on Network (synchronosly, thread pool not needed)
 			this.unregisterOnNetwork();
@@ -176,7 +189,7 @@ public class NetworkEnvironment {
 
 		}
 	}
-	
+
 	public boolean isDisposed() {
 		try {
 			//lock
@@ -268,28 +281,28 @@ public class NetworkEnvironment {
 		for(NetworkEnvironmentListener l : listeners)
 			this.addNetworkEnvironmentListener(l);
 	}
-	
+
 	public Cipher getEncryptionCipher() throws InvalidKeyException {
 		EncryptionType type = ENCRYPTION_TYPE;
 		byte[] key = ENCRYPTION_KEY;
-		
+
 		Cipher c = type.createCipher();
 		SecretKeySpec k = type.getSecretKeySpec(key);
 		c.init(Cipher.ENCRYPT_MODE, k);
-		
+
 		return c;
 	}
-	
+
 	public Cipher getDecryptionCipher() throws InvalidKeyException {
 		EncryptionType type = ENCRYPTION_TYPE;
 		byte[] key = ENCRYPTION_KEY;
-		
+
 		Cipher c = type.createCipher();
 		SecretKeySpec k = type.getSecretKeySpec(key);
 		c.init(Cipher.DECRYPT_MODE, k);
-		
+
 		return c;
-		
+
 	}
 
 	/**
@@ -343,13 +356,13 @@ public class NetworkEnvironment {
 
 		}
 	}
-	
+
 	public void clientUnavailableForProvider(Client c, EnvironmentProvider provider) {
 		c.removeAddressForProvider(provider);
-		
+
 		if(c.getAllProviders().size() <= 0) {
 			this.removeClient(c);
-			
+
 		} else {
 			try {
 				this.dispatchEvent("clientUpdated", new Class[]{Client.class}, c);
@@ -359,7 +372,7 @@ public class NetworkEnvironment {
 
 		}
 	}
-	
+
 	public List<Client> getClientsForProvider(EnvironmentProvider provider) {
 		try {
 			//lock
@@ -426,7 +439,7 @@ public class NetworkEnvironment {
 			//if already a search is active -> cancel it
 			if(this.clientSearchTask != null) {
 				this.clientSearchTask.cancel(true);
-				
+
 				//wait until the ongoing client search is canceled
 				try {
 					this.CLIENT_SEARCH_DONE_CONDITION.await();
@@ -490,13 +503,13 @@ public class NetworkEnvironment {
 							NetworkEnvironment.this.clientSearchTask = null;
 
 						}
-						
+
 						//notify waiting client search
 						NetworkEnvironment.this.CLIENT_SEARCH_DONE_CONDITION.signal();
 
 						//unlock
 						NetworkEnvironment.this.LOCK.writeLock().unlock();
-						
+
 					}
 				}
 			});
@@ -543,9 +556,17 @@ public class NetworkEnvironment {
 	 * @throws IOException
 	 */
 	private void registerOnNetwork() throws IOException {
-		for(EnvironmentProvider p : this.PROVIDERS)
-			p.registerOnNetwork();
-		
+		try {
+			//lock
+			this.LOCK.readLock().lock();
+
+			for(EnvironmentProvider p : this.PROVIDERS)
+				p.registerOnNetwork();
+		} finally {
+			//unlock
+			this.LOCK.readLock().unlock();
+
+		}
 	}
 
 	/**
@@ -553,9 +574,17 @@ public class NetworkEnvironment {
 	 * @throws Exception
 	 */
 	private void unregisterOnNetwork() throws Exception {
-		for(EnvironmentProvider p : this.PROVIDERS)
-			p.unregisterOnNetwork();
-		
+		try {
+			//lock
+			this.LOCK.readLock().lock();
+
+			for(EnvironmentProvider p : this.PROVIDERS)
+				p.unregisterOnNetwork();
+		} finally {
+			//unlock
+			this.LOCK.readLock().unlock();
+
+		}
 	}
 
 	/**
@@ -596,11 +625,11 @@ public class NetworkEnvironment {
 
 	}
 
-	
+
 	public void removeClient(Client c) {
 		this.removeClient(c.getId());
 	}
-	
+
 	/**
 	 * Removes the given {@link Client} from the list of reachable {@link Client}s.
 	 * @param id the id of the {@link Client} to delete
@@ -665,7 +694,7 @@ public class NetworkEnvironment {
 		.put(NetworkEnvironment.HEADER_FIELD_OS_NAME, 		this.OS_NAME)
 		.put(NetworkEnvironment.HEADER_FIELD_DEVICE_TYPE,	this.DEVICE_TYPE);
 	}
-	
+
 	/**
 	 * Creates the payload that should be send to register on the network.
 	 * @return the payload that should be send to register on the network
@@ -675,7 +704,7 @@ public class NetworkEnvironment {
 		return this.createDefaultHeaderBundle()
 				.put(NetworkEnvironment.HEADER_FIELD_METHOD, NetworkEnvironment.METHOD_TYPE_REGISTER);
 	}
-	
+
 	/**
 	 * Creates the payload that should be send to unregister on the network.
 	 * @return the payload that should be send to unregister on the network
@@ -707,30 +736,30 @@ public class NetworkEnvironment {
 			//everythig is ok, take a closer look
 			//Create a new Client
 			Client c = new Client(
-				b.get(NetworkEnvironment.HEADER_FIELD_DEVICE_NAME), 
-				b.get(NetworkEnvironment.HEADER_FIELD_ID), 
-				b.get(NetworkEnvironment.HEADER_FIELD_OS_NAME), 
-				b.get(NetworkEnvironment.HEADER_FIELD_DEVICE_TYPE));
-			
+					b.get(NetworkEnvironment.HEADER_FIELD_DEVICE_NAME), 
+					b.get(NetworkEnvironment.HEADER_FIELD_ID), 
+					b.get(NetworkEnvironment.HEADER_FIELD_OS_NAME), 
+					b.get(NetworkEnvironment.HEADER_FIELD_DEVICE_TYPE));
+
 			//If the method is answer or register
 			if(b.get(NetworkEnvironment.HEADER_FIELD_METHOD).equals(NetworkEnvironment.METHOD_TYPE_REGISTER) 
 					|| b.get(NetworkEnvironment.HEADER_FIELD_METHOD).equals(NetworkEnvironment.METHOD_TYPE_ANSWER)) {
-				
+
 				//Add Address for provider
 				c.setAddressForProvider(provider, address);
 
 				//Add the client to the list of available clients (method will handle duplicates etc)
 				this.addClient(b.get(NetworkEnvironment.HEADER_FIELD_ID), c);	
-				
+
 				//Return the client
 				return c;
 
 			} else {
 				//Remove the provider from the client and return null
 				this.clientUnavailableForProvider(c, provider);
-				
+
 				return null;
-				
+
 			}
 
 			//Catch all Exceptions including Numberformat etc etc etc
@@ -766,22 +795,28 @@ public class NetworkEnvironment {
 		final Method M = NetworkEnvironmentListener.class.getMethod(methodName, parameterTypes);
 		final Object[] PARAMETERS = parameters;
 
-		this.THREAD_EXECUTOR.execute(new Runnable() {
-			public void run() {
-				for(NetworkEnvironmentListener l : NetworkEnvironment.this.LISTENERS) {
-					synchronized (l) {
-						try {
-							M.invoke(l, PARAMETERS);
-						} catch (Exception e) {
-							e.printStackTrace();
+		try {
+
+			this.THREAD_EXECUTOR.execute(new Runnable() {
+				public void run() {
+					for(NetworkEnvironmentListener l : NetworkEnvironment.this.LISTENERS) {
+						synchronized (l) {
+							try {
+								M.invoke(l, PARAMETERS);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
-			}
-		});
+			});
+		} catch(RejectedExecutionException e) {
+
+		}
+
+
 	}
-	
-	
+
 	/**
 	 * Returns the device name.
 	 * @return the device name
@@ -789,7 +824,7 @@ public class NetworkEnvironment {
 	public String getDeviceName() {
 		return DEVICE_NAME;
 	}
-	
+
 	/**
 	 * Returns the {@link DeviceType}.
 	 * @return the {@link DeviceType}
@@ -797,7 +832,7 @@ public class NetworkEnvironment {
 	public DeviceType getDeviceType() {
 		return DEVICE_TYPE;
 	}
-	
+
 	/**
 	 * Returns the operating system's name.
 	 * @return the operating system's name
@@ -805,7 +840,7 @@ public class NetworkEnvironment {
 	public String getOsName() {
 		return OS_NAME;
 	}
-	
+
 	/**
 	 * Returns the local id.
 	 * @return the local id
@@ -821,7 +856,7 @@ public class NetworkEnvironment {
 	public EncryptionType getEncryptionType() {
 		return ENCRYPTION_TYPE;
 	}
-	
+
 	/**
 	 * Returns the encryption key used.
 	 * @return the encryption key used
@@ -838,7 +873,7 @@ public class NetworkEnvironment {
 				+ OS_NAME + ", LOCAL_ID=" + LOCAL_ID + ", ENCRPTION_KEY="
 				+ Arrays.toString(ENCRYPTION_KEY) + "]";
 	}
-	
+
 	/**
 	 * A class containing all necessary settings for an {@link NetworkEnvironment}
 	 * @author preussjan, chrwuer
@@ -846,25 +881,25 @@ public class NetworkEnvironment {
 	 * @version 1.0
 	 */
 	public static class Builder {
-		
+
 		//The device name
 		private String deviceName = "Unknown";
-		
+
 		//the type of the device
 		private DeviceType deviceType = DeviceType.TYPE_UNKNOWN;
-		
+
 		//the encrpytion type used
 		private EncryptionType encryptionType;
-		
+
 		//the encryption key used
 		private byte[] encryptionKey;
-		
+
 		//the name of the os
 		private String osName = System.getProperty("os.name");
-		
+
 		//the id of the local device
 		private String localID;
-		
+
 		/**
 		 * Creates {@link Builder} object with necessary attributes
 		 * @param encryptionType the used {@link EncryptionType}
@@ -875,7 +910,7 @@ public class NetworkEnvironment {
 			this.encryptionKey = encryptionKey;
 			this.localID = this.generateId();
 		}
-		
+
 		/**
 		 * Sets the device name (Default = "Unknown")
 		 * @param deviceName the Name
@@ -915,7 +950,7 @@ public class NetworkEnvironment {
 			this.osName = osName;
 			return this;
 		}
-		
+
 		/**
 		 * Sets the encryption key
 		 * @param encryptionKey the encryption key
@@ -925,7 +960,7 @@ public class NetworkEnvironment {
 			this.encryptionKey = encryptionKey;
 			return this;
 		}
-		
+
 		/**
 		 * Builds the {@link NetworkEnvironment}
 		 * @return the finished {@link NetworkEnvironment}
@@ -934,7 +969,7 @@ public class NetworkEnvironment {
 		public NetworkEnvironment build() throws Exception {
 			return new NetworkEnvironment(this);
 		}
-		
+
 		/**
 		 * Generates a unique id for the {@link NetworkEnvironment} containing a mac-adress.
 		 * @return a unique id
@@ -969,15 +1004,15 @@ public class NetworkEnvironment {
 
 						//done. stop iterating over interfaces
 						break;
-						
+
 					} catch(Exception e) {
 						e.printStackTrace();
-						
+
 					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				
+
 			}
 
 			//return the id

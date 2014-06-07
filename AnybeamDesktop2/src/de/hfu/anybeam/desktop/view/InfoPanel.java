@@ -2,23 +2,33 @@ package de.hfu.anybeam.desktop.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import de.hfu.anybeam.desktop.model.ClipboardTransmissionEvent;
+import de.hfu.anybeam.desktop.model.ClipboardUtils;
 import de.hfu.anybeam.desktop.model.FileTransmissionEvent;
 import de.hfu.anybeam.desktop.view.androidUI.ActionbarButton;
 import de.hfu.anybeam.desktop.view.resources.R;
@@ -34,10 +44,9 @@ public class InfoPanel extends JPanel implements ActionListener {
 	private static final Icon ICON_ERROR = R.getIcon("ic_action_error.png", 48, 48);
 
 	private final ActionbarButton OPEN_FOLDER_BUTTON = new ActionbarButton(R.getImage("ic_action_open_folder.png"), true);
-	private final ActionbarButton OPEN_FILE_BUTTON = new ActionbarButton(R.getImage("ic_action_open_file.png"), true);
+	private final ActionbarButton OPEN_BUTTON = new ActionbarButton(R.getImage("ic_action_open_file.png"), true);
 	private final ActionbarButton CANCEL_BUTTON = new ActionbarButton(R.getImage("ic_action_discard.png"), true);
 	private final ActionbarButton CLOSE_BUTTON = new ActionbarButton(R.getImage("ic_action_close.png"), true);
-	private final ActionbarButton DSCARD_BUTTON = new ActionbarButton(R.getImage("ic_action_discard.png"), true);
 	private final ActionbarButton COPY_BUTTON = new ActionbarButton(R.getImage("ic_action_copy.png"), true);
 
 
@@ -93,14 +102,13 @@ public class InfoPanel extends JPanel implements ActionListener {
 
 		this.ICON_LABEL.setBorder(new EmptyBorder(0, 0, 0, 8));
 
-		this.ACTION_PANEL.setOpaque(true);
+		this.ACTION_PANEL.setOpaque(false);
 		this.CANCEL_BUTTON.setIgnoreRepaint(true);
 
 		this.CANCEL_BUTTON.addActionListener(this);
 		this.CLOSE_BUTTON.addActionListener(this);
-		this.OPEN_FILE_BUTTON.addActionListener(this);
+		this.OPEN_BUTTON.addActionListener(this);
 		this.OPEN_FOLDER_BUTTON.addActionListener(this);
-		this.DSCARD_BUTTON.addActionListener(this);
 		this.COPY_BUTTON.addActionListener(this);
 
 	}
@@ -113,7 +121,6 @@ public class InfoPanel extends JPanel implements ActionListener {
 
 		this.currentlyShownTransmissionEvent = e;
 
-
 		//Set Title
 		this.TITLE_LABEL.setText(e.getResourceName());
 
@@ -123,19 +130,29 @@ public class InfoPanel extends JPanel implements ActionListener {
 			this.ICON_LABEL.setIcon(ICON_SUCCESS);
 			this.SUBTITLE_LABEL.setText(new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date(e.getTime())));
 			this.setPercentDone(0);
-
+			this.setActions(this.CLOSE_BUTTON);
+			
 			if(e instanceof FileTransmissionEvent) {
-				this.setActions(this.OPEN_FILE_BUTTON, this.CLOSE_BUTTON, this.OPEN_FOLDER_BUTTON, this.DSCARD_BUTTON);
+				this.setActions(this.OPEN_BUTTON, this.OPEN_FOLDER_BUTTON);
 
-			} else {
-				this.setActions(this.CLOSE_BUTTON, this.COPY_BUTTON);
+			} 
+			
+			if(e instanceof ClipboardTransmissionEvent) {
+				try {
+					//Try to create URI, if possible use open button
+					new URI(((ClipboardTransmissionEvent) e).getClipboardContent());
+					this.setActions(this.CLOSE_BUTTON, this.OPEN_BUTTON);
 
-			}
+				} catch(Exception e1) {
+					//URI createion failed....use copy button to re-copy the text
+					this.setActions(this.CLOSE_BUTTON, this.COPY_BUTTON);
 
+				}
+			} 
 		}
 
 		//In Progress
-		if(!e.isDone() && e.isSucessfull()) {
+		if(e.isInProgress()) {
 			this.ICON_LABEL.setIcon(e.isDownload() ? ICON_DOWNLOAD : ICON_UPLOAD);
 			this.SUBTITLE_LABEL.setText(String.format("%.1f MB/s", e.getAverageSpeed()/1000000));
 			this.setPercentDone(e.getPercentDone());
@@ -146,8 +163,14 @@ public class InfoPanel extends JPanel implements ActionListener {
 		//Failed
 		if(!e.isSucessfull()) {
 			this.ICON_LABEL.setIcon(ICON_ERROR);
-			this.SUBTITLE_LABEL.setText(String.format("Transmission failed. (%.2f%% completed)", e.getPercentDone()*100));
-			this.setActions();
+			this.SUBTITLE_LABEL.setText(String.format("Transmission failed. (%.1f%% completed)", Math.abs(e.getPercentDone()*100)));
+			this.setActions(this.CLOSE_BUTTON);
+
+		}
+
+		//If the transmission was canceled -> hide the info panel
+		if(e.isCanceled()) {
+			this.setVisible(false);
 
 		}
 
@@ -194,24 +217,49 @@ public class InfoPanel extends JPanel implements ActionListener {
 
 		//If the copy button was pressed
 		if(e.getSource() == this.COPY_BUTTON) {
-
+			if(this.currentlyShownTransmissionEvent instanceof ClipboardTransmissionEvent) {
+				ClipboardUtils.setClipboardContent(((ClipboardTransmissionEvent) this.currentlyShownTransmissionEvent).getClipboardContent());
+				
+			}
 		}
 
 		//If the open file button was pressed
-		if(e.getSource() == this.OPEN_FILE_BUTTON) {
+		if(e.getSource() == this.OPEN_BUTTON) {
+			//If the event is a clipboard event, try to create URI and browse
+			if(this.currentlyShownTransmissionEvent instanceof ClipboardTransmissionEvent) {
+				try {
+					Desktop.getDesktop().browse(new URI(((ClipboardTransmissionEvent) this.currentlyShownTransmissionEvent).getClipboardContent()));
 
+				}catch (Exception e1) {
+					e1.printStackTrace();
+
+				}
+			}
+
+			//If the event is a FileTransmissionEvent, try to open file
+			if(this.currentlyShownTransmissionEvent instanceof FileTransmissionEvent) {
+				try {
+					Desktop.getDesktop().open(((FileTransmissionEvent) this.currentlyShownTransmissionEvent).getFile());
+
+				} catch (IOException e1) {
+					e1.printStackTrace();
+
+				}
+			}
 		}
 
 		//If the open folder was pressed
-		if(e.getSource() == this.CLOSE_BUTTON) {
+		if(e.getSource() == this.OPEN_FOLDER_BUTTON) {
+			//If the event is a FileTransmissionEvent, try to open parent
+			if(this.currentlyShownTransmissionEvent instanceof FileTransmissionEvent) {
+				try {
+					Desktop.getDesktop().open(((FileTransmissionEvent) this.currentlyShownTransmissionEvent).getFile().getParentFile());
 
+				} catch (IOException e1) {
+					e1.printStackTrace();
+
+				}
+			}
 		}
-
-		//If the discrad was pressed
-		if(e.getSource() == this.CLOSE_BUTTON) {
-
-		}
-
 	}
-
 }

@@ -115,6 +115,9 @@ class TcpDataReceiverConnection extends AbstractDownloadTransmission {
 			}
 
 		}
+		
+		//Write last bytes
+		this.increaseTransmittedLength(transmittedInCurrentInterval);
 
 		//flush output and close input, DO NOT CLOSE OUTPUT, that's the adapters task and may be not wished
 		transmissionOutput.flush();	
@@ -128,7 +131,7 @@ class TcpDataReceiverConnection extends AbstractDownloadTransmission {
 		
 		if(this.getAdapter() != null && this.transmissionOutput != null)
 			((AbstractDownloadTransmissionAdapter)
-					this.getAdapter()).closeOutputStream(this.createTransmissionEvent(null), transmissionOutput);
+					this.getAdapter()).closeOutputStream(this.createTransmissionEvent(null, false), transmissionOutput);
 			
 		//Close input
 		if(this.INPUT != null)

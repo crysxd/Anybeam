@@ -39,6 +39,7 @@ public class UdpBroadcastSender implements Runnable {
 	public UdpBroadcastSender(int port, byte[] payload, EncryptionType encryptionType, byte[] enncryptionKey) {
 		this.PAYLOAD = payload;
 		this.PORT = port;
+		
 	}
 
 	@Override
@@ -79,7 +80,5 @@ public class UdpBroadcastSender implements Runnable {
 				ss.close();
 
 		}
-
-
 	}
 }

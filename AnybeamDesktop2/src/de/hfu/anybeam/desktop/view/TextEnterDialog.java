@@ -17,8 +17,8 @@ import javax.swing.border.EmptyBorder;
 
 public class TextEnterDialog extends JDialog  implements ActionListener {
 
-
 	private static final long serialVersionUID = -3290164165860226944L;
+	
 	private final JTextArea TEXT_AREA = new JTextArea();
 	private final JButton APPLY = new JButton("Send");
 	private final JButton CANCEL = new JButton("Cancel");
@@ -38,6 +38,8 @@ public class TextEnterDialog extends JDialog  implements ActionListener {
 
 		//Top content
 		JScrollPane scroller = new JScrollPane(this.TEXT_AREA);
+		this.TEXT_AREA.setLineWrap(true);
+		this.TEXT_AREA.setWrapStyleWord(true);
 		scroller.setBorder(new CompoundBorder( new EmptyBorder(0 , 0, 0, 5), scroller.getBorder()));
 		this.add(scroller);
 

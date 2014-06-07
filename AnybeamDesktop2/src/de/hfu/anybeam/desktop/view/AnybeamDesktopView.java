@@ -69,5 +69,9 @@ public class  AnybeamDesktopView {
 	public void tellControlToSendData(Client target, InputStream data, String resourceName, long length) {
 		this.MY_CONTROL.send(target, data, resourceName, length);
 	}
+	
+	public void showErrorDialog(String title, String message) {
+		this.MAIN_WIDNOW.showErrorDialog(title, message);
+	}
 
 }

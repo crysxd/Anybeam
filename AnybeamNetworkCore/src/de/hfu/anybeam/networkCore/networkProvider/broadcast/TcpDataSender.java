@@ -159,6 +159,9 @@ public class TcpDataSender extends AbstractTransmission {
 			}
 
 		}
+	
+		//Write last bytes
+		this.increaseTransmittedLength(transmittedInCurrentInterval);
 		
 		this.outputStream.flush();
 	}

@@ -1,9 +1,6 @@
 package de.hfu.anybeam.desktop.model;
 
 import java.awt.Desktop;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,31 +21,24 @@ import de.hfu.anybeam.networkCore.networkProvider.broadcast.TcpDataReceiver;
 
 public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 	
-	private TcpDataReceiver reciver;
+	private TcpDataReceiver receiver;
 	private final Map<Integer, File> DOWNLOAD_FILES = new HashMap<>();
 	
-	public DesktopDataReciver() {
-		try {	
-			//Get encryption and key
-			Settings s = Settings.getSettings();
-			EncryptionType encryption = EncryptionType.valueOf(s.getPreference("group_encryption_type").getValue());
-			byte[] key= encryption.getSecretKeyFromPassword(s.getPreference("group_password").getValue());
-			int transmissionport = Integer.valueOf(s.getPreference("port_data").getValue());
-			
-			reciver = new TcpDataReceiver(
-					encryption,
-					key, 
-					transmissionport,
-					this);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-		}
-	}
-	
-	public void dispose() {
-		this.reciver.dispose();
+	public void restart() throws IOException {
+		if(this.receiver != null)
+			receiver.dispose();
+		
+		//Get encryption and key
+		Settings s = Settings.getSettings();
+		EncryptionType encryption = EncryptionType.valueOf(s.getPreference("group_encryption_type").getValue());
+		byte[] key= encryption.getSecretKeyFromPassword(s.getPreference("group_password").getValue());
+		int transmissionport = Integer.valueOf(s.getPreference("port_data").getValue());
+		
+		receiver = new TcpDataReceiver(
+				encryption,
+				key, 
+				transmissionport,
+				this);
 	}
 
 	@Override
@@ -72,9 +62,6 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 	@Override
 	public void transmissionFailed(TransmissionEvent e) {
 		this.updateProgressView(e);
-		
-		if(e.getException() != null)
-			e.getException().printStackTrace();
 
 	}
 
@@ -102,7 +89,6 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 
 	@Override
 	public void closeOutputStream(TransmissionEvent e, OutputStream out) {
-		System.out.println("OutputStream closed");
 		
 		//If a clipboard String was received
 		if(!this.DOWNLOAD_FILES.containsKey(e.getTransmissionId())) {
@@ -111,11 +97,10 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 			//Put back in clipboard
 			try {
 				String s = new String(clipboardOut.toByteArray(), "UTF-8");
-				StringSelection selection = new StringSelection(s);
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				clipboard.setContents(selection, selection);
+				ClipboardUtils.setClipboardContent(s);
 				
-				System.out.println("[" + e.getResourceName() + "] Copied to clipboard: " + s);
+				//Override Event to ClipboardTransmissionEvent
+				e = new ClipboardTransmissionEvent(e, s);
 				
 				//If it is a link, open it (just try to parse)
 				if(this.isAutoOpenURLsEnabled()) {
@@ -147,12 +132,11 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 					
 				}
 			}
-			
-			//Show file as lasz download
-			this.updateProgressView(e);
-			
 		}
 
+		//Show file as lasz download
+		this.updateProgressView(e);
+		
 		try {
 			out.close();
 		} catch (IOException e1) {

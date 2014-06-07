@@ -1,18 +1,16 @@
 package de.hfu.anybeam.desktop.model;
 
-import java.io.File;
-
 import de.hfu.anybeam.networkCore.TransmissionEvent;
 
-public class FileTransmissionEvent extends TransmissionEvent {
+public class ClipboardTransmissionEvent extends TransmissionEvent {
 
-	private final File MY_FILE;
+	private final String MY_CLIPBOARD_CONTENT;
 	
-	FileTransmissionEvent(TransmissionEvent e, File file) {
+	ClipboardTransmissionEvent(TransmissionEvent e, String clipboardContent) {
 		super(e.getTransmissionId(), 
 				e.getTotalLength(), 
 				e.getTransmittedLength(), 
-				file.getName(), 
+				clipboardContent,
 				e.getException(), 
 				e.getAverageSpeed(), 
 				e.getTransmissionHandler(),
@@ -20,12 +18,12 @@ public class FileTransmissionEvent extends TransmissionEvent {
 				e.isInProgress()
 			);
 		
-		this.MY_FILE = file;
+		this.MY_CLIPBOARD_CONTENT = clipboardContent;
 		
 	}
 	
-	public File getFile() {
-		return this.MY_FILE;
+	public String getClipboardContent() {
+		return this.MY_CLIPBOARD_CONTENT;
 		
 	}
 	
