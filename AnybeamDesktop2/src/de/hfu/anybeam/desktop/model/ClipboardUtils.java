@@ -15,6 +15,7 @@ public class ClipboardUtils {
 			return null;
 		
 		return new ByteArrayInputStream(clipboardContent.getBytes());
+		
 	}
 	
 	public static String getClipboardContent() {
