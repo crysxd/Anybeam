@@ -173,7 +173,7 @@ public class AndroidUI extends TrayWindow {
 		boolean wasAlwaysOnTop = this.isAlwaysOnTop();
 		this.setAlwaysOnTop(true);
 		
-		JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(this.isVisible() ? this : null, message, title, JOptionPane.ERROR_MESSAGE);
 		
 		this.setHideOnFocusLost(true);
 		this.setAlwaysOnTop(wasAlwaysOnTop);
