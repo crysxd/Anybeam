@@ -12,11 +12,9 @@
     <string name="info_os">OS:</string>
     <string name="main_click_to_share">Tap to beam clipboard</string>
     <string name="main_instruction">Use the share button in other apps to beam data</string>
-    <string name="action_settings_clipboard_remove">Clear Clipboard</string>
-    <string name="action_settings_clipboard_set">Set Clipboard</string>
     <string name="default_client_name">Android</string>
-    <string name="default_port_data">1338</string>
-    <string name="default_port_broadcast">1337</string>
+    <string name="default_port_broadcast">10042</string>
+    <string name="default_port_data">10043</string>
     <string name="default_encyption_type">AES128</string>
     <string name="default_device_type">TYPE_SMARTPHONE</string>
     <string name="default_display_time">5</string>
@@ -33,12 +31,12 @@
     <string name="settings_pref_data_port">Data Port</string>
     <string name="settings_pref_device_type">Device Type</string>
     <string name="settings_category_general">General Settings</string>
-    <string name="settings_pref_display_time">Notification display time</string>
+    <string name="settings_pref_display_time">Notification Display time</string>
     <string name="settings_pref_display_time_summary">seconds (0 = unlimited)</string>
     <string name="settings_pref_data_folder">Download Path</string>
     <string name="settings_pref_data_folder_summary">/storage/</string>
     <string name="settings_pref_auto_url">Auto Open Links</string>
-    <string name="settings_pref_auto_url_summary">Auto open recieved links</string>
+    <string name="settings_pref_auto_url_summary">Auto open received links</string>
     <string name="settings_category_other">Other</string>
     <string name="settings_category_about">About</string>
     <string name="settings_category_about_summary">
@@ -52,15 +50,16 @@
     <string name="send_title">Choose a Device</string>
     <string name="send_clients_not_found">No Clients Found</string>
     <string name="send_clipboard_error">The clipboard dose not contain text to beam</string>
-    <string name="send_image_error">Fehlermeldung Fehlt!</string>
     <string name="transmission_in_done_title_clipboard">New clipboard text received</string>
     <string name="transmission_in_done_title_url">Tap to open URL</string>
     <string name="transmission_in_done_title_file">New file received, tap to open</string>
     <string name="transmission_in_progress_title">Receiving file</string>
     <string name="transmission_out_done_title_file">File Beamed</string>
     <string name="transmission_out_progress_title">Beaming in Progress</string>
-    <string name="error_port_bind_message">The present ports for brodcast or data messages are already used by another application</string>
-    <string name="error_port_bind_title">Port bind error</string>
+    <string name="error_port_bind">Port bind error</string>
+    <string name="error_port_bind_summary">The present ports for brodcast or data messages are already used by another application</string>
+    <string name="error_transmission_failed">Transmission failed</string>
+    <string name="error_transmission_failed_summary">The current transmission failed</string>
     <string name="alt_ivsearching">Searching</string>
     
 

@@ -93,24 +93,26 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 	 * @param preference the {@link Preference} to change
 	 */
 	private void updatePreference(Preference preference) {
-		if (preference instanceof ListPreference) {
-			ListPreference listPreference = (ListPreference) preference;
-			listPreference.setSummary(listPreference.getEntry());
-		} else if (preference instanceof EditTextPreference) {
-			EditTextPreference editTextPreference = (EditTextPreference) preference;
-			
-			//Update summary to current value 
-			if (editTextPreference.getKey().equals("group_password")) { //Is Password
-				editTextPreference.setSummary(getString(R.string.settings_pref_group_password_summary));
-			} else if (editTextPreference.getKey().equals("display_time")) { //Is display time
-				editTextPreference.setSummary(editTextPreference.getText() + " "
-						+ getString(R.string.settings_pref_display_time_summary));
-			} else if (editTextPreference.getKey().equals("data_folder")) { //Is data folder
-				editTextPreference.setSummary(getString(R.string.settings_pref_data_folder_summary) 
-						+ editTextPreference.getText());
-			} else {
-				editTextPreference.setSummary(editTextPreference.getText());
-			}
+		if (this.getView() != null) {
+			if (preference instanceof ListPreference) {
+				ListPreference listPreference = (ListPreference) preference;
+				listPreference.setSummary(listPreference.getEntry());
+			} else if (preference instanceof EditTextPreference) {
+				EditTextPreference editTextPreference = (EditTextPreference) preference;
+				
+				//Update summary to current value 
+				if (editTextPreference.getKey().equals("group_password")) { //Is Password
+					editTextPreference.setSummary(getString(R.string.settings_pref_group_password_summary));
+				} else if (editTextPreference.getKey().equals("display_time")) { //Is display time
+					editTextPreference.setSummary(editTextPreference.getText() + " "
+							+ getString(R.string.settings_pref_display_time_summary));
+				} else if (editTextPreference.getKey().equals("data_folder")) { //Is data folder
+					editTextPreference.setSummary(getString(R.string.settings_pref_data_folder_summary) 
+							+ editTextPreference.getText());
+				} else {
+					editTextPreference.setSummary(editTextPreference.getText());
+				}
+			}			
 		}
 	}
 	

@@ -1,9 +1,6 @@
 package de.hfu.anybeam.android;
 
-import de.hfu.anybeam.android.utils.ClipboardUtils;
-import de.hfu.anybeam.networkCore.NetworkEnvironment;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import de.hfu.anybeam.android.utils.ClipboardUtils;
 
 public class MainActivity extends Activity {
 
@@ -87,22 +85,6 @@ public class MainActivity extends Activity {
 			Intent settingsActivity = new Intent(getBaseContext(), SettingsActivity.class);
 			startActivity(settingsActivity);
 			return true;
-		}
-		if (item.getItemId() == R.id.action_settings_clipboard_remove) {
-			ClipboardUtils.copyToClipboard(this, "", "");
-		}
-		if (item.getItemId() == R.id.action_settings_clipboard_set) {
-			ClipboardUtils.copyToClipboard(this, "Text", "Das ist ein Test String");
-		}
-		if (item.getItemId() == R.id.action_settings_show) {
-			AlertDialog.Builder b = new AlertDialog.Builder(this);
-			try {
-				NetworkEnvironment environment = NetworkEnvironmentManager.getNetworkEnvironment(this);
-				b.setMessage(environment.toString());
-				b.show();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 
 		return super.onOptionsItemSelected(item);

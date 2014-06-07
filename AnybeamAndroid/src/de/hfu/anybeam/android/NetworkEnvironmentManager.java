@@ -68,8 +68,8 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 			} catch (BindException e) {
 				//Warn User for Bind Exception
 				new AlertDialog.Builder(context)
-					.setTitle(R.string.error_port_bind_title)
-					.setMessage(R.string.error_port_bind_message)
+					.setTitle(R.string.error_port_bind)
+					.setMessage(R.string.error_port_bind_summary)
 					.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {

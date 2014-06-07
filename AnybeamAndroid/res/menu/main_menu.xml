@@ -7,22 +7,5 @@
         android:showAsAction="always"
         android:title="@string/menu_action_settings"
         android:icon="@drawable/ic_action_settings"/>
-        
-    <item
-        android:id="@+id/action_settings_clipboard_remove"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings_clipboard_remove"/> 
-    <item
-        android:id="@+id/action_settings_clipboard_set"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings_clipboard_set"/> 
-    
-    <item
-        android:id="@+id/action_settings_show"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="Show Settings"/> 
     
 </menu>

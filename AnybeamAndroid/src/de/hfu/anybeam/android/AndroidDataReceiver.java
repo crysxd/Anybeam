@@ -9,11 +9,14 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.concurrent.Executors;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Looper;
@@ -132,6 +135,8 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	@Override
 	public void closeOutputStream(final TransmissionEvent e, OutputStream out) {
 		Log.i("Transmission", "Closed id: " + e.getTransmissionId());
+		
+		Notification mNotification = null;
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
 			.setSmallIcon(R.drawable.ic_notification)
@@ -194,6 +199,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 				mBuilder.setContentText(value);
 			}
 			
+			mNotification = mBuilder.build();
 			
 		} else if (out instanceof FileOutputStream) {
 			//File to save
@@ -208,9 +214,19 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			mBuilder.setContentText(e.getResourceName());
 			mBuilder.setContentIntent(pendingIntent);
 			mBuilder.setAutoCancel(true);
+			
+			if (getMimeType(uri.getPath()).startsWith("image/")) {
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+				Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+				
+				mBuilder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap));
+			} 
+
+			mNotification = mBuilder.build();
 		}
 		
-		mManager.notify(e.getTransmissionId(), mBuilder.build());
+		mManager.notify(e.getTransmissionId(), mNotification);
 		
 		try {
 			out.close();

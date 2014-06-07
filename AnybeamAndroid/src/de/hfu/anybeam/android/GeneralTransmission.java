@@ -49,8 +49,20 @@ public class GeneralTransmission implements AbstractTransmissionAdapter {
 	}
 
 	@Override
-	public void transmissionFailed(TransmissionEvent e) {		
+	public void transmissionFailed(TransmissionEvent e) {
 		Log.i("Transmission", "Failed");
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+				context)
+				.setSmallIcon(R.drawable.ic_notification)
+				.setWhen(System.currentTimeMillis())
+				.setContentTitle(
+						context.getString(R.string.error_transmission_failed))
+				.setContentText(
+						context.getString(R.string.error_transmission_failed_summary));
+
+		NotificationManager mManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		mManager.notify(e.getTransmissionId(), mBuilder.build());
 	}
 
 	@Override
