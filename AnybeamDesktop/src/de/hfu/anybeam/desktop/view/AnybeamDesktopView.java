@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 
 import de.hfu.anybeam.desktop.Control;
 import de.hfu.anybeam.desktop.view.androidUI.AndroidUI;
+import de.hfu.anybeam.desktop.view.androidUI.NotificationWindow;
 import de.hfu.anybeam.desktop.view.resources.R;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
@@ -19,6 +20,7 @@ public class  AnybeamDesktopView {
 	private final AndroidUI MAIN_WIDNOW;
 	private final StartStage START_STAGE;
 	private final InfoPanel INFO_PANEL;
+	private final NotificationWindow NOTIFICATION_WINDOW;
 	
 	public AnybeamDesktopView(Control c) throws UnsupportedOperationException, AWTException {
 		this.MY_CONTROL = c;
@@ -41,10 +43,12 @@ public class  AnybeamDesktopView {
 		this.START_STAGE = new StartStage(this.MAIN_WIDNOW);
 		this.MAIN_WIDNOW.setStartStage(this.START_STAGE);
 		
-		//Basic bottom bar TODO improve
+		//bottom bar
 		this.INFO_PANEL = new InfoPanel();
 		this.INFO_PANEL.setVisible(false);
 		this.MAIN_WIDNOW.setBottomBar(this.INFO_PANEL);
+		
+		this.NOTIFICATION_WINDOW = new NotificationWindow();
 		
 	}
 	
@@ -62,6 +66,10 @@ public class  AnybeamDesktopView {
 				AnybeamDesktopView.this.INFO_PANEL.setVisible(true);
 				AnybeamDesktopView.this.INFO_PANEL.display(E);
 				
+				if(!AnybeamDesktopView.this.MAIN_WIDNOW.isVisible() && !E.isInProgress()) {
+					AnybeamDesktopView.this.NOTIFICATION_WINDOW.display(E);
+					
+				}
 			}
 		});
 	}

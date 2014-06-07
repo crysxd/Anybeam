@@ -56,7 +56,7 @@ public class AndroidUI extends TrayWindow {
 		this.MAIN_PANEL.setBackground(new Color(250, 250, 250));
 		
 		//BottomBar
-		this.BOTTOM_BAR = new ShadowInsetPanel();
+		this.BOTTOM_BAR = new JPanel();
 		this.BOTTOM_BAR.setLayout(new BorderLayout());
 		this.BOTTOM_BAR.setBackground(new Color(240, 240, 240));
 		this.add(this.BOTTOM_BAR, BorderLayout.SOUTH);

@@ -27,10 +27,7 @@ public abstract class Preference {
 	}
 	
 	public String getSummary() {
-		if(summary.equals("@value"))
-			return this.getValue();
-		else
-			return summary;
+		return summary.replaceAll("@value", this.getValue());
 	}
 	
 	public String getPlainSummary() {

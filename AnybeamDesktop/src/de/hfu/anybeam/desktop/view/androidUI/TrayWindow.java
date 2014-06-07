@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
+import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -18,8 +19,9 @@ import de.hfu.anybeam.desktop.view.ViewUtils;
 public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFocusListener {
 	
 	private static final long serialVersionUID = -3265790096085134965L;
+	private static final int PADDING = 0;
+
 	private final TrayIcon TRAY_ICON;
-	private final int PADDING = 0;
 	private boolean hideOnFocusLost = true;
 	
 	public TrayWindow(Image trayIcon) throws AWTException, UnsupportedOperationException {	
@@ -90,23 +92,28 @@ public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFo
 		this.updateLocation();
 	}
 	
-	public void updateLocation() {
+	private void updateLocation() {
+		TrayWindow.updateLocation(this);
+
+	}
+	
+	public static void updateLocation(Window w) {
 		//Get os name and scrren size (use max widnow size to ignore windows task bar)
 		String os = System.getProperty("os.name");
 		Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		
 		//If windows -> locate on bottom right
 		if(os.toUpperCase().contains("WINDOWS")) {
-			this.setLocation(
-					screen.x + screen.width - this.getWidth() - this.PADDING, 
-					screen.y + screen.height - this.getHeight() - this.PADDING
+			w.setLocation(
+					screen.x + screen.width - w.getWidth() - PADDING, 
+					screen.y + screen.height - w.getHeight() - PADDING
 			);
 			
 		//Else -> locate on top right
 		} else {
-			this.setLocation(
-					screen.x + screen.width - this.getWidth() - this.PADDING, 
-					this.PADDING
+			w.setLocation(
+					screen.x + screen.width - w.getWidth() - PADDING, 
+					PADDING
 			);
 			
 		}

@@ -38,7 +38,7 @@ public class AnybeamWindow extends JDialog {
 		this.setUndecorated(true);
 		super.setBackground(new Color(0,0,0,0));
 		this.setContentPane(new TrayWindowContentPane());
-		this.setMinimumSize(new Dimension(100, 200));
+		this.setMinimumSize(new Dimension(100, 80));
 	}
 	
 	@Override

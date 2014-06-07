@@ -157,8 +157,9 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 	
 	private void updateProgressView(TransmissionEvent e) {
 		//If the TRansmission is a File transmission -> create a FileTransmissionEvent
-		if(	this.DOWNLOAD_FILES.containsKey(e.getTransmissionId())) {
+		if(this.DOWNLOAD_FILES.containsKey(e.getTransmissionId())) {
 			e = new FileTransmissionEvent(e, this.DOWNLOAD_FILES.get(e.getTransmissionId()));
+			
 		}
 		
 		//Tell Control
