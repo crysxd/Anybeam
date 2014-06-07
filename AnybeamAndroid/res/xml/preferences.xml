@@ -15,6 +15,7 @@
             android:title="@string/settings_pref_broadcast_port" />
         <EditTextPreference
             android:key="group_password"
+            android:inputType="textVisiblePassword"
             android:summary="@string/settings_pref_group_password_summary"
             android:title="@string/settings_pref_group_password" />
 

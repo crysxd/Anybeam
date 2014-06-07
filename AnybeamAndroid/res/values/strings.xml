@@ -59,7 +59,7 @@
     <string name="error_port_bind">Port bind error</string>
     <string name="error_port_bind_summary">The present ports for brodcast or data messages are already used by another application</string>
     <string name="error_transmission_failed">Transmission failed</string>
-    <string name="error_transmission_failed_summary">The current transmission failed</string>
+    <string name="error_transmission_failed_summary">Check your password and encryption type</string>
     <string name="alt_ivsearching">Searching</string>
     
 

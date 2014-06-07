@@ -84,6 +84,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			.setProgress(100, (int) (e.getPercentDone() * 100), false)
 			.setContentTitle(context.getString(R.string.transmission_in_progress_title)) 
 			.setContentText(e.getResourceName());
+			
 		
 		//Update/Create notification
 		NotificationManager mManager = (NotificationManager) context
@@ -99,7 +100,16 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 
 	@Override
 	public void transmissionFailed(TransmissionEvent e) {
-		Log.i("Transmission", "Failed");
+		Log.i("Transmission", "Recieve failed");
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+				.setSmallIcon(R.drawable.ic_notification)
+				.setWhen(System.currentTimeMillis())
+				.setContentTitle(context.getString(R.string.error_transmission_failed))
+				.setContentText(context.getString(R.string.error_transmission_failed_summary));
+
+		NotificationManager mManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		mManager.notify(e.getTransmissionId(), mBuilder.build());
 	}
 
 	@Override

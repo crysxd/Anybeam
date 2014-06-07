@@ -33,6 +33,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		OnPreferenceChangeListener listener = new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				
 				String key = (String) newValue;
 				if (!isPort(key)) {
 	        		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
@@ -48,7 +49,6 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 
 		broadcastPort.setOnPreferenceChangeListener(listener);
 		dataPort.setOnPreferenceChangeListener(listener);
-
 	}
 
     @Override
@@ -67,11 +67,6 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
       }
     }
 
-    @Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		updatePreference(findPreference(key));
-	}
-    
     /**
      * Checks if String is valid port
      * @param s the String to check
@@ -88,6 +83,11 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		return false;
 	}
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    	updatePreference(findPreference(key));
+    }
+    
 	/**
 	 * Updates the summary text of the given {@link Preference}
 	 * @param preference the {@link Preference} to change
