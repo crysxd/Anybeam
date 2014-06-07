@@ -1,10 +1,6 @@
 package de.hfu.anybeam.desktop.view;
 
 import java.awt.BorderLayout;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 
 import javax.swing.JTextArea;
 
@@ -34,23 +30,6 @@ public class TextStage extends Substage {
 		ta.setWrapStyleWord(true);
 		this.add(ta);
 		
-	}
-
-	public TextStage(Stage parent, File textFile, String title) throws IOException {
-		this(parent, readTextFile(textFile), title);
-		
-	}
-	
-	private static String readTextFile(File f) throws IOException {
-		BufferedReader r = new BufferedReader(new FileReader(f));
-		String text = "", line;
-		
-		while((line = r.readLine()) != null)
-			text += line + "\n";
-		
-		r.close();
-		
-		return text;
 	}
 
 	@Override

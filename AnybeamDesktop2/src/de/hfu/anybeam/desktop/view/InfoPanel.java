@@ -33,13 +33,11 @@ public class InfoPanel extends JPanel implements ActionListener {
 
 	private static final Icon ICON_UPLOAD = R.getIcon("ic_action_upload.png", 48, 48);
 	private static final Icon ICON_DOWNLOAD = R.getIcon("ic_action_download.png", 48, 48);
-	private static final Icon ICON_SUCCESS = R.getIcon("ic_action_success.png", 48, 48);
 	private static final Icon ICON_ERROR = R.getIcon("ic_action_error.png", 48, 48);
 
 	private final ActionbarButton OPEN_FOLDER_BUTTON = new ActionbarButton(R.getImage("ic_action_open_folder.png"), true);
 	private final ActionbarButton OPEN_BUTTON = new ActionbarButton(R.getImage("ic_action_open_file.png"), true);
 	private final ActionbarButton CANCEL_BUTTON = new ActionbarButton(R.getImage("ic_action_discard.png"), true);
-	private final ActionbarButton CLOSE_BUTTON = new ActionbarButton(R.getImage("ic_action_close.png"), true);
 	private final ActionbarButton COPY_BUTTON = new ActionbarButton(R.getImage("ic_action_copy.png"), true);
 
 
@@ -99,7 +97,6 @@ public class InfoPanel extends JPanel implements ActionListener {
 		this.CANCEL_BUTTON.setIgnoreRepaint(true);
 
 		this.CANCEL_BUTTON.addActionListener(this);
-		this.CLOSE_BUTTON.addActionListener(this);
 		this.OPEN_BUTTON.addActionListener(this);
 		this.OPEN_FOLDER_BUTTON.addActionListener(this);
 		this.COPY_BUTTON.addActionListener(this);
@@ -120,10 +117,10 @@ public class InfoPanel extends JPanel implements ActionListener {
 		//Set Status
 		//Successfully done
 		if(e.isDone() && e.isSucessfull()) {
-			this.ICON_LABEL.setIcon(ICON_SUCCESS);
+			this.ICON_LABEL.setIcon(e.isDownload() ? ICON_DOWNLOAD : ICON_UPLOAD);
 			this.SUBTITLE_LABEL.setText(new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date(e.getTime())));
 			this.setPercentDone(0);
-			this.setActions(this.CLOSE_BUTTON);
+			this.setActions();
 			
 			if(e instanceof FileTransmissionEvent) {
 				this.setActions(this.OPEN_BUTTON, this.OPEN_FOLDER_BUTTON);
@@ -134,11 +131,11 @@ public class InfoPanel extends JPanel implements ActionListener {
 				try {
 					//Try to create URI, if possible use open button
 					new URI(((ClipboardTransmissionEvent) e).getClipboardContent());
-					this.setActions(this.CLOSE_BUTTON, this.OPEN_BUTTON);
+					this.setActions(this.OPEN_BUTTON);
 
 				} catch(Exception e1) {
 					//URI createion failed....use copy button to re-copy the text
-					this.setActions(this.CLOSE_BUTTON, this.COPY_BUTTON);
+					this.setActions(this.COPY_BUTTON);
 
 				}
 			} 
@@ -157,7 +154,7 @@ public class InfoPanel extends JPanel implements ActionListener {
 		if(!e.isSucessfull()) {
 			this.ICON_LABEL.setIcon(ICON_ERROR);
 			this.SUBTITLE_LABEL.setText(String.format("Transmission failed. (%.1f%% completed)", Math.abs(e.getPercentDone()*100)));
-			this.setActions(this.CLOSE_BUTTON);
+			this.setActions();
 
 		}
 
@@ -199,12 +196,6 @@ public class InfoPanel extends JPanel implements ActionListener {
 		//If the cancelButton was pressed
 		if(e.getSource() == this.CANCEL_BUTTON) {
 			this.currentlyShownTransmissionEvent.getTransmissionHandler().cancelTransmission();
-
-		}
-
-		//If the close button was pressed
-		if(e.getSource() == this.CLOSE_BUTTON) {
-			this.setVisible(false);
 
 		}
 

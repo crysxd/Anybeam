@@ -1,7 +1,6 @@
 package de.hfu.anybeam.desktop.view;
 
 import java.awt.Desktop;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,6 +15,7 @@ import de.hfu.anybeam.desktop.view.androidUI.ListItem;
 import de.hfu.anybeam.desktop.view.androidUI.ListSectionHeaderItem;
 import de.hfu.anybeam.desktop.view.androidUI.ListStage;
 import de.hfu.anybeam.desktop.view.androidUI.Stage;
+import de.hfu.anybeam.desktop.view.resources.R;
 
 public class SettingsStage extends ListStage {
 
@@ -37,7 +37,7 @@ public class SettingsStage extends ListStage {
 		//Create legal notices stage
 		TextStage s = null;
 		try {
-			s = new TextStage(this, new File("legal.txt"), this.LEGAL_NOTICES_ID);
+			s = new TextStage(this, R.readTextFile("legal.txt"), this.LEGAL_NOTICES_ID);
 		} catch (IOException e) {
 			e.printStackTrace();
 			s = new TextStage(this, e.getMessage(), this.LEGAL_NOTICES_ID);
@@ -48,7 +48,7 @@ public class SettingsStage extends ListStage {
 		//Create about notices stage
 		s = null;
 		try {
-			s = new TextStage(this, new File("about.txt"), this.ABOUT_NOTICES_ID);
+			s = new TextStage(this, R.readTextFile("about.txt"), this.ABOUT_NOTICES_ID);
 		} catch (IOException e) {
 			e.printStackTrace();
 			s = new TextStage(this, e.getMessage(), this.ABOUT_NOTICES_ID);

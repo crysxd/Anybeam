@@ -2,12 +2,27 @@ package de.hfu.anybeam.desktop.view.resources;
 
 import java.awt.Font;
 import java.awt.Image;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 public class R {
+	
+	public static String readTextFile(String fileName) throws IOException {
+		BufferedReader r = new BufferedReader(new InputStreamReader(R.class.getResourceAsStream(fileName)));
+		String text = "", line;
+		
+		while((line = r.readLine()) != null)
+			text += line + "\n";
+		
+		r.close();
+		
+		return text;
+	}
 	
 	public static Image getImage(String name) {
 		try {

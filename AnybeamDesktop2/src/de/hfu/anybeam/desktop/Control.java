@@ -1,5 +1,8 @@
 package de.hfu.anybeam.desktop;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -8,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import de.hfu.anybeam.desktop.model.DesktopDataReciver;
 import de.hfu.anybeam.desktop.model.NetworkEnvironmentManager;
+import de.hfu.anybeam.desktop.model.settings.BooleanPreference;
 import de.hfu.anybeam.desktop.model.settings.Preference;
 import de.hfu.anybeam.desktop.view.AnybeamDesktopView;
 import de.hfu.anybeam.networkCore.AbstractTransmissionAdapter;
@@ -60,7 +64,6 @@ public class Control {
 		
 		//Start both network service
 		this.restartNetworkServices();
-
 	}
 
 	public void send(Client target, InputStream data, String resourceName, long length) {
@@ -102,7 +105,6 @@ public class Control {
 			e.printStackTrace();
 
 		}
-
 	}
 
 	public void updateDevicesDisplayed(List<Client> l) {
@@ -111,7 +113,21 @@ public class Control {
 	}
 
 	public void preferenceWasChanged(Preference preference) {
-		restartNetworkServices();
+		//If the setting "start on system startup" was chanegd
+		if(preference.getId().equals("gen_auto_start")) {
+			try {
+				this.setStartWithSystem(((BooleanPreference) preference).getBooleanValue());
+			} catch (Exception e) {
+				e.printStackTrace();
+				this.VIEW.showErrorDialog("Unsupported System", "Starting Anybeam on startup is currently only supported on Windows.\n"
+						+ "Visit www.anybeam.de/help/startup for assistance on other systems.");
+			}
+		
+		//Something else was changed -> restart network services
+		} else {
+			restartNetworkServices();
+
+		}
 
 	}
 	
@@ -152,5 +168,37 @@ public class Control {
 		this.VIEW.setBottomBarInformation(e);
 		
 	}
+	
+	private void setStartWithSystem(boolean flag) throws Exception {
+		File thisJarFile = new java.io.File(Control.class.getProtectionDomain()
+				  .getCodeSource()
+				  .getLocation()
+				  .getPath());
+		boolean isJarFile = true;// thisJarFile.getName().toUpperCase().endsWith(".jar");
+		String system = System.getProperty("os.name").toUpperCase();
+		
+		if(system.contains("WINDOWS") && isJarFile) {
+			File autostart = new File(System.getProperty("user.home"), 
+					"AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Anybeam Autostart.jar");
 
+			if(flag) {
+				FileInputStream in = new FileInputStream(thisJarFile);
+				FileOutputStream out = new FileOutputStream(autostart);
+				byte[] buf = new byte[2048];
+				int length;
+				while((length = in.read(buf)) > 0)
+					out.write(buf, 0, length);
+				
+				in.close();
+				out.close();
+				
+			} else {
+				autostart.delete();
+				
+			}
+		} else {
+			throw new Exception("Unsupported system");
+			
+		}
+	}
 }
