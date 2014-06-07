@@ -60,6 +60,7 @@
             android:summary="@string/settings_pref_data_folder_summary"/>
         <CheckBoxPreference 
             android:key="auto_url" 
+            android:defaultValue="false"
             android:title="@string/settings_pref_auto_url"
             android:summary="@string/settings_pref_auto_url_summary"/>
     </PreferenceCategory>

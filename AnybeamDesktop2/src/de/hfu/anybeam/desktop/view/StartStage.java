@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -130,9 +132,12 @@ public class StartStage extends Stage implements ActionListener {
 				if(text.length() == 0) {
 					return;
 				}
+				
+				//Build a buffer for UTF-8 Encoding
+				ByteBuffer bytes = Charset.forName("UTF-8").encode(text);
 
 				//enter stage
-				this.SEND_STAGE.setNextTransmissionSource(new ByteArrayInputStream(text.getBytes()), "*clipboard", text.length());
+				this.SEND_STAGE.setNextTransmissionSource(new ByteArrayInputStream(bytes.array()), "*clipboard", text.length());
 				this.getAndroidUI().enterStage(this.SEND_STAGE);
 
 			} finally {

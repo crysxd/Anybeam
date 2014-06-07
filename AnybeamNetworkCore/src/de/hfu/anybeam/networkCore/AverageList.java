@@ -43,7 +43,7 @@ class AverageList extends Vector<Double> {
 	 * @return the calculated average
 	 */
 	public synchronized double getAverage() {
-		List<Double> copy = new ArrayList<>(this);
+		List<Double> copy = new ArrayList<Double>(this);
 		Collections.sort(copy);
 		
 		if(copy.size() == 0)

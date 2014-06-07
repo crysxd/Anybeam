@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.concurrent.Executors;
 
 import android.app.NotificationManager;
@@ -149,26 +150,26 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			ByteArrayOutputStream bo = (ByteArrayOutputStream) out;	
 			String value = new String(bo.toByteArray());
 			ClipboardUtils.copyToClipboard(context, "Text", value);
-						
-			try { 
-				//if URL keep Notification and set intent
+			
+			if (isURL(value)) { 
+				//if is URL, show notification and set intent
 				mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_url));
 				Uri url = Uri.parse(value);
 				Intent intent = new Intent();
 				intent.setAction(android.content.Intent.ACTION_VIEW);
 				intent.setData(url);
 				
-				if (prefs.getBoolean("auto_url", false)) { //if auto open url is enabled
+				if (prefs.getBoolean("auto_url", false)) { 
+					//if auto open url is enabled
 					context.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 					return;
 				} 
-				
+
 				PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);					
 				mBuilder.setContentIntent(pendingIntent);
-			
-			} catch (Exception e2) {
-				//Catch: not an URL
-				
+				mBuilder.setAutoCancel(true);
+			} else {
+			//Else not an URL
 				mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_clipboard));
 				final Integer time = Integer.parseInt(prefs.getString("display_time", "5"));
 				if (time > 0) {
@@ -184,7 +185,6 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 						};
 					}.start();				
 				}
-				e2.printStackTrace();
 			}
 			
 			//Shorten content text
@@ -220,6 +220,16 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 
 	}
 	
+	private boolean isURL(String value) {
+		try {
+			new URL(value);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	private String getMimeType(String url) {
         String extension = url.substring(url.lastIndexOf("."));
         String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
