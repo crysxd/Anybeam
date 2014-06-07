@@ -134,7 +134,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 		Log.i("Transmission", "Closed id: " + e.getTransmissionId());
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-			.setSmallIcon(R.drawable.ic_launcher)
+			.setSmallIcon(R.drawable.ic_notification)
 			.setWhen(System.currentTimeMillis());
 		
 		final NotificationManager mManager = (NotificationManager) context
