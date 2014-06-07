@@ -21,7 +21,6 @@ import de.hfu.anybeam.networkCore.Client;
 public class DeviceInfoFragment extends DialogFragment{
 	private TextView tvAddress;
 	private TextView tvId;
-	private TextView tvGroup;
 	private TextView tvOs;
 
     public DeviceInfoFragment() {
@@ -62,7 +61,6 @@ public class DeviceInfoFragment extends DialogFragment{
         
         tvAddress = (TextView) view.findViewById(R.id.tvDeviceInfoAddress);
         tvId = (TextView) view.findViewById(R.id.tvDeviceInfoId);
-        tvGroup = (TextView) view.findViewById(R.id.tvDeviceInfoGroup);
         tvOs = (TextView) view.findViewById(R.id.tvDeviceInfoOS);
 
         getDialog().setTitle(getArguments().getString("title", "Unknown"));

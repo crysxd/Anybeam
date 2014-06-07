@@ -21,6 +21,8 @@ public class ClipboardUtils {
 	
 	public static String getClipboardContent() {
 		try {
+			System.out.println(Toolkit.getDefaultToolkit()
+			        .getSystemClipboard().getData(DataFlavor.stringFlavor));
 			return (String) Toolkit.getDefaultToolkit()
 			        .getSystemClipboard().getData(DataFlavor.stringFlavor);
 			
@@ -37,5 +39,4 @@ public class ClipboardUtils {
 		clipboard.setContents(selection, selection);
 		
 	}
-
 }
