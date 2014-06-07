@@ -33,6 +33,9 @@ class TcpDataReceiverConnection extends AbstractDownloadTransmission {
 	
 	//the OuttpuStream to write the received data in
 	private	OutputStream transmissionOutput = null;
+	
+	//The Reciever this connection was created by
+	private final TcpDataReceiver MY_RECEIVER;
 
 	/**
 	 * Creates a new {@link TcpDataReceiverConnection} instance using the given settings.
@@ -42,12 +45,13 @@ class TcpDataReceiverConnection extends AbstractDownloadTransmission {
 	 * @param adapter the {@link AbstractDownloadTransmissionAdapter} to get the {@link OutputStream} from and inform about progress updates
 	 */
 	public TcpDataReceiverConnection(InputStream in, EncryptionType encryptionType, 
-			byte[] encryptionKey, AbstractDownloadTransmissionAdapter adapter) {
+			byte[] encryptionKey, AbstractDownloadTransmissionAdapter adapter, TcpDataReceiver receiver) {
 		super(adapter);
 		//save args
 		this.INPUT = in;
 		this.ENCRYPTION_TYPE = encryptionType;
 		this.ENCRYPTION_KEY = encryptionKey;
+		this.MY_RECEIVER = receiver;
 		
 	}
 	
@@ -128,6 +132,8 @@ class TcpDataReceiverConnection extends AbstractDownloadTransmission {
 	@Override
 	public void forceCloseTransmissionStream() throws IOException {
 		super.forceCloseTransmissionStream();
+		
+		this.MY_RECEIVER.transmissionDone(this);
 		
 		if(this.getAdapter() != null && this.transmissionOutput != null)
 			((AbstractDownloadTransmissionAdapter)

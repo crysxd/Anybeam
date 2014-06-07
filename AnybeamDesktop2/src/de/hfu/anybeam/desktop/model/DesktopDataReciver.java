@@ -89,7 +89,7 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 
 	@Override
 	public void closeOutputStream(TransmissionEvent e, OutputStream out) {
-		System.out.println("Close");
+		
 		//If a clipboard String was received
 		if(!this.DOWNLOAD_FILES.containsKey(e.getTransmissionId())) {
 			ByteArrayOutputStream clipboardOut = (ByteArrayOutputStream) out;

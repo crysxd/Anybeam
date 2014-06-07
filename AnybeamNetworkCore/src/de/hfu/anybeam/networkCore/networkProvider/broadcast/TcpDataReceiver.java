@@ -87,7 +87,8 @@ public class TcpDataReceiver implements Runnable {
 						soc.getInputStream(), 
 						this.ENCRYPTION_TYPE,
 						this.ENCRYPTION_KEY,
-						this.ADAPTER);
+						this.ADAPTER,
+						this);
 				
 				//start transmission
 				ch.startTransmission();
