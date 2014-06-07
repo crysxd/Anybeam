@@ -2,6 +2,7 @@ package de.hfu.anybeam.desktop.model;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -19,8 +20,15 @@ public class ClipboardUtils {
 	}
 	
 	public static String getClipboardContent() {
-		return null;
-		
+		try {
+			return (String) Toolkit.getDefaultToolkit()
+			        .getSystemClipboard().getData(DataFlavor.stringFlavor);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			return null;
+		}
 	}
 	
 	public static void setClipboardContent(String newContent) {
