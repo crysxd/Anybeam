@@ -65,7 +65,7 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 					
 		clientList = (ListView) findViewById(R.id.lvClient);
 		clientList.setOnItemLongClickListener(this);
-		clientList.setOnItemLongClickListener(this);
+		clientList.setOnItemClickListener(this);
 		
 		this.updateView();
 	}
