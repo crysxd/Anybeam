@@ -33,6 +33,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		OnPreferenceChangeListener listener = new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				
 				String key = (String) newValue;
 				if (!isPort(key)) {
 	        		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
@@ -48,7 +49,6 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 
 		broadcastPort.setOnPreferenceChangeListener(listener);
 		dataPort.setOnPreferenceChangeListener(listener);
-
 	}
 
     @Override
@@ -67,11 +67,6 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
       }
     }
 
-    @Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		updatePreference(findPreference(key));
-	}
-    
     /**
      * Checks if String is valid port
      * @param s the String to check
@@ -88,29 +83,36 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		return false;
 	}
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    	updatePreference(findPreference(key));
+    }
+    
 	/**
 	 * Updates the summary text of the given {@link Preference}
 	 * @param preference the {@link Preference} to change
 	 */
 	private void updatePreference(Preference preference) {
-		if (preference instanceof ListPreference) {
-			ListPreference listPreference = (ListPreference) preference;
-			listPreference.setSummary(listPreference.getEntry());
-		} else if (preference instanceof EditTextPreference) {
-			EditTextPreference editTextPreference = (EditTextPreference) preference;
-			
-			//Update summary to current value 
-			if (editTextPreference.getKey().equals("group_password")) { //Is Password
-				editTextPreference.setSummary(getString(R.string.settings_pref_group_password_summary));
-			} else if (editTextPreference.getKey().equals("display_time")) { //Is display time
-				editTextPreference.setSummary(editTextPreference.getText() + " "
-						+ getString(R.string.settings_pref_display_time_summary));
-			} else if (editTextPreference.getKey().equals("data_folder")) { //Is data folder
-				editTextPreference.setSummary(getString(R.string.settings_pref_data_folder_summary) 
-						+ editTextPreference.getText());
-			} else {
-				editTextPreference.setSummary(editTextPreference.getText());
-			}
+		if (this.getView() != null) {
+			if (preference instanceof ListPreference) {
+				ListPreference listPreference = (ListPreference) preference;
+				listPreference.setSummary(listPreference.getEntry());
+			} else if (preference instanceof EditTextPreference) {
+				EditTextPreference editTextPreference = (EditTextPreference) preference;
+				
+				//Update summary to current value 
+				if (editTextPreference.getKey().equals("group_password")) { //Is Password
+					editTextPreference.setSummary(getString(R.string.settings_pref_group_password_summary));
+				} else if (editTextPreference.getKey().equals("display_time")) { //Is display time
+					editTextPreference.setSummary(editTextPreference.getText() + " "
+							+ getString(R.string.settings_pref_display_time_summary));
+				} else if (editTextPreference.getKey().equals("data_folder")) { //Is data folder
+					editTextPreference.setSummary(getString(R.string.settings_pref_data_folder_summary) 
+							+ editTextPreference.getText());
+				} else {
+					editTextPreference.setSummary(editTextPreference.getText());
+				}
+			}			
 		}
 	}
 	

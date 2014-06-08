@@ -203,12 +203,19 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 					Client c = (Client) clientList.getItemAtPosition(position);
 					Intent intent = getIntent();
 				    String action = intent.getAction();
-				    String type = intent.getType();
+				    Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+				    String path = null;
+				    
+				    try {
+				    	path = Uri.decode(fileUri.toString());
+				    	Log.i("Filepaht", path);
+					} catch (Exception e) {
+					}
 				    
 				    Client.SendTask builder = new Client.SendTask();
 				    
-				    if (Intent.ACTION_SEND.equals(action) && type != null) {
-				        if ("text/plain".equals(type)) {
+				    if (Intent.ACTION_SEND.equals(action)) {
+				        if (path == null) {
 				        	// Handle text being sent
 				        	String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
 				    	    if (sharedText != null) {
@@ -218,11 +225,6 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 				    	    }
 						} else {
 							//Handle file being sent
-							
-							Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-							String path = Uri.decode(fileUri.toString());																								
-							Log.i("Filepaht", path);
-				
 							if (path.startsWith("content")) {
 								//Image file from Gallery
 								builder.setInputStream(new FileInputStream(
