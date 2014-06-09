@@ -26,10 +26,12 @@ public class SettingsStage extends ListStage {
 	private final String HELP_ID = "Help";
 	private final String WEBPAGE_ID = "Webpage";
 	private final String ABOUT_NOTICES_ID = "About";
+	private final String PLAY_STORE_ID = "Google Play Store";
 	private final TextStage LEGAL_NOTICES_STAGE;
 	private final TextStage ABOUT_NOTICES_STAGE;
 	private final String HELP_URL = "http://www.anybeam.de/help/";
 	private final String WEBPAGE_URL = "http://www.anybeam.de/";
+	private final String PLAY_STORE_URL = "http://www.anybeam.de/playstore";
 
 	public SettingsStage(Stage parent) {
 		super(parent);
@@ -55,7 +57,7 @@ public class SettingsStage extends ListStage {
 		}
 
 		this.ABOUT_NOTICES_STAGE = s;
-		
+
 		this.updateSettingsDisplayed();
 	}
 
@@ -63,7 +65,7 @@ public class SettingsStage extends ListStage {
 
 	public void updateSettingsDisplayed() {
 		Settings s = Settings.getSettings();
-		
+
 		//Save scrollbar position
 		int scrollbarPosition = this.getListScroller().getVerticalScrollBar().getValue();
 
@@ -88,13 +90,26 @@ public class SettingsStage extends ListStage {
 			}
 		}
 
-		//Add LegalNotics section
-		m.addElement(new ListSectionHeaderItem("Others"));
-		m.addElement(new ListItem(this.EXIT_PROGRAM_ID));
+		//Add Links
+		m.addElement(new ListSectionHeaderItem("Links"));
 		m.addElement(new ListItem(this.WEBPAGE_ID));
 		m.addElement(new ListItem(this.HELP_ID));
+		m.addElement(new ListItem(this.PLAY_STORE_ID));
+		
+		//Add Others
+		m.addElement(new ListSectionHeaderItem("Others"));
+		m.addElement(new ListItem(this.EXIT_PROGRAM_ID));
 		m.addElement(new ListItem(this.LEGAL_NOTICES_ID));
 		m.addElement(new ListItem(this.ABOUT_NOTICES_ID));
+		
+		//Add Version
+		try {
+			m.addElement(new ListItem("Version: " + R.readTextFile("version.txt")));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			
+		}
 
 		//Reset scrollbar
 		this.getListScroller().getVerticalScrollBar().setValue(scrollbarPosition);
@@ -135,18 +150,30 @@ public class SettingsStage extends ListStage {
 
 			} catch (IOException | URISyntaxException e) {
 				e.printStackTrace();
-				
+
 			}
 		}
+
+		//If the Row with Help was selected -> show help webpage
+		if(item.getTitle().equals(this.PLAY_STORE_ID)) {
+			try {
+				Desktop.getDesktop().browse(new URI(this.PLAY_STORE_URL));
+
+			} catch (IOException | URISyntaxException e) {
+				e.printStackTrace();
+
+			}
+		}
+
 
 		//If the Row with Wepage was selected -> show webpage
 		if(item.getTitle().equals(this.WEBPAGE_ID)) {
 			try {
 				Desktop.getDesktop().browse(new URI(this.WEBPAGE_URL));
-				
+
 			} catch (IOException | URISyntaxException e) {
 				e.printStackTrace();
-				
+
 			}
 		}
 
