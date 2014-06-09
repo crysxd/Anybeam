@@ -19,7 +19,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -40,6 +39,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	private Context context;
 	private TcpDataReceiver reciver;
 	private File file;
+	private final NotificationManager mManager; 
 		
 	/**
 	 * Creates a new AndroidDataReceiver which starts a {@link TcpDataReceiver}
@@ -50,6 +50,9 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 		this.context = context.getApplicationContext();
 		
 		NetworkEnvironment environment = NetworkEnvironmentManager.getNetworkEnvironment(context);
+		
+		mManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
 		
 		//generate reciever from settings
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -82,10 +85,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			.setContentTitle(context.getString(R.string.transmission_in_progress_title)) 
 			.setContentText(e.getResourceName());
 			
-		
 		//Update/Create notification
-		NotificationManager mManager = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
 		mManager.notify(e.getTransmissionId(), mBuilder.build());
 	}
 
@@ -102,8 +102,6 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 				.setContentTitle(context.getString(R.string.error_transmission_failed))
 				.setContentText(context.getString(R.string.error_transmission_failed_summary));
 
-		NotificationManager mManager = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
 		mManager.notify(e.getTransmissionId(), mBuilder.build());
 	}
 
@@ -140,117 +138,174 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	@Override
 	public void closeOutputStream(final TransmissionEvent e, OutputStream out) {
 		Log.i("Transmission", "Closed id: " + e.getTransmissionId());
-		
-		Notification mNotification = null;
-
+				
+		//remove old Notification
+		mManager.cancel(e.getTransmissionId());
+				
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-			.setSmallIcon(R.drawable.ic_notification)
-			.setWhen(System.currentTimeMillis());
-		
-		final NotificationManager mManager = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-		
-		
+		.setSmallIcon(R.drawable.ic_notification)
+		.setWhen(System.currentTimeMillis());
+	
 		if (out instanceof ByteArrayOutputStream && e.getResourceName().equals("*clipboard")) {
-			//Clipboard Text
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-			Looper.prepare();
-			
 			//Get String from stream
 			ByteArrayOutputStream bo = (ByteArrayOutputStream) out;	
-			String value = new String(bo.toByteArray());
-			ClipboardUtils.copyToClipboard(context, "Text", value);
+			String stringFromStream = new String(bo.toByteArray());
+			ClipboardUtils.copyToClipboard(context, "Text", stringFromStream);
 			
-			if (isURL(value)) { 
-				//if is URL, show notification and set intent
-				mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_url));
-				Uri url = Uri.parse(value);
-				Intent intent = new Intent();
-				intent.setAction(android.content.Intent.ACTION_VIEW);
-				intent.setData(url);
-				
-				if (prefs.getBoolean("auto_url", false)) { 
-					//if auto open url is enabled
-					context.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-					return;
-				} 
-
-				PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);					
-				mBuilder.setContentIntent(pendingIntent);
-				mBuilder.setAutoCancel(true);
+			if (isURL(stringFromStream)) { 
+				showUrlNotification(e.getTransmissionId(), mBuilder, stringFromStream);
 			} else {
-			//Else not an URL
-				mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_clipboard));
-				final Integer time = Integer.parseInt(prefs.getString("display_time", "5"));
-				if (time > 0) {
-					//Remove notification after time seconds
-					new Thread() {
-						public void run() {
-							try {
-								sleep(time * 1000);
-							} catch (InterruptedException e1) {
-								e1.printStackTrace();
-							}
-							mManager.cancel(e.getTransmissionId());
-						};
-					}.start();				
-				}
+				showClipboardNotification(e.getTransmissionId(), mBuilder, stringFromStream);
 			}
-			
-			//Shorten content text
-			if (value.length() > 40) {
-				mBuilder.setContentText(value.substring(0, 40) + "...");				
-			}else {
-				mBuilder.setContentText(value);
-			}
-			
-			mNotification = mBuilder.build();
-			
+	
 		} else if (out instanceof FileOutputStream) {
-			//File to save
-			Uri uri = Uri.fromFile(file);
-			
-			Intent intent = new Intent();
-			intent.setAction(android.content.Intent.ACTION_VIEW);
-			intent.setDataAndType(uri, getMimeType(uri.getPath()));
-			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-			
-			mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_file)); 
-			mBuilder.setContentText(e.getResourceName());
-			mBuilder.setContentIntent(pendingIntent);
-			mBuilder.setAutoCancel(true);
-			
-			if (getMimeType(uri.getPath()).startsWith("image/")) {
-				BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-				Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-				
-				mBuilder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap));
-			} 
-
-			mNotification = mBuilder.build();
+			showFileNotification(e, mBuilder);
 		}
-		
-		mManager.notify(e.getTransmissionId(), mNotification);
-		
+				
 		try {
 			out.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+	
+	}
 
+	/**
+	 * Shows notification for received URL and sets intent, if auto open url is enabled intet will be started.
+	 * @param transmissionId the id to identify the Notification
+	 * @param mBuilder builder to finalize the {@link Notification}
+	 * @param stringUrl the Url as String
+	 */
+	private void showUrlNotification(
+			int transmissionId, 
+			NotificationCompat.Builder mBuilder, 
+			String stringUrl) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		Uri url = Uri.parse(stringUrl);
+		Intent intent = new Intent();
+		intent.setAction(android.content.Intent.ACTION_VIEW);
+		intent.setData(url);
+		
+		if (prefs.getBoolean("auto_url", false)) { 
+			//if auto open url is enabled
+			context.startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+		} else {
+			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);					
+			mBuilder.setContentIntent(pendingIntent);
+			mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_url));
+			mBuilder.setContentText(abbreviate(stringUrl));
+			mBuilder.setAutoCancel(true);
+			
+			mManager.notify(transmissionId, mBuilder.build());
+		}
+	}
+
+	/**
+	 * Show notification for received text
+	 * @param transmissionId the id to identify the Notification
+	 * @param mBuilder builder to finalize the {@link Notification}
+	 * @param clipboarContent
+	 */
+	private void showClipboardNotification(
+			final int transmissionId,
+			NotificationCompat.Builder mBuilder,
+			String clipboarContent) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_clipboard));
+		mBuilder.setContentText(abbreviate(clipboarContent));
+		
+		//Remove notification after time seconds
+		final Integer time = Integer.parseInt(prefs.getString("display_time", "5"));
+		if (time > 0) {
+			new Thread() {
+				public void run() {
+					try {
+						sleep(time * 1000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+					mManager.cancel(transmissionId);
+				};
+			}.start();				
+		}
+		mManager.notify(transmissionId, mBuilder.build());
+	}
+
+	/**
+	 * Show notification for received file and sets intent
+	 * @param e
+	 * @param mBuilder builder to finalize the {@link Notification}
+	 */
+	private void showFileNotification(
+			TransmissionEvent e,
+			NotificationCompat.Builder mBuilder) {
+		Uri uri = Uri.fromFile(file);
+		
+		Intent openIntent = new Intent();
+		openIntent.setAction(android.content.Intent.ACTION_VIEW);
+		openIntent.setDataAndType(uri, getMimeType(uri.getPath()));
+		PendingIntent pendingOpenIntent = PendingIntent.getActivity(context, 0, openIntent, PendingIntent.FLAG_ONE_SHOT);
+		
+		mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_file)); 
+		mBuilder.setContentText(e.getResourceName());
+		mBuilder.setContentIntent(pendingOpenIntent);
+		mBuilder.setAutoCancel(true);
+		
+		if (getMimeType(uri.getPath()).startsWith("image/")) {
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+			Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+			
+			Intent sendIntent = new Intent();
+			sendIntent.setAction(Intent.ACTION_SEND);
+			sendIntent.setDataAndType(uri, getMimeType(uri.getPath()));
+			PendingIntent pendingSendIntent = PendingIntent.getActivity(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT);
+			
+			mBuilder.addAction(android.R.drawable.ic_menu_share, context.getString(R.string.action_share), pendingSendIntent);
+			mBuilder.setStyle(new NotificationCompat.BigPictureStyle()
+										.bigPicture(bitmap)
+										.setSummaryText(e.getResourceName()));
+		} 
+	
+		mManager.notify(e.getTransmissionId(), mBuilder.build());
+	}
+
+	/**
+	 * Abbreviate the input string if longer than 40 characters
+	 * @param input the String
+	 * @return the abbreviated string
+	 */
+	private String abbreviate(String input) {
+		if (input.length() > 40) {
+			return input.substring(0, 40) + "...";
+		} else {
+			return input;
+		}
 	}
 	
-	private boolean isURL(String value) {
+ 	
+	/**
+	 * Checks if input is a valid URL
+	 * @param input the String containing the URL
+	 * @return true if input is a valid URL
+	 */
+	private boolean isURL(String input) {
 		try {
-			new URL(value);
+			new URL(input);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.i("Transmission", "No URL");
 			return false;
 		}
 	}
 
+	/**
+	 * Get the mime type from file extension
+	 * @param url the Filepath
+	 * @return the mime type
+	 */
 	private String getMimeType(String url) {
         String extension = url.substring(url.lastIndexOf("."));
         String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);

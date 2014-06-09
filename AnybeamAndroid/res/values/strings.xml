@@ -5,6 +5,7 @@
     <string name="replaceMe">Replace Me</string>
     <string name="menu_action_settings">Settings</string>
     <string name="menu_action_refresh">Reload client list</string>
+    <string name="action_share">Share</string>    
     <string name="icon_device">Device Icon</string>
     <string name="info_adress">IP-Address:</string>
     <string name="info_id">ID:</string>
