@@ -130,7 +130,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 	 * Disposes the {@link NetworkEnvironment}
 	 * @throws Exception 
 	 */
-	public synchronized static void disposeNetworkEnvironment() throws Exception {
+	private synchronized static void disposeNetworkEnvironment() throws Exception {
 		if(networkEnvironment != null) {
 			new Thread() {
 				public void run() {
@@ -159,7 +159,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 	 * @param context the application {@link Context}
 	 * @return Returns the current {@link NetworkEnvironmentSettings}
 	 */
-	public static NetworkEnvironment buildNetworkEnvironment(Context context) {
+	private static NetworkEnvironment buildNetworkEnvironment(Context context) {
 		PreferenceManager.setDefaultValues(context.getApplicationContext(), R.xml.preferences, false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = prefs.edit();

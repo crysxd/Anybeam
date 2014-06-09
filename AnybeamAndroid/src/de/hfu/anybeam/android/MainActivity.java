@@ -23,7 +23,6 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		NetworkEnvironmentManager.buildNetworkEnvironment(this);
 		setListeners();
 
 		this.includeShareIcon((TextView) this.findViewById(R.id.tvInstructionText));
