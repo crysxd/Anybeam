@@ -1,6 +1,6 @@
 package de.hfu.anybeam.desktop.view.androidUI;
 
-import java.awt.BorderLayout; 
+import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.concurrent.Callable;
@@ -21,10 +21,8 @@ public class NotificationWindow extends AnybeamWindow implements MouseListener {
 
 	private final ExecutorService HIDE_AFTER_DELAY_THREAD = Executors.newSingleThreadExecutor();
 	private Future<?> currenthideTask = null;
-	private final AndroidUI MAIN_WINDOW;
 
-	public NotificationWindow(AndroidUI mainWindow) {
-		this.MAIN_WINDOW = mainWindow;
+	public NotificationWindow() {
 		
 		//Set Layout
 		this.setLayout(new BorderLayout());
@@ -81,33 +79,29 @@ public class NotificationWindow extends AnybeamWindow implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		this.currenthideTask.cancel(true);
-		this.MAIN_WINDOW.setVisible(true);
-		this.setVisible(false);
+		this.currenthideTask.cancel(true);		
 		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(!this.INFO_PANEL.contains(e.getPoint()))
+			this.setVisible(false);
+			
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 }
