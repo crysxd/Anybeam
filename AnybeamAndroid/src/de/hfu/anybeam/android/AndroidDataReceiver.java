@@ -70,13 +70,10 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 
 	@Override
 	public void transmissionStarted(TransmissionEvent e) {
-		Log.i("Transmission", "Started");
 	}
 
 	@Override
-	public void transmissionProgressChanged(TransmissionEvent e) {
-		Log.i("Transmission", "Progress Changed: " + String.format("%.2f", e.getPercentDone()));
-		
+	public void transmissionProgressChanged(TransmissionEvent e) {		
 		//Notification to inform user about progress
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
 			.setSmallIcon(R.drawable.ic_notification)
@@ -94,13 +91,11 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 
 	@Override
 	public void transmissionDone(TransmissionEvent e) {
-		Log.i("Transmission", "Done");
 
 	}
 
 	@Override
 	public void transmissionFailed(TransmissionEvent e) {
-		Log.i("Transmission", "Recieve failed");
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
 				.setSmallIcon(R.drawable.ic_notification)
 				.setWhen(System.currentTimeMillis())

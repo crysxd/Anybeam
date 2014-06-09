@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import de.hfu.anybeam.networkCore.AbstractTransmissionAdapter;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
 
@@ -25,14 +24,11 @@ public class GeneralTransmission implements AbstractTransmissionAdapter {
 	
 	@Override
 	public void transmissionStarted(TransmissionEvent e) {
-		Log.i("Transmission", "Started");
 
 	}
 
 	@Override
-	public void transmissionProgressChanged(TransmissionEvent e) {
-		Log.i("Transmission", "Progress Changed: " + String.format("%.2f", e.getPercentDone()));
-		
+	public void transmissionProgressChanged(TransmissionEvent e) {		
 		//Notification to inform user about progress
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
 			.setSmallIcon(R.drawable.ic_notification)
@@ -50,7 +46,6 @@ public class GeneralTransmission implements AbstractTransmissionAdapter {
 
 	@Override
 	public void transmissionFailed(TransmissionEvent e) {
-		Log.i("Transmission", "Send failed");
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
 				.setSmallIcon(R.drawable.ic_notification)
 				.setWhen(System.currentTimeMillis())
