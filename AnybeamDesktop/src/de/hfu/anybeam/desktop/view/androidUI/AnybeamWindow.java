@@ -34,11 +34,20 @@ public class AnybeamWindow extends JDialog {
 
 	private Color backgroundColor = new Color(1, 1, 1, 0.85f);
 
+	private boolean shadowUsed = false;
+	
 	public AnybeamWindow() {
 		this.setUndecorated(true);
 		super.setBackground(new Color(0,0,0,0));
-		this.setContentPane(new TrayWindowContentPane());
 		this.setMinimumSize(new Dimension(100, 80));
+		
+		//Only use the modified background if the system supports it
+		String property = System.getProperty("os.name").toUpperCase();
+		if(property.contains("WINDOWS") || property.contains("MAC")) {;
+			this.setContentPane(new TrayWindowContentPane());
+			this.shadowUsed = true;
+			
+		}
 	}
 	
 	@Override
@@ -49,11 +58,18 @@ public class AnybeamWindow extends JDialog {
 	
 	@Override
 	public void setSize(int width, int height) {
-		super.setSize(width + AnybeamWindow.PADDING * 2, height + AnybeamWindow.PADDING * 2);
+		if(!shadowUsed)
+			super.setSize(width, height);
+		
+		else	
+			super.setSize(width + AnybeamWindow.PADDING * 2, height + AnybeamWindow.PADDING * 2);
 		
 	}
 	
 	public Dimension getSizeUnmodified() {
+		if(!shadowUsed)
+			return super.getSize();
+			
 		Dimension d = getSize();
 		return new Dimension(d.width - AnybeamWindow.PADDING * 2, d.height - AnybeamWindow.PADDING * 2);
 	}

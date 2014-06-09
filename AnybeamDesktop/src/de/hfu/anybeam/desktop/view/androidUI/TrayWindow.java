@@ -19,7 +19,7 @@ import de.hfu.anybeam.desktop.view.ViewUtils;
 public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFocusListener {
 	
 	private static final long serialVersionUID = -3265790096085134965L;
-	private static final int PADDING = 0;
+	private static final int PADDING = 5;
 
 	private final TrayIcon TRAY_ICON;
 	private boolean hideOnFocusLost = true;
