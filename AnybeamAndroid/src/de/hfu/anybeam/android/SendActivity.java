@@ -108,10 +108,11 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
     	findViewById(R.id.action_refresh).startAnimation(anim);
 			try {
 				NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).startClientSearch();
-				updateView();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			updateView();
+
 			return true;
 		}
 		
@@ -137,6 +138,9 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 				} catch (Exception e) {
 					e.printStackTrace();
 					
+					ArrayList<Client> l = new ArrayList<Client> ();
+					clientList.setAdapter(new ClientAdapter(getApplicationContext(), l));
+
 				}
 			}
 		}); 
@@ -235,6 +239,7 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 			
 		} catch (IndexOutOfBoundsException e) {
 			Log.w("ClientList", "ClientList is Empty");
+			
 		} catch (Exception e) {
 			//Warn User for File sending error
 			new AlertDialog.Builder(this)
@@ -248,6 +253,7 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 				})
 				.create()
 				.show();
+			
 			e.printStackTrace();
 		}		
 	}
