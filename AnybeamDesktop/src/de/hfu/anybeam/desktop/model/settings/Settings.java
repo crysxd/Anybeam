@@ -29,7 +29,7 @@ public class Settings {
 	private final static File USER_HOME = new File(System.getProperty("user.home"));
 	private final static File LOCATION_WINDOWS = new File(USER_HOME, "\\AppData\\Local\\Anybeam\\");
 	private final static File LOCATION_MAC = new File(USER_HOME, "/Library/Preferences/de.hfu.anybeam.desktop/");
-	private final static File LOCATION_OTHERS = new File(USER_HOME, "Anybeam");
+	private final static File LOCATION_OTHERS = new File(USER_HOME, ".anybeam");
 	private final static String SETTINGS_FILE_NAME = "settings.xml";
 
 	public static Settings getSettings() {
