@@ -38,13 +38,14 @@ public class AnybeamWindow extends JDialog {
 	
 	public AnybeamWindow() {
 		this.setUndecorated(true);
-		super.setBackground(new Color(0,0,0,0));
 		this.setMinimumSize(new Dimension(100, 80));
 		
 		//Only use the modified background if the system supports it
 		String property = System.getProperty("os.name").toUpperCase();
 		if(property.contains("WINDOWS") || property.contains("MAC")) {;
 			this.setContentPane(new TrayWindowContentPane());
+			super.setBackground(new Color(0,0,0,0));
+
 			this.shadowUsed = true;
 			
 		}
