@@ -7,7 +7,6 @@
     <string name="menu_action_refresh">Reload client list</string>
     <string name="icon_device">Device Icon</string>
     <string name="info_adress">IP-Address:</string>
-    <string name="info_group">Group:</string>
     <string name="info_id">ID:</string>
     <string name="info_os">OS:</string>
     <string name="main_click_to_share">Tap to beam clipboard</string>
@@ -58,6 +57,8 @@
     <string name="transmission_out_progress_title">Beaming in Progress</string>
     <string name="error_port_bind">Port bind error</string>
     <string name="error_port_bind_summary">The present ports for brodcast or data messages are already used by another application</string>
+    <string name="error_file_select">Can\'t send file</string>
+    <string name="error_file_select_summary">Something went wrong with selecting the file</string>
     <string name="error_transmission_failed">Transmission failed</string>
     <string name="error_transmission_failed_summary">Check your password and encryption type</string>
     <string name="alt_ivsearching">Searching</string>

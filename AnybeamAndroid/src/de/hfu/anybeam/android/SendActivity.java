@@ -4,12 +4,15 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
@@ -31,9 +34,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import de.hfu.anybeam.android.fragments.DeviceInfoFragment;
 import de.hfu.anybeam.networkCore.Client;
+import de.hfu.anybeam.networkCore.Client.SendTask;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 
-public class SendActivity extends Activity implements NetworkEnvironmentListener {
+public class SendActivity extends Activity implements NetworkEnvironmentListener, OnItemClickListener, OnItemLongClickListener {
 	
 	private ListView clientList;
 		
@@ -60,8 +64,9 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 		}	
 					
 		clientList = (ListView) findViewById(R.id.lvClient);
+		clientList.setOnItemLongClickListener(this);
+		clientList.setOnItemClickListener(this);
 		
-		this.setListener();
 		this.updateView();
 	}
 	
@@ -171,111 +176,142 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 	private String getFilenameFromPath(String path) {
 		return path.replaceAll("(.*[\\/])", "");
 	}
-	
 		
-	private void setListener() {
-		clientList.setOnItemLongClickListener(new OnItemLongClickListener() {
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		//On long click show device info if valid Client
+		try {
+			Client c = (Client) clientList.getItemAtPosition(position);
 
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			FragmentManager fm = getFragmentManager();
+			DeviceInfoFragment devInfo = DeviceInfoFragment.newInstance(c);
+			devInfo.show(fm, "fragment_device_info");
+		} catch (IndexOutOfBoundsException e) {
+			Log.w("ClientList", "ClientList is Empty");
+		}
 
-				try {					
-					Client c = (Client) clientList.getItemAtPosition(position);
-					
-					FragmentManager fm = getFragmentManager();
-					DeviceInfoFragment devInfo = DeviceInfoFragment.newInstance(c);
-					devInfo.show(fm, "fragment_device_info");
-				} catch (IndexOutOfBoundsException e) {
-					Log.w("ClientList", "ClientList is Empty");
-				}
-
-				return true;
-			}
-		});
-		
-		clientList.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				try {					
-					Client c = (Client) clientList.getItemAtPosition(position);
-					Intent intent = getIntent();
-				    String action = intent.getAction();
-				    Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-				    String path = null;
-				    
-				    try {
-				    	path = Uri.decode(fileUri.toString());
-				    	Log.i("Filepaht", path);
-					} catch (Exception e) {
-					}
-				    
-				    Client.SendTask builder = new Client.SendTask();
-				    
-				    if (Intent.ACTION_SEND.equals(action)) {
-				        if (path == null) {
-				        	// Handle text being sent
-				        	String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-				    	    if (sharedText != null) {
-				    	    	builder.setInputStream(new ByteArrayInputStream(sharedText.getBytes()));
-				    	    	builder.setInputStreamLength(sharedText.length());
-				    	    	builder.setSourceName("*clipboard");
-				    	    }
-						} else {
-							//Handle file being sent
-							if (path.startsWith("content")) {
-								//Image file from Gallery
-								builder.setInputStream(new FileInputStream(
-										new File(getRealPathFromURI(
-												getApplicationContext(),
-												fileUri))));
-								builder.setSourceName(getFilenameFromURI(
-										getApplicationContext(), fileUri));
-								builder.setInputStreamLength(new File(
-										getRealPathFromURI(
-												getApplicationContext(),
-												fileUri)).length());
-							}
-
-							if (path.startsWith("file")) {
-								//File from file browser
-								path = path.replace("file:/", "");
-
-								builder.setInputStream(new FileInputStream(
-										new File(path)));
-								builder.setSourceName(getFilenameFromPath(path));
-								builder.setInputStreamLength(new File(path)
-										.length());
-							}
-				        }
-				    }
-				    
-					builder.setAdapter(new GeneralTransmission(getApplicationContext()));
-					builder.sendTo(c);
-					
-					//Close Activity after Sending
-					finish();
-				} catch (IndexOutOfBoundsException e) {
-					Log.w("ClientList", "ClientList is Empty");
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} 
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		return true;
 	}
 
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		try {					
+			Client c = (Client) clientList.getItemAtPosition(position);
+			Intent intent = getIntent();
+		    String action = intent.getAction();
+		    Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+		    String path = null;
+		    
+		    //Try to get path from the uri
+		    try {
+		    	path = Uri.decode(fileUri.toString());
+		    	Log.i("Filepaht", path);
+			} catch (Exception e) {
+			}
+		    
+		    Client.SendTask builder = new Client.SendTask();
+		    builder.setAdapter(new GeneralTransmission(getApplicationContext()));
+		    
+		    //Decide what kind of content will be send
+		    if (Intent.ACTION_SEND.equals(action)) {
+		        if (path == null) {
+		        	String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+		    		if (sharedText != null) {
+		    			sendClipboard(c, sharedText, builder);
+		    		}
+				} else {
+					if (path.startsWith("content")) {
+						sendContent(c, fileUri, builder);
+					}
+
+					if (path.startsWith("file")) {
+						sendFile(c, path, builder);
+					}
+		        }
+		    }
+		    							
+			//Close Activity after Sending
+			finish();
+			
+		} catch (IndexOutOfBoundsException e) {
+			Log.w("ClientList", "ClientList is Empty");
+		} catch (Exception e) {
+			//Warn User for File sending error
+			new AlertDialog.Builder(this)
+				.setTitle(R.string.error_file_select)
+				.setMessage(R.string.error_file_select_summary)
+				.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				})
+				.create()
+				.show();
+			e.printStackTrace();
+		}		
+	}
+
+	/**
+	 * Function to finalize and send a clipboard {@link SendTask}
+	 * @param c the {@link Client} to send to
+	 * @param sharedText the clipboard content
+	 * @param builder the {@link SendTask} builder
+	 * @throws IOException caused by sending
+	 */
+	private void sendClipboard(Client c, String sharedText, Client.SendTask builder) throws IOException {
+		builder.setInputStream(new ByteArrayInputStream(sharedText.getBytes()));
+		builder.setInputStreamLength(sharedText.length());
+		builder.setSourceName("*clipboard");
+		builder.sendTo(c);
+	}
+
+	/**
+	 *  Function to finalize and send a file {@link SendTask}
+	 * @param c the {@link Client} to send to
+	 * @param path the paht to the file
+	 * @param builder the {@link SendTask} builder
+	 * @throws FileNotFoundException
+	 * @throws IOException caused by sending
+	 */
+	private void sendFile(Client c, String path, Client.SendTask builder) throws FileNotFoundException, IOException {
+		path = path.replace("file:/", "");
+
+		builder.setInputStream(new FileInputStream(
+				new File(path)));
+		builder.setSourceName(getFilenameFromPath(path));
+		builder.setInputStreamLength(new File(path)
+				.length());
+		builder.sendTo(c);
+	}
+
+	/**
+	 * Function to finalize and send a content {@link SendTask}
+	 * @param c the {@link Client} to send to
+	 * @param fileUri the {@link Uri} specifying the content
+	 * @param builder the {@link SendTask} builder
+	 * @throws FileNotFoundException
+	 * @throws IOException caused by sending
+	 */
+	private void sendContent(Client c, Uri fileUri, Client.SendTask builder) throws FileNotFoundException, IOException {
+		builder.setInputStream(new FileInputStream(
+				new File(getPath(getApplicationContext(), fileUri))));
+		builder.setSourceName(getFilenameFromURI(
+				getApplicationContext(), fileUri));
+		builder.setInputStreamLength(new File(
+				getPath(
+						getApplicationContext(),
+						fileUri)).length());
+		builder.sendTo(c);
+	}
+	
 	/**
 	 * Function to find file in MediaStore
 	 * @param context the Application {@link Context}
 	 * @param contentUri the {@link Uri} for the File
 	 * @return the Path
 	 */
-	private String getRealPathFromURI(Context context, Uri contentUri) {
+	private String getPath(Context context, Uri contentUri) {
 		Cursor cursor = null;
 		try {
 			String[] proj = { MediaStore.Images.Media.DATA };
@@ -299,6 +335,6 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 	 * @return the file name
 	 */
 	private String getFilenameFromURI(Context context, Uri contentUri) {
-		return getRealPathFromURI(context, contentUri).replaceAll("(.*[\\/])", "");
+		return getPath(context, contentUri).replaceAll("(.*[\\/])", "");
 	}
 }

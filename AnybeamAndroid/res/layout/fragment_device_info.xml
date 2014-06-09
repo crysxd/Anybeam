@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tvDeviceInfoGroupDesc"
+        android:layout_below="@+id/tvDeviceInfoAddressDesc"
         android:text="@string/info_id"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -43,29 +43,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/tvDeviceInfoGroupDesc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tvDeviceInfoAddressDesc"
-        android:text="@string/info_group"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/tvDeviceInfoGroup"
+        android:id="@+id/tvDeviceInfoId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tvDeviceInfoAddress"
         android:layout_below="@+id/tvDeviceInfoAddress"
-        android:text="@string/replaceMe"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/tvDeviceInfoId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvDeviceInfoGroup"
-        android:layout_below="@+id/tvDeviceInfoGroup"
         android:text="@string/replaceMe"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
