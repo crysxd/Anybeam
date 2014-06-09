@@ -3,6 +3,7 @@ package de.hfu.anybeam.android.utils;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.os.Looper;
 
 /**
  * Utility's for the Android clipboard management.
@@ -21,6 +22,7 @@ public class ClipboardUtils {
 	 */
 	public static boolean copyToClipboard(Context context, String lable,
 			String text) {
+		Looper.prepare();
 		try {
 			android.content.ClipboardManager clipboard = 
 					(android.content.ClipboardManager) context
