@@ -6,7 +6,10 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.CharArrayWriter;
 import java.io.InputStream;
+import java.io.StringReader;
 
 public class ClipboardUtils {
 
@@ -24,20 +27,27 @@ public class ClipboardUtils {
 		try {
 			Transferable t = Toolkit.getDefaultToolkit()
 					.getSystemClipboard().getContents(null);
+			String content = null;
 			
-			System.out.println("DataFlavor.stringFlavor name: " + DataFlavor.stringFlavor.getHumanPresentableName());
 			for(DataFlavor d : t.getTransferDataFlavors()) {
-				try {
-					System.out.print(d.getHumanPresentableName() + "[" + d.getDefaultRepresentationClassAsString() + "] -> ");
-					System.out.println(t.getTransferData(d).toString());
-				} catch(Exception e) {
-					System.out.println("Retrieving value failed (" + e.getMessage()  + ")");
+
+				if(d.getHumanPresentableName().equals("Plain Text") && t.getTransferData(d) instanceof StringReader) {
+					StringReader s = (StringReader) t.getTransferData(d);
+					
+					CharArrayWriter cw = new CharArrayWriter();
+					char read[] = new char[1024];
+					int length;
+					while((length = s.read(read)) > 0)
+						cw.write(read, 0, length);
+					
+					content = new String(cw.toCharArray());
+					System.out.println("Clipboard Content: " + content);
+					
 				}
 			}
 
-			return (String) Toolkit.getDefaultToolkit()
-					.getSystemClipboard().getData(DataFlavor.stringFlavor);
-
+			return content;
+					
 		} catch (Exception e) {
 			e.printStackTrace();
 
