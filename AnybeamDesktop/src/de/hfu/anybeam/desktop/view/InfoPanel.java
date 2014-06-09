@@ -24,11 +24,10 @@ import de.hfu.anybeam.desktop.model.ClipboardTransmissionEvent;
 import de.hfu.anybeam.desktop.model.ClipboardUtils;
 import de.hfu.anybeam.desktop.model.FileTransmissionEvent;
 import de.hfu.anybeam.desktop.view.androidUI.ActionbarButton;
-import de.hfu.anybeam.desktop.view.androidUI.ShadowInsetPanel;
 import de.hfu.anybeam.desktop.view.resources.R;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
 
-public class InfoPanel extends ShadowInsetPanel implements ActionListener {
+public class InfoPanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 324432413436876988L;
 
@@ -153,8 +152,10 @@ public class InfoPanel extends ShadowInsetPanel implements ActionListener {
 
 		//Failed
 		if(!e.isSucessfull()) {
+			this.TITLE_LABEL.setText("Transmission Failed");
 			this.ICON_LABEL.setIcon(ICON_ERROR);
-			this.SUBTITLE_LABEL.setText(String.format("Transmission failed. (%.1f%% completed)", Math.abs(e.getPercentDone()*100)));
+			this.SUBTITLE_LABEL.setText(String.format("%.1f%% completed", Math.abs(e.getPercentDone()*100)));
+			this.setPercentDone(e.getPercentDone());
 			this.setActions();
 
 		}
