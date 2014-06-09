@@ -48,7 +48,7 @@ public class  AnybeamDesktopView {
 		this.INFO_PANEL.setVisible(false);
 		this.MAIN_WIDNOW.setBottomBar(this.INFO_PANEL);
 		
-		this.NOTIFICATION_WINDOW = new NotificationWindow();
+		this.NOTIFICATION_WINDOW = new NotificationWindow(this.MAIN_WIDNOW);
 		
 	}
 	

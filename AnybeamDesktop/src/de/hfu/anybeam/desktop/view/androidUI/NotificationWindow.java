@@ -1,10 +1,6 @@
 package de.hfu.anybeam.desktop.view.androidUI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout; 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.concurrent.Callable;
@@ -15,33 +11,24 @@ import java.util.concurrent.Future;
 import de.hfu.anybeam.desktop.model.settings.IntegerPreference;
 import de.hfu.anybeam.desktop.model.settings.Settings;
 import de.hfu.anybeam.desktop.view.InfoPanel;
-import de.hfu.anybeam.desktop.view.ViewUtils;
-import de.hfu.anybeam.desktop.view.resources.R;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
 
-public class NotificationWindow extends AnybeamWindow implements ActionListener, MouseListener {
+public class NotificationWindow extends AnybeamWindow implements MouseListener {
 
 	private static final long serialVersionUID = 8025630517748933669L;
-	private static final Image CLOSE_ICON = R.getImage("ic_action_cancel.png");
 
 	private final InfoPanel INFO_PANEL = new InfoPanel();
 
 	private final ExecutorService HIDE_AFTER_DELAY_THREAD = Executors.newSingleThreadExecutor();
 	private Future<?> currenthideTask = null;
+	private final AndroidUI MAIN_WINDOW;
 
-	public NotificationWindow() {
-
+	public NotificationWindow(AndroidUI mainWindow) {
+		this.MAIN_WINDOW = mainWindow;
+		
 		//Set Layout
 		this.setLayout(new BorderLayout());
-
-		//Add Actionbar
-		ActionbarButton closeButton = new ActionbarButton(CLOSE_ICON);
-		Actionbar actionbar = new Actionbar(R.getImage("ic_actionbar.png"), ViewUtils.ANYBEAM_GREEN, "", Color.white);
-		actionbar.addAction(closeButton);
-		actionbar.setTitle("Anybeam");
-		closeButton.addActionListener(this);
-		this.add(actionbar, BorderLayout.NORTH);
-
+		
 		//add view
 		this.add(this.INFO_PANEL, BorderLayout.CENTER);
 
@@ -49,12 +36,12 @@ public class NotificationWindow extends AnybeamWindow implements ActionListener,
 		this.setAlwaysOnTop(true);
 
 		//pack
-		this.setSize(320, actionbar.getPreferredSize().height + INFO_PANEL.getPreferredSize().height);
+		this.setSize(320, INFO_PANEL.getPreferredSize().height);
 
 		//Set location
 		TrayWindow.updateLocation(this);
-
-		//Add MouseListener
+		
+		//Add mouselistener
 		this.addMouseListener(this);
 
 	}
@@ -90,45 +77,37 @@ public class NotificationWindow extends AnybeamWindow implements ActionListener,
 			}
 
 		});
-
-
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		this.setVisible(false);
-
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
+	public void mouseEntered(MouseEvent e) {
 		this.currenthideTask.cancel(true);
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-	System.out.println(arg0.getPoint());
+		this.MAIN_WINDOW.setVisible(true);
 		this.setVisible(false);
 		
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
+	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
