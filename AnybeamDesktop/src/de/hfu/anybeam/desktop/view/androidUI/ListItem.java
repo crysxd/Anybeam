@@ -98,6 +98,9 @@ public class ListItem {
 			JLabel subtitle = new JLabel(this.getSubtitle());
 			subtitle.setForeground(TITLE_COLOR);
 			subtitle.setFont(SUBTITLE_FONT);
+			
+			if(centered)
+				subtitle.setHorizontalAlignment(SwingConstants.CENTER);
 
 			comp.add(subtitle, BorderLayout.SOUTH);
 		}

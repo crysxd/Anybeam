@@ -104,7 +104,7 @@ public class SendStage extends ListStage {
 			model.addElement(new ClientListItem(c));
 		
 		if(allClients.size() == 0) {
-			model.addElement(new ListItem("No Clients", null, true, false));
+			model.addElement(new ListItem("No Clients Found", "The display of Android devices must be on", true, false));
 		}
 		
 		//Set model
