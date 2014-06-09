@@ -120,15 +120,15 @@ public class AnybeamWindow extends JDialog {
 			Graphics2D g2 = (Graphics2D) g;
 
 			//TOP
-			g2.drawImage(AnybeamWindow.TOP_LEFT, 0, 0, 50, 125, this);
-			g2.drawImage(AnybeamWindow.TOP, 50, 0, this.getWidth()-100, 125, this);
-			g2.drawImage(AnybeamWindow.TOP_RIGHT, this.getWidth()-50, 0, 50, 125, this);
+			g2.drawImage(AnybeamWindow.TOP_LEFT, 0, 0, 50, 50, this);
+			g2.drawImage(AnybeamWindow.TOP, 50, 0, this.getWidth()-100, 50, this);
+			g2.drawImage(AnybeamWindow.TOP_RIGHT, this.getWidth()-50, 0, 50, 50, this);
 
 			//LEFT
-			g2.drawImage(AnybeamWindow.LEFT, 0, 125, 50, this.getHeight()-175, this);
+			g2.drawImage(AnybeamWindow.LEFT, 0, 50, 50, this.getHeight()-100, this);
 
 			//RIGHT
-			g2.drawImage(AnybeamWindow.RIGHT, this.getWidth()-50, 125, 50, this.getHeight()-175, this);
+			g2.drawImage(AnybeamWindow.RIGHT, this.getWidth()-50, 50, 50, this.getHeight()-100, this);
 
 			//BOTTOM
 			g2.drawImage(AnybeamWindow.BOTTOM_LEFT, 0, this.getHeight()-50, 50, 50, this);
@@ -136,7 +136,7 @@ public class AnybeamWindow extends JDialog {
 			g2.drawImage(AnybeamWindow.BOTTOM_RIGHT, this.getWidth()-50, this.getHeight()-50, 50, 50, this);
 
 			//BODY
-			g2.drawImage(AnybeamWindow.BODY, 50, 125, this.getWidth()-100, this.getHeight()-175, this);
+			g2.drawImage(AnybeamWindow.BODY, 50, 50, this.getWidth()-100, this.getHeight()-100, this);
 
 		}
 
