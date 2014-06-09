@@ -67,7 +67,8 @@ public class Control {
 	}
 
 	public void send(Client target, InputStream data, String resourceName, long length) {
-		System.out.println("Send: " + target.getName()+ " - " + resourceName);
+		final InputStream DATA = data;
+		
 		Client.SendTask sender = new Client.SendTask();
 		sender.setInputStream(data);
 		sender.setInputStreamLength(length);
@@ -89,13 +90,23 @@ public class Control {
 			@Override
 			public void transmissionFailed(TransmissionEvent e) {
 				Control.getControl().displayDownloadStatus(e);
+				try {
+					DATA.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 
 			}
 
 			@Override
 			public void transmissionDone(TransmissionEvent e) {
 				Control.getControl().displayDownloadStatus(e);
-				
+				try {
+					DATA.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
 			}
 		});
 		
