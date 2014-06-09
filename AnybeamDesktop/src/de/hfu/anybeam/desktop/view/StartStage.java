@@ -153,6 +153,8 @@ public class StartStage extends Stage implements ActionListener {
 				//Hide window (so it will be not on the screenshot)
 				this.getAndroidUI().setVisible(false);
 				this.getAndroidUI().setHideOnFocusLost(false);
+				
+				Thread.sleep(100);
 
 				//Make screenshot and save to tmp file
 				File temp = File.createTempFile("screenshot", ".png");
