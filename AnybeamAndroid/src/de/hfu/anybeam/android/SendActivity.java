@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -176,11 +175,7 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 	public void clientSearchDone() {
 		
 	}
-	
-	private String getFilenameFromPath(String path) {
-		return path.replaceAll("(.*[\\/])", "");
-	}
-		
+			
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		//On long click show device info if valid Client
@@ -290,6 +285,15 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 				.length());
 		builder.sendTo(c);
 	}
+	
+	/**
+	 * Helper Function to get the Filename
+	 * @param path the file path
+	 * @return the cut filename
+	 */
+	private String getFilenameFromPath(String path) {
+		return path.replaceAll("(.*[\\/])", "");
+	}
 
 	/**
 	 * Function to finalize and send a content {@link SendTask}
@@ -300,47 +304,61 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 	 * @throws IOException caused by sending
 	 */
 	private void sendContent(Client c, Uri fileUri, Client.SendTask builder) throws FileNotFoundException, IOException {
-		builder.setInputStream(new FileInputStream(
-				new File(getPath(getApplicationContext(), fileUri))));
-		builder.setSourceName(getFilenameFromURI(
-				getApplicationContext(), fileUri));
-		builder.setInputStreamLength(new File(
-				getPath(
-						getApplicationContext(),
-						fileUri)).length());
-		builder.sendTo(c);
+		String fileName = getFilenameFromURI(fileUri);
+		Long fileSize = getSizeFromURI(fileUri);
+		Log.i("Filename", fileName);
+		Log.i("Filesize", fileSize.toString());
+		Log.i("URI", fileUri.toString());
+		if (fileName != null && fileSize != null) {
+			builder.setInputStream(getContentResolver().openInputStream(fileUri));
+			builder.setSourceName(fileName);
+			builder.setInputStreamLength(fileSize);
+			builder.sendTo(c);
+		} else {
+			throw new FileNotFoundException();
+		}
+		
 	}
 	
 	/**
-	 * Function to find file in MediaStore
-	 * @param context the Application {@link Context}
-	 * @param contentUri the {@link Uri} for the File
-	 * @return the Path
-	 */
-	private String getPath(Context context, Uri contentUri) {
-		Cursor cursor = null;
-		try {
-			String[] proj = { MediaStore.Images.Media.DATA };
-			cursor = context.getContentResolver().query(contentUri, proj, null,
-					null, null);
-			int column_index = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			cursor.moveToFirst();
-			return cursor.getString(column_index);
-		} finally {
-			if (cursor != null) {
-				cursor.close();
-			}
-		}
-	}
-
-	/**
-	 * Function to find file name from the filepath
-	 * @param context the Application {@link Context}
+	 * Function to find file name from the contentUri
 	 * @param contentUri the {@link Uri} for the File
 	 * @return the file name
 	 */
-	private String getFilenameFromURI(Context context, Uri contentUri) {
-		return getPath(context, contentUri).replaceAll("(.*[\\/])", "");
+	private String getFilenameFromURI(Uri contentUri) {
+		String fileName = null;
+        String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
+        Cursor metaCursor = getContentResolver().query(contentUri, projection, null, null, null);
+        if (metaCursor != null) {
+            try {
+                if (metaCursor.moveToFirst()) {
+                    fileName = metaCursor.getString(0);
+                }
+            } finally {
+                metaCursor.close();
+            }
+        }
+        return fileName;
+	}
+	
+	/**
+	 * Function to find file size from the contentUri
+	 * @param contentUri the {@link Uri} for the File
+	 * @return the file name
+	 */
+	private long getSizeFromURI(Uri contentUri) {
+		Long fileSize = null;
+		String[] projection = {MediaStore.MediaColumns.SIZE};
+		Cursor metaCursor = getContentResolver().query(contentUri, projection, null, null, null);
+		if (metaCursor != null) {
+			try {
+				if (metaCursor.moveToFirst()) {
+					fileSize = metaCursor.getLong(0);
+				}
+			} finally {
+				metaCursor.close();
+			}
+		}
+		return fileSize;
 	}
 }
