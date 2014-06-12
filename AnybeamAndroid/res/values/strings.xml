@@ -45,8 +45,13 @@
         \t Jan-Henrik Preuß\n
         As team assignment to develop an Android application. \n \n 
         Computer Science (BSC), Furtwangen University 2014</string>
-    <string name="settings_pref_port_error_title">Invalid Port</string>
-    <string name="settings_pref_port_error_message">The port must be an integer between 1024 and 65535</string>
+    <string name="settings_pref_error_port_title">Invalid Port</string>
+    <string name="settings_pref_error_port_message">The port must be an integer between 1024 and 65535</string>
+    <string name="settings_pref_error_title">Input Error</string>
+    <string name="settings_pref_error_length_long">Your input is to long</string>
+    <string name="settings_pref_error_length_short">Your input is to short</string>
+    <string name="settings_pref_error_integer">Your input is to short</string>
+    <string name="settings_pref_error_path">Your chosen path is not valid. Use only characters between A-z, numbers, spaces or \'-\', \'_\', \'(\', \')\'</string>
     <string name="send_title">Choose a Device</string>
     <string name="send_clients_not_found">No Clients Found</string>
     <string name="send_clipboard_error">The clipboard dose not contain text to beam</string>
@@ -58,8 +63,8 @@
     <string name="transmission_out_progress_title">Beaming in Progress</string>
     <string name="error_port_bind">Port bind error</string>
     <string name="error_port_bind_summary">The present ports for brodcast or data messages are already used by another application</string>
-    <string name="error_file_select">Can\'t send file</string>
-    <string name="error_file_select_summary">Something went wrong with selecting the file</string>
+    <string name="error_file_select">File not found</string>
+    <string name="error_file_select_summary">Can\'t find the selected file</string>
     <string name="error_transmission_failed">Transmission failed</string>
     <string name="error_transmission_failed_summary">Check your password and encryption type</string>
     <string name="alt_ivsearching">Searching</string>

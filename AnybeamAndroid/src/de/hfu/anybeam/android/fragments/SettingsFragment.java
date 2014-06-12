@@ -18,37 +18,24 @@ import de.hfu.anybeam.android.R;
  * @since 1.0
  * @version 1.0
  */
-public class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener, OnPreferenceChangeListener {
 	
-    @Override
+	//Array, containing every EditTextPreference to be checked.
+	final String[] PREFERENCE_KEYS = {"port_broadcast", "group_password", "client_name", "port_data", "display_time", "data_folder"};		
+	
+	//Regex to check filepath no / at beginning or end, only characters between A-z, numbers, spaces or '-', '_', '(', ')'
+	final String REGEX = "[^\\/]([a-zA-Z0-9 \\-_\\(\\)]+\\/)*([a-zA-Z0-9 \\-_\\(\\)]+){1}";
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-
-		EditTextPreference broadcastPort = (EditTextPreference) getPreferenceScreen().findPreference("port_broadcast");
-		EditTextPreference dataPort = (EditTextPreference) getPreferenceScreen().findPreference("port_data");
 		
-		//Listener to check port setting
-		OnPreferenceChangeListener listener = new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				
-				String key = (String) newValue;
-				if (!isPort(key)) {
-	        		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-	        			.setTitle(R.string.settings_pref_port_error_title)
-	        			.setMessage(R.string.settings_pref_port_error_message)
-	        			.setPositiveButton(android.R.string.ok, null);
-	        		builder.show();
-	        		return false;				
-				}			
-				return true;
-			}
-		};
-
-		broadcastPort.setOnPreferenceChangeListener(listener);
-		dataPort.setOnPreferenceChangeListener(listener);
+		//Setup Listeners
+		for (int i = 0; i < PREFERENCE_KEYS.length; i++) {
+			getPreferenceScreen().findPreference(PREFERENCE_KEYS[i]).setOnPreferenceChangeListener(this);
+		}
 	}
 
     @Override
@@ -66,6 +53,71 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
         }
       }
     }
+    
+	@Override
+	public boolean onPreferenceChange(Preference preference, Object newValue) {
+		String key = (String) newValue;
+		
+		if (preference.getKey().equals("port_broadcast") || preference.getKey().equals("port_data")) {
+			if (!isPort(key)) {				
+				return showAlert(R.string.settings_pref_error_port_title, R.string.settings_pref_error_port_message);
+			}						
+		}
+		
+		if (preference.getKey().equals("group_password") ||
+			preference.getKey().equals("client_name") ||
+			preference.getKey().equals("display_time") ) {
+			if (key.length() > 32) {
+				return showAlert(R.string.settings_pref_error_title, R.string.settings_pref_error_length_long);
+			} else if (key.length() < 1) {
+				return showAlert(R.string.settings_pref_error_title, R.string.settings_pref_error_length_short);
+			}
+		}
+				
+		if (preference.getKey().equals("display_time")) {
+			if (!isInteger(key)) {
+				return showAlert(R.string.settings_pref_error_title, R.string.settings_pref_error_integer);
+			}
+		}
+		
+		if (preference.getKey().equals("data_folder")) {
+			if (!key.matches(REGEX)) {
+				return showAlert(R.string.settings_pref_error_title, R.string.settings_pref_error_path);
+			}
+		}
+		
+		return true;
+	}
+
+	/**
+	 * Shows error dialog
+	 * @param title the title id from resource
+	 * @param message the message id from resource
+	 * @return always False
+	 */
+	private boolean showAlert(int title, int message) {
+		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+		.setTitle(title)
+		.setMessage(message)
+		.setPositiveButton(android.R.string.ok, null);
+		builder.show();
+		return false;
+	}
+	
+	/**
+	 * Checks if String is valid integer
+	 * @param s the String to check
+	 * @return True if s is valid, false if not
+	 */
+	private boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    }
+	    // only got here if we didn't return false
+	    return true;
+	}
 
     /**
      * Checks if String is valid port
