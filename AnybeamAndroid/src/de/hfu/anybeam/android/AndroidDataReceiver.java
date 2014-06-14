@@ -263,7 +263,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			sendIntent.setDataAndType(uri, getMimeType(uri.getPath()));
 			PendingIntent pendingSendIntent = PendingIntent.getActivity(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT);
 			
-			mBuilder.addAction(android.R.drawable.ic_menu_share, context.getString(R.string.action_share), pendingSendIntent);
+			mBuilder.addAction(R.drawable.ic_action_share, context.getString(R.string.action_share), pendingSendIntent);
 			mBuilder.setStyle(new NotificationCompat.BigPictureStyle()
 										.bigPicture(bitmap)
 										.setSummaryText(e.getResourceName()));

@@ -296,7 +296,7 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 	}
 
 	/**
-	 * Function to finalize and send a content {@link SendTask}
+	 * Function to finalize and send content {@link SendTask}
 	 * @param c the {@link Client} to send to
 	 * @param fileUri the {@link Uri} specifying the content
 	 * @param builder the {@link SendTask} builder

@@ -37,14 +37,28 @@
     <string name="settings_pref_data_folder_summary">/storage/</string>
     <string name="settings_pref_auto_url">Auto Open Links</string>
     <string name="settings_pref_auto_url_summary">Auto open received links</string>
+    <string name="settings_category_links">Links</string>
+    <string name="settings_category_links_webpage">Webpage</string>
+    <string name="settings_category_links_help">Help</string>
     <string name="settings_category_other">Other</string>
     <string name="settings_category_about">About</string>
     <string name="settings_category_about_summary">
         Created and developed by:\n
-        \t Christian Würthner\ny
+        \t Christian Würthner\n
         \t Jan-Henrik Preuß\n
         As team assignment to develop an Android application. \n \n 
         Computer Science (BSC), Furtwangen University 2014</string>
+    <string name="settings_category_legal">Legal Notices</string>
+    <string name="settings_category_legal_icons">Icons</string>
+    <string name="settings_category_legal_icons_summary">
+		Device icons from iconmonstr.com\n
+		All other icons are part of the Android ecosystem.
+	</string>
+    <string name="settings_category_legal_core">Core Api</string>
+    <string name="settings_category_legal_core_summary">
+		The Anybeam Core API is available under the GNU GPLv2 on Github
+		https://anybeam.de/core
+	</string>
     <string name="settings_pref_error_port_title">Invalid Port</string>
     <string name="settings_pref_error_port_message">The port must be an integer between 1024 and 65535</string>
     <string name="settings_pref_error_title">Input Error</string>
