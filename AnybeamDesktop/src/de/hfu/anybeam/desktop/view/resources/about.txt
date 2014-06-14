@@ -1,1 +1,9 @@
-About .s.cpdspmcds  dds hdsiuh f uhds iuhfsudh s h
+Created and developed by
+    Christian Würthner
+    Jan-Henrik Preuß
+	
+As team assigned to develop an Android application within the scope of a project.
+
+Computer Science B.Sc.
+Hochschule Furtwangen University
+Copyright 2014

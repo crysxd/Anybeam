@@ -1,1 +1,6 @@
-Legal Notices sdok ifsd fiusdhu sd iusdhf uhdsf dsh fs d
+Icons
+Device icons from iconmonstr.com, all other icons are part of the Android ecosystem.
+
+Core API
+The Anybeam Core API is available under the GNU Public License version 2 on GitHub.
+www.anybeam.de/core
