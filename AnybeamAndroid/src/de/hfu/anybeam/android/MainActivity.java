@@ -2,8 +2,10 @@ package de.hfu.anybeam.android;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
@@ -18,6 +20,8 @@ import android.widget.Toast;
 import de.hfu.anybeam.android.utils.ClipboardUtils;
 
 public class MainActivity extends Activity {
+	
+	private WelcomeDialog welcomeDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,19 @@ public class MainActivity extends Activity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+		//If this is the first start, show a welcom dialog
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if(prefs.getBoolean("firstStart", true) && this.welcomeDialog == null) {
+			this.welcomeDialog = new WelcomeDialog();
+			this.welcomeDialog.show(this.getFragmentManager(), "aTag");
+		}
+
 	}
 
 	private void setListeners() {

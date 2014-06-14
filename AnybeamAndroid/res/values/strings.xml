@@ -5,7 +5,7 @@
     <string name="replaceMe">Replace Me</string>
     <string name="menu_action_settings">Settings</string>
     <string name="menu_action_refresh">Reload client list</string>
-    <string name="action_share">Share</string>    
+    <string name="action_share">Share</string>
     <string name="icon_device">Device Icon</string>
     <string name="info_adress">IP-Address:</string>
     <string name="info_id">ID:</string>
@@ -42,23 +42,18 @@
     <string name="settings_category_links_help">Help</string>
     <string name="settings_category_other">Other</string>
     <string name="settings_category_about">About</string>
-    <string name="settings_category_about_summary">
-        Created and developed by:\n
+    <string name="settings_category_about_summary">        Created and developed by:\n
         \t Christian Würthner\n
         \t Jan-Henrik Preuß\n
         As team assignment to develop an Android application. \n \n 
         Computer Science (BSC), Furtwangen University 2014</string>
     <string name="settings_category_legal">Legal Notices</string>
     <string name="settings_category_legal_icons">Icons</string>
-    <string name="settings_category_legal_icons_summary">
-		Device icons from iconmonstr.com\n
-		All other icons are part of the Android ecosystem.
-	</string>
+    <string name="settings_category_legal_icons_summary">		Device icons from iconmonstr.com\n
+		All other icons are part of the Android ecosystem.</string>
     <string name="settings_category_legal_core">Core Api</string>
-    <string name="settings_category_legal_core_summary">
-		The Anybeam Core API is available under the GNU GPLv2 on Github
-		https://anybeam.de/core
-	</string>
+    <string name="settings_category_legal_core_summary">		The Anybeam Core API is available under the GNU GPLv2 on Github
+		https://anybeam.de/core</string>
     <string name="settings_pref_error_port_title">Invalid Port</string>
     <string name="settings_pref_error_port_message">The port must be an integer between 1024 and 65535</string>
     <string name="settings_pref_error_title">Input Error</string>
@@ -82,6 +77,8 @@
     <string name="error_transmission_failed">Transmission failed</string>
     <string name="error_transmission_failed_summary">Check your password and encryption type</string>
     <string name="alt_ivsearching">Searching</string>
+    <string name="dialog_welcome_title">Welcome</string>
+    <string name="dialog_welcome_text">Thanks for downloading Anybeam. Remember this:\n\n- Enter your password in settings\n- Download Anybeam for your PC (www.anybeam.de/download)\n\nHaving problems? Go to Settings > Help to receive assistance.</string>
+    <string name="dialog_welcome_done">Let\'s go!</string>
     
-
 </resources>
