@@ -1,6 +1,6 @@
-Created and developed by
-    Christian Würthner
-    Jan-Henrik Preuß
+ï»¿Created and developed by
+    Christian WÃ¼rthner
+    Jan-Henrik PreuÃŸ
 	
 As team assigned to develop an Android application within the scope of a project.
 

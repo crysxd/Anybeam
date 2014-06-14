@@ -1,4 +1,4 @@
-Icons
+﻿Icons
 Device icons from iconmonstr.com, all other icons are part of the Android ecosystem.
 
 Core API
