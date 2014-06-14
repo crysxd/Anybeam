@@ -1,6 +1,8 @@
 package de.hfu.anybeam.desktop.view.androidUI;
 
 import java.awt.BorderLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.concurrent.Callable;
@@ -90,7 +92,10 @@ public class NotificationWindow extends AnybeamWindow implements MouseListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		if(!this.INFO_PANEL.contains(e.getPoint()))
+		Point p = e.getLocationOnScreen();
+		Rectangle d = this.getBounds();
+		
+		if(p.getX() < d.getX() || p.getX() > d.getMaxX() || p.getY() < d.getY() || p.getY() > d.getMaxY())
 			this.setVisible(false);
 			
 	}
