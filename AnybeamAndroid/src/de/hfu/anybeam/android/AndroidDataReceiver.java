@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 import android.app.Notification;
@@ -17,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -38,7 +41,7 @@ import de.hfu.anybeam.networkCore.networkProvider.broadcast.TcpDataReceiver;
 public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter {
 	private Context context;
 	private TcpDataReceiver reciver;
-	private File file;
+	private final Map<Integer, File> DOWNLOAD_FILES = new HashMap<Integer, File>();
 	private final NotificationManager mManager; 
 		
 	/**
@@ -120,13 +123,13 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		file = new File(fullPath, e.getResourceName());
-		if (file.exists())
-			file.delete();
+		File target = new File(fullPath, e.getResourceName());
+
+		this.DOWNLOAD_FILES.put(e.getTransmissionId(), target);
 		
 		try
 		{
-			return new FileOutputStream(file);
+			return new FileOutputStream(target);
 	    }
 	    catch (FileNotFoundException e1)
 	    {
@@ -160,6 +163,18 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	
 		} else if (out instanceof FileOutputStream) {
 			showFileNotification(e, mBuilder);
+			
+			String path = this.DOWNLOAD_FILES.get(e.getTransmissionId()).getAbsolutePath();
+			MediaScannerConnection.scanFile(
+					context, 
+					new String[] {path}, 
+					new String[] {getMimeType(path)}, 
+				new MediaScannerConnection.OnScanCompletedListener() {
+			      public void onScanCompleted(String path, Uri uri) {
+			          Log.i("ExternalStorage", "Scanned " + path + ":");
+			          Log.i("ExternalStorage", "-> uri=" + uri);
+			      }
+			 });
 		}
 				
 		try {
@@ -241,7 +256,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	private void showFileNotification(
 			TransmissionEvent e,
 			NotificationCompat.Builder mBuilder) {
-		Uri uri = Uri.fromFile(file);
+		Uri uri = Uri.fromFile(this.DOWNLOAD_FILES.get(e.getTransmissionId()));
 		
 		Intent openIntent = new Intent();
 		openIntent.setAction(android.content.Intent.ACTION_VIEW);
@@ -256,12 +271,13 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 		if (getMimeType(uri.getPath()).startsWith("image/")) {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-			Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+			Bitmap bitmap = BitmapFactory.decodeFile(this.DOWNLOAD_FILES.get(e.getTransmissionId()).getAbsolutePath(), options);
 			
 			Intent sendIntent = new Intent();
 			sendIntent.setAction(Intent.ACTION_SEND);
-			sendIntent.setDataAndType(uri, getMimeType(uri.getPath()));
-			PendingIntent pendingSendIntent = PendingIntent.getActivity(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT);
+			sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+			sendIntent.setType(getMimeType(uri.getPath()));
+			PendingIntent pendingSendIntent = PendingIntent.getActivity(context, 0, sendIntent,PendingIntent.FLAG_CANCEL_CURRENT);
 			
 			mBuilder.addAction(R.drawable.ic_action_share, context.getString(R.string.action_share), pendingSendIntent);
 			mBuilder.setStyle(new NotificationCompat.BigPictureStyle()
