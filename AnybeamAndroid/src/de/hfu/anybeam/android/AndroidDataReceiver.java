@@ -7,8 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Executors;
 
 import android.app.Notification;
@@ -25,6 +23,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.util.SparseArray;
 import android.webkit.MimeTypeMap;
 import de.hfu.anybeam.android.utils.ClipboardUtils;
 import de.hfu.anybeam.networkCore.AbstractDownloadTransmissionAdapter;
@@ -41,7 +40,7 @@ import de.hfu.anybeam.networkCore.networkProvider.broadcast.TcpDataReceiver;
 public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter {
 	private Context context;
 	private TcpDataReceiver reciver;
-	private final Map<Integer, File> DOWNLOAD_FILES = new HashMap<Integer, File>();
+	private final SparseArray<File> DOWNLOAD_FILES = new SparseArray<File>();
 	private final NotificationManager mManager; 
 		
 	/**
