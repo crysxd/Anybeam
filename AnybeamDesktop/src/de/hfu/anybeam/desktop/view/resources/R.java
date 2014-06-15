@@ -20,9 +20,7 @@ public class R {
 			text += line + "\n";
 		
 		r.close();
-		
-		System.out.println(text);
-		
+				
 		return text;
 	}
 	
