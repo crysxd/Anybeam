@@ -267,7 +267,8 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 		mBuilder.setContentIntent(pendingOpenIntent);
 		mBuilder.setAutoCancel(true);
 		
-		if (getMimeType(uri.getPath()).startsWith("image/")) {
+		String mimeType = getMimeType(uri.getPath());
+		if (mimeType != null && mimeType.startsWith("image/")) {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 			Bitmap bitmap = BitmapFactory.decodeFile(this.DOWNLOAD_FILES.get(e.getTransmissionId()).getAbsolutePath(), options);
@@ -322,9 +323,15 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	 * @return the mime type
 	 */
 	private String getMimeType(String url) {
-        String extension = url.substring(url.lastIndexOf("."));
+		int extensionStart = url.lastIndexOf(".");
+		
+		if(extensionStart < 0)
+			return "";
+		
+        String extension = url.substring(extensionStart);
         String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
+        
         return mimeType;
     }
 }
