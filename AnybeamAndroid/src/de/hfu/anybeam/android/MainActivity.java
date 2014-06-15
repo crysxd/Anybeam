@@ -47,6 +47,7 @@ public class MainActivity extends Activity {
 		if(prefs.getBoolean("firstStart", true) && this.welcomeDialog == null) {
 			this.welcomeDialog = new WelcomeDialog();
 			this.welcomeDialog.show(this.getFragmentManager(), "aTag");
+			prefs.edit().putBoolean("firstStart", false).apply();
 		}
 
 	}

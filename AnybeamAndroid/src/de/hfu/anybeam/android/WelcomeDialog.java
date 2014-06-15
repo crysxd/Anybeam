@@ -3,9 +3,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
 public class WelcomeDialog extends DialogFragment {
 	
@@ -17,8 +15,7 @@ public class WelcomeDialog extends DialogFragment {
 		.setTitle(R.string.dialog_welcome_title)
 		.setPositiveButton(R.string.dialog_welcome_done, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-				prefs.edit().putBoolean("firstStart", false).apply();
+
 			}
 		});
 		
