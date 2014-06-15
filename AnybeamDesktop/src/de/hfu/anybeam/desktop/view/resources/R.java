@@ -13,13 +13,15 @@ import javax.swing.ImageIcon;
 public class R {
 	
 	public static String readTextFile(String fileName) throws IOException {
-		BufferedReader r = new BufferedReader(new InputStreamReader(R.class.getResourceAsStream(fileName)));
+		BufferedReader r = new BufferedReader(new InputStreamReader(R.class.getResourceAsStream(fileName), "UTF8"));
 		String text = "", line;
 		
 		while((line = r.readLine()) != null)
 			text += line + "\n";
 		
 		r.close();
+		
+		System.out.println(text);
 		
 		return text;
 	}
