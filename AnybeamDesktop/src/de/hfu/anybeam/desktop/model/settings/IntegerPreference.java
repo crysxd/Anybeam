@@ -17,7 +17,7 @@ public class IntegerPreference extends Preference {
 	
 	public void setValue(Integer i) {
 		if(min <= i && i <=  max)
-			super.setValue(i.toString());
+			super.setValueAndSave(i.toString());
 		else
 			throw new IllegalArgumentException("Value out of range!");
 	}

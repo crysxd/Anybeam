@@ -9,9 +9,9 @@ public class TextPreference extends Preference {
 	@XmlAttribute
 	private int maxLegth;
 	
-	public void setValue(String s) {
+	public void setValueAndSave(String s) {
 		if(s.length() <= maxLegth)
-			super.setValue(s);
+			super.setValueAndSave(s);
 		else
 			throw new IllegalArgumentException("String is too long!");
 	}

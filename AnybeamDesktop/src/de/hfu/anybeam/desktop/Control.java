@@ -13,7 +13,12 @@ import de.hfu.anybeam.desktop.model.DesktopDataReciver;
 import de.hfu.anybeam.desktop.model.NetworkEnvironmentManager;
 import de.hfu.anybeam.desktop.model.settings.BooleanPreference;
 import de.hfu.anybeam.desktop.model.settings.Preference;
+import de.hfu.anybeam.desktop.model.settings.Settings;
 import de.hfu.anybeam.desktop.view.AnybeamDesktopView;
+import de.hfu.anybeam.desktop.view.resources.R;
+import de.hfu.anybeam.desktop.view.welcome.PasswordSlide;
+import de.hfu.anybeam.desktop.view.welcome.WelcomeWindow;
+import de.hfu.anybeam.desktop.view.welcome.WelcomeWindowSlide;
 import de.hfu.anybeam.networkCore.AbstractTransmissionAdapter;
 import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.TransmissionEvent;
@@ -64,6 +69,22 @@ public class Control {
 		
 		//Start both network service
 		this.restartNetworkServices();
+		
+		//Show welcome window
+		BooleanPreference firstStart = (BooleanPreference) Settings.getSettings().getPreference("first_start");
+		if(firstStart.getBooleanValue()) {
+			new WelcomeWindow(
+					new WelcomeWindowSlide(R.getImage("bg_welcome_1.png")), 
+					new WelcomeWindowSlide(R.getImage("bg_welcome_2.png")),
+					new WelcomeWindowSlide(R.getImage("bg_welcome_3.png")),
+					new WelcomeWindowSlide(R.getImage("bg_welcome_4.png")),
+					new PasswordSlide(R.getImage("bg_welcome_5.png")),
+					new WelcomeWindowSlide(R.getImage("bg_welcome_6.png")),
+					new WelcomeWindowSlide(R.getImage("bg_welcome_7.png"))
+			).setVisible(true);
+			
+			firstStart.setValue(false);
+		}
 	}
 
 	public void send(Client target, InputStream data, String resourceName, long length) {

@@ -17,7 +17,7 @@ public abstract class PreferenceEditView extends JPanel {
 	protected abstract String getValue();
 	
 	public void apply() {
-		this.MY_PREFERENCE.setValue(this.getValue());
+		this.MY_PREFERENCE.setValueAndSave(this.getValue());
 		
 	}
 	

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Settings>
+    <PreferencesGroup transient="true" title="Transient" summary="">
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanPreference" name="Flag inidcating the first use of Anybeam" summary="@value" value="True" id="first_start"/>
+    </PreferencesGroup>   
     <PreferencesGroup title="Group Settings" summary="All group settings must be equal on all devices.">
         <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="integerPreference" min="1025" max="49151" name="Broadcast Port" summary="@value" value="10042" id="port_broadcast"/>
         <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="textPreference" maxLegth="32" name="Group Password" summary="Set the group encryption password" value="default" id="group_password"/>

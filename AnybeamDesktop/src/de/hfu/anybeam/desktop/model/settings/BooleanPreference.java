@@ -6,12 +6,13 @@ import javax.xml.bind.annotation.XmlType;
 public class BooleanPreference extends Preference {
 	
 	public void setValue(Boolean b) {
-		System.out.println(this.getName() + ": " + b);
-		super.setValue(b.toString());
+		super.setValueAndSave(b.toString());
+		
 	}
 	
 	public Boolean getBooleanValue() {
 		return Boolean.valueOf(this.getValue());
+		
 	}
 
 	@Override

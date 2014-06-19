@@ -78,6 +78,10 @@ public class SettingsStage extends ListStage {
 
 		//Iterate through groups
 		for(PreferencesGroup g : groups) {
+			//Skip if the group should not be shown
+			if(g.isTransient())
+				continue;
+			
 			//Get Preferences
 			List<Preference> prefs = g.getPreferences();
 

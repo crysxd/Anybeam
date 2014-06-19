@@ -14,6 +14,8 @@ public class PreferencesGroup {
 	private String title = "Unknown";
 	@XmlAttribute
 	private String summary = "";
+	@XmlAttribute(name="transient")
+	private boolean isTransient = false;
 	
 	public List<Preference> getPreferences() {
 		return new ArrayList<Preference>(this.preferences);
@@ -25,6 +27,11 @@ public class PreferencesGroup {
 	
 	public String getSummary() {
 		return summary;
+	}
+	
+	public boolean isTransient() {
+		return isTransient;
+		
 	}
 
 }

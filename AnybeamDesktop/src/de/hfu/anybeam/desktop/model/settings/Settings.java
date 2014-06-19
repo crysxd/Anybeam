@@ -63,10 +63,11 @@ public class Settings {
 		//Load Settings
 		Settings usedSettings = null;
 		try {
+			File setFile = getSettingsFile();
+			setFile.getParentFile().mkdirs();
 			usedSettings = (Settings) unmarshaller.unmarshal(getSettingsFile());
 
 		} catch(Exception e) {	
-			e.printStackTrace();
 		}
 		
 		//If no Settings where found, return the default one and save it to create the settings file
@@ -88,7 +89,7 @@ public class Settings {
 				//Get it from the used ones
 				Preference uPref = usedPrefs.get(usedPrefs.indexOf(dPref));
 				//Copy the value
-				dPref.setValue(uPref.getValue());
+				dPref.setValueAndSave(uPref.getValue());
 				
 			}
 			
@@ -195,7 +196,9 @@ public class Settings {
 
 			Marshaller m = jaxbContext.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			m.marshal(this, getSettingsFile());
+			File setFile =  getSettingsFile();
+			setFile.getParentFile().mkdirs();
+			m.marshal(this, setFile);
 
 		} catch (JAXBException e) {
 			e.printStackTrace();

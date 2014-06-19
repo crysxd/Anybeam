@@ -18,7 +18,7 @@ public class FilePreference extends Preference {
 	}
 	
 	public void setValue(File f) {
-		super.setValue(f.getAbsolutePath().replace('/', '\\').replace(USER_HOME, USER_HOME_PLACEHOLDER));
+		super.setValueAndSave(f.getAbsolutePath().replace('/', '\\').replace(USER_HOME, USER_HOME_PLACEHOLDER));
 		
 	}
 	

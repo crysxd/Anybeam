@@ -15,10 +15,10 @@ public class ListPreference extends Preference {
 	@XmlElement(name="Possibility")
 	private List<Possibility> possibilities;
 	
-	public void setValue(String value) {
+	public void setValueAndSave(String value) {
 		for(Possibility p : possibilities)
 			if(p.value.equals(value)) {
-				super.setValue(value);
+				super.setValueAndSave(value);
 				return;
 			}
 		
@@ -27,7 +27,7 @@ public class ListPreference extends Preference {
 	}
 	
 	public void setValue(Possibility p) {
-		this.setValue(p.value);
+		this.setValueAndSave(p.value);
 
 	}
 	

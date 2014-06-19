@@ -59,7 +59,6 @@ public class ClipboardUtils {
 				}
 			}
 
-			System.out.println(content);
 			return content;
 					
 		} catch (Exception e) {

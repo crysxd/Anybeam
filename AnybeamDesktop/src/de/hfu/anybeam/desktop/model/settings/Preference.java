@@ -44,7 +44,7 @@ public abstract class Preference {
 		
 	}
 	
-	protected void setValue(String value) {
+	public void setValueAndSave(String value) {
 		this.value = value;
 		
 		if(!Settings.isInitialised()) {

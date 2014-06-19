@@ -42,7 +42,7 @@ public class AnybeamWindow extends JDialog {
 		
 		//Only use the modified background if the system supports it
 		String property = System.getProperty("os.name").toUpperCase();
-		if(property.contains("WINDOWS") || property.contains("MAC")) {;
+		if(property.contains("WINDOWS")) {
 			this.setContentPane(new TrayWindowContentPane());
 			super.setBackground(new Color(0,0,0,0));
 

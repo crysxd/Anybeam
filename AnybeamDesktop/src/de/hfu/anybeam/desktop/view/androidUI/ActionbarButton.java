@@ -21,13 +21,13 @@ public class ActionbarButton extends JButton {
 	
 	private final Color ROLLOVER_BACKGROUND;
 	private final Color PRESSED_BACKGROUND;
+	private final Color BACKGROUND;
 	
 	public ActionbarButton(Image icon) {
 		this(icon, false);
-
 	}
 	
-	public ActionbarButton(Image icon, boolean useDarkhighlightColor) {
+	public ActionbarButton(Image icon, Color background, Color pressedBackground, Color rolloverBackground) {
 		super(new ImageIcon(ViewUtils.resizeImage(icon, Actionbar.getIconSize())));
 		
 		this.setContentAreaFilled(false);
@@ -35,25 +35,26 @@ public class ActionbarButton extends JButton {
 		this.setFocusPainted(false);
 		this.setPreferredSize(new Dimension(40, 40));
 		
-		if(useDarkhighlightColor) {
-			this.ROLLOVER_BACKGROUND = ActionbarButton.ROLLOVER_BACKGROUND_DARK;
-			this.PRESSED_BACKGROUND = ActionbarButton.PRESSED_BACKGROUND_DARK;
-			
-		} else {
-			this.ROLLOVER_BACKGROUND = ActionbarButton.ROLLOVER_BACKGROUND_LIGHT;
-			this.PRESSED_BACKGROUND = ActionbarButton.PRESSED_BACKGROUND_LIGHT;
-			
-		}
+		this.ROLLOVER_BACKGROUND = rolloverBackground;
+		this.PRESSED_BACKGROUND = pressedBackground;
+		this.BACKGROUND = background;
+
 	}
 	
+	public ActionbarButton(Image icon, boolean useDarkhighlightColor) {
+		this(
+				icon, 
+				new Color(0, 0, 0, 0f), 
+				useDarkhighlightColor ? ROLLOVER_BACKGROUND_DARK : ROLLOVER_BACKGROUND_LIGHT, 
+				useDarkhighlightColor ? PRESSED_BACKGROUND_DARK : PRESSED_BACKGROUND_LIGHT
+			);
+
+	}
+		
 	@Override
 	protected void paintComponent(Graphics g) {
 
-		g.setColor(new Color(0, 0, 0, 0));
-		
-		if(this.getModel().isArmed()) {
-			g.setColor(this.PRESSED_BACKGROUND); 
-		}
+		g.setColor(this.BACKGROUND);
 		
 		if(this.getModel().isRollover()) {
 			g.setColor(this.ROLLOVER_BACKGROUND); 
@@ -62,6 +63,7 @@ public class ActionbarButton extends JButton {
 		if(this.getModel().isArmed()) {
 			g.setColor(this.PRESSED_BACKGROUND); 
 		}
+		
 		
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		

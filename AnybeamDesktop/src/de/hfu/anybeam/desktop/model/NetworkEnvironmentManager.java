@@ -45,7 +45,6 @@ public class NetworkEnvironmentManager implements NetworkEnvironmentListener{
 	}
 
 	public void setActiveSearchModeEnabled(boolean flag) {
-		System.out.println("Active search:" + flag);
 		if(flag) {
 			this.myNetworkEnvironment.startClientSearch();
 
