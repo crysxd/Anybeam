@@ -68,6 +68,14 @@
         android:title="@string/settings_category_links">
         <Preference 
             android:key="webpage" 
+            android:title="@string/settings_category_links_download"
+            android:summary="@string/settings_category_links_download_summary">
+             <intent
+				 android:action="android.intent.action.VIEW"
+				 android:data="http://anybeam.de/download"/>
+        </Preference>
+        <Preference 
+            android:key="webpage" 
             android:title="@string/settings_category_links_webpage">
              <intent
 				 android:action="android.intent.action.VIEW"
