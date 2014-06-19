@@ -73,7 +73,8 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 
 		File userHome = new File(System.getProperty("user.home"));
 		File downloads = new File(userHome, "Downloads");
-		File target = new File(downloads,e.getResourceName());
+		
+		File target = getTarget(downloads.getAbsolutePath(), e.getResourceName(), 0);
 
 		this.DOWNLOAD_FILES.put(e.getTransmissionId(), target);
 		
@@ -84,6 +85,34 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 			e1.printStackTrace();
 			return null;
 			
+		}
+	}
+	
+	/**
+	 * Function to detect duplicate files new files get name_count as new name 
+	 * @param path the target Path
+	 * @param resourceName the base name of the file
+	 * @param count current count, max 100
+	 * @return returns the {@link File}
+	 */
+	private File getTarget(String path, String resourceName, int count ) {
+		File candidate;
+		if (count == 0) {
+			candidate = new File(path, resourceName);				
+		} else {
+			//Add _count extension
+			String iteration = resourceName + "_" + count;
+			if (resourceName.contains(".")) {
+				iteration = new StringBuilder(resourceName).insert(resourceName.lastIndexOf('.'), "_" + count ).toString();				
+			}
+			candidate = new File(path, iteration);				
+		}
+		//return candidate or make new recursion
+		if (!candidate.exists() || count > 100) {
+			return candidate;
+		} else {
+			count++;
+			return getTarget(path, resourceName, count);
 		}
 	}
 

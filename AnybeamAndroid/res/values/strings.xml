@@ -17,7 +17,7 @@
     <string name="default_port_data">10043</string>
     <string name="default_encyption_type">AES128</string>
     <string name="default_device_type">TYPE_SMARTPHONE</string>
-    <string name="default_display_time">5</string>
+    <string name="default_display_time">0</string>
     <string name="default_data_folder">Download</string>
     <string name="settings_title">Settings</string>
     <string name="settings_category_group">Group Settings</string>
@@ -60,7 +60,10 @@
     <string name="settings_pref_error_length_long">Your input is to long</string>
     <string name="settings_pref_error_length_short">Your input is to short</string>
     <string name="settings_pref_error_integer">Your input is to short</string>
-    <string name="settings_pref_error_path">Your chosen path is not valid. Use only characters between A-z, numbers, spaces or \'-\', \'_\', \'(\', \')\'</string>
+    <string name="settings_pref_error_path">
+        Your chosen path is not valid. Use only characters between A-z, 
+        numbers, spaces or \'-\', \'_\', \'(\', \')\' \n
+        Example: this/is/my/path</string>
     <string name="send_title">Choose a Device</string>
     <string name="send_clients_not_found">No Clients Found</string>
     <string name="send_clipboard_error">The clipboard dose not contain text to beam</string>

@@ -122,7 +122,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		File target = new File(fullPath, e.getResourceName());
+		File target = getTarget(fullPath, e.getResourceName(), 0);
 
 		this.DOWNLOAD_FILES.put(e.getTransmissionId(), target);
 		
@@ -135,6 +135,34 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 	        Log.e("saveToExternalStorage()", e1.getMessage());
 	        return null;
 	    }
+	}
+	
+	/**
+	 * Function to detect duplicate files new files get name_count as new name 
+	 * @param path the target Path
+	 * @param resourceName the base name of the file
+	 * @param count current count, max 100
+	 * @return returns the {@link File}
+	 */
+	private File getTarget(String path, String resourceName, int count ) {
+		File candidate;
+		if (count == 0) {
+			candidate = new File(path, resourceName);				
+		} else {
+			//Add _count extension
+			String iteration = resourceName + "_" + count;
+			if (resourceName.contains(".")) {
+				iteration = new StringBuilder(resourceName).insert(resourceName.lastIndexOf('.'), "_" + count ).toString();				
+			}
+			candidate = new File(path, iteration);				
+		}
+		//return candidate or make new recursion
+		if (!candidate.exists() || count > 100) {
+			return candidate;
+		} else {
+			count++;
+			return getTarget(path, resourceName, count);
+		}
 	}
 
 	@Override
@@ -263,7 +291,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 		PendingIntent pendingOpenIntent = PendingIntent.getActivity(context, 0, openIntent, PendingIntent.FLAG_ONE_SHOT);
 		
 		mBuilder.setContentTitle(context.getString(R.string.transmission_in_done_title_file)); 
-		mBuilder.setContentText(e.getResourceName());
+		mBuilder.setContentText(this.DOWNLOAD_FILES.get(e.getTransmissionId()).getName());
 		mBuilder.setContentIntent(pendingOpenIntent);
 		mBuilder.setAutoCancel(true);
 		
@@ -282,7 +310,7 @@ public class AndroidDataReceiver implements AbstractDownloadTransmissionAdapter 
 			mBuilder.addAction(R.drawable.ic_action_share, context.getString(R.string.action_share), pendingSendIntent);
 			mBuilder.setStyle(new NotificationCompat.BigPictureStyle()
 										.bigPicture(bitmap)
-										.setSummaryText(e.getResourceName()));
+										.setSummaryText(this.DOWNLOAD_FILES.get(e.getTransmissionId()).getName()));
 		} 
 	
 		mManager.notify(e.getTransmissionId(), mBuilder.build());
