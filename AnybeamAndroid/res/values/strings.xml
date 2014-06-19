@@ -55,7 +55,9 @@
     <string name="settings_category_legal_icons">Icons</string>
     <string name="settings_category_legal_icons_summary">
         Device icons from iconmonstr.com\n
-		All other icons are part of the Android ecosystem.	</string>
+		All other icons are part of the Android ecosystem. \n \n
+		The Android HelpViewPager is created by Patrik Åkerfeldt, Francisco Figueiredo Jr. and Jake Wharton. \n 
+		Licenced under Apache License, Version 2.0 http://www.apache.org/licenses/LICENSE-2.0	</string>
     <string name="settings_category_legal_core">Core Api</string>
     <string name="settings_category_legal_core_summary">
 		The Anybeam Core API is available under the GNU GPLv2 on Github
@@ -86,8 +88,17 @@
     <string name="error_transmission_failed">Transmission failed</string>
     <string name="error_transmission_failed_summary">Check your password and encryption type</string>
     <string name="alt_ivsearching">Searching</string>
-    <string name="dialog_welcome_title">Welcome</string>
-    <string name="dialog_welcome_text">Thanks for downloading Anybeam. Remember this:\n\n- Enter your password in settings\n- Download Anybeam for your PC (www.anybeam.de/download)\n\nHaving problems? Go to Settings > Help to receive assistance.</string>
-    <string name="dialog_welcome_done">Let\'s go!</string>
+    <string name="welcome_screen1_title">Welcome to Anybeam</string>
+    <string name="welcome_screen1_summary">Share your content with ease \n Securely</string>
+    <string name="welcome_screen1_image_alt">Anybeam Launcher</string>
+    <string name="welcome_screen2_title">How to share your Content?</string>
+    <string name="welcome_screen2_summary">Its very simple, just use Android\'s buildin share function.</string>
+    <string name="welcome_screen2_image_alt">Share</string>
+    <string name="welcome_screen3_title">How to share your Content?</string>
+    <string name="welcome_screen3_summary">Next select the device you want to share to.</string>
+    <string name="welcome_screen3_image_alt">Share</string>
+    <string name="welcome_screen4_title">Choose a password</string>
+    <string name="welcome_screen4_summary">Your password must be equal on all your devices. \n You can set your own password.</string>
+    <string name="welcome_screen4_button">Set password</string>
     
 </resources>

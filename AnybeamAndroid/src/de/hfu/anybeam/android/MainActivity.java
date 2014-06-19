@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,7 +22,6 @@ import de.hfu.anybeam.android.utils.ClipboardUtils;
 
 public class MainActivity extends Activity {
 	
-	private WelcomeDialog welcomeDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +44,11 @@ public class MainActivity extends Activity {
 		
 		//If this is the first start, show a welcom dialog
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getBoolean("firstStart", true) && this.welcomeDialog == null) {
-			this.welcomeDialog = new WelcomeDialog();
-			this.welcomeDialog.show(this.getFragmentManager(), "aTag");
-			prefs.edit().putBoolean("firstStart", false).apply();
+		if(prefs.getBoolean("firstStart", true)) {
+			Log.i("First Start", "Starting");
+			prefs.edit().putBoolean("firstStart", false).commit();
+            Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+            startActivity(intent);
 		}
 
 	}
