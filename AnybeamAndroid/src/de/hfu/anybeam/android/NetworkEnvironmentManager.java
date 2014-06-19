@@ -68,16 +68,16 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 			} catch (BindException e) {
 				//Warn User for Bind Exception
 				new AlertDialog.Builder(context)
-					.setTitle(R.string.error_port_bind)
-					.setMessage(R.string.error_port_bind_summary)
-					.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					})
-					.create()
-					.show();
+				.setTitle(R.string.error_port_bind)
+				.setMessage(R.string.error_port_bind_summary)
+				.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				})
+				.create()
+				.show();
 				e.printStackTrace();
 			}
 		}
@@ -159,7 +159,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 	 * @param context the application {@link Context}
 	 * @return Returns the current {@link NetworkEnvironmentSettings}
 	 */
-	private static NetworkEnvironment buildNetworkEnvironment(Context context) {
+	private static NetworkEnvironment buildNetworkEnvironment(Context context) {		 
 		PreferenceManager.setDefaultValues(context.getApplicationContext(), R.xml.preferences, false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = prefs.edit();
@@ -205,7 +205,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 	}
 
 	@Override
-	public void onReceive(Context context, Intent intent) {     
+	public void onReceive(Context context, Intent intent) {    
 		try {
 			switch(getWifiManager(context).getWifiState()) {
 			case WifiManager.WIFI_STATE_DISABLED:

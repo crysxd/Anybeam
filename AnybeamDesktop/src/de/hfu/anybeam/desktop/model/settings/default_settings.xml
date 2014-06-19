@@ -27,8 +27,9 @@
     </PreferencesGroup>
     <PreferencesGroup title="General Settings" summary="">
         <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanPreference" name="Start with System" summary="Start Anybeam after System Startup" value="False" id="gen_auto_start"/>
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="filePreference" name="Download Path" summary="@value" value="%HOME%/Downloads" id="gen_download_path"/>
         <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanPreference" name="Auto Open Links" summary="Auto open received links" value="False" id="gen_auto_open_links"/>
         <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="booleanPreference" name="Auto Open Files" summary="Auto open received files" value="False" id="gen_auto_open_files"/>
-        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="integerPreference" name="Notification Display Time" summary="@value seconds (0 = unlimited)" value="3" min="0" max="6000000" id="gen_notification_display_time"/>
+        <Preference xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="integerPreference" name="Notification Display Time" summary="@value seconds (0 = unlimited)" value="3" min="0" max="6000000" id="gen_notification_display_time"/>        
     </PreferencesGroup>
 </Settings>

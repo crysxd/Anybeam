@@ -71,8 +71,8 @@ public class DesktopDataReciver implements AbstractDownloadTransmissionAdapter {
 			return new ByteArrayOutputStream();
 		}
 
-		File userHome = new File(System.getProperty("user.home"));
-		File downloads = new File(userHome, "Downloads");
+		File downloads = new File(Settings.getSettings().getPreference("gen_download_path").getValue());
+		downloads.mkdirs();
 		
 		File target = getTarget(downloads.getAbsolutePath(), e.getResourceName(), 0);
 

@@ -30,12 +30,12 @@ public class MainActivity extends Activity {
 		setListeners();
 
 		this.includeShareIcon((TextView) this.findViewById(R.id.tvInstructionText));
-
+		
 		try {
 			NetworkEnvironmentManager.getNetworkEnvironment(this);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 	
 	@Override

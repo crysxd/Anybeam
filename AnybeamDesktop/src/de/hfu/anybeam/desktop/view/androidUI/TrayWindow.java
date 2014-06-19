@@ -4,10 +4,14 @@ import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
 import java.awt.Rectangle;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -23,6 +27,7 @@ public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFo
 
 	private final TrayIcon TRAY_ICON;
 	private boolean hideOnFocusLost = true;
+	private long lastFocusLost = 0;
 	
 	public TrayWindow(Image trayIcon) throws AWTException, UnsupportedOperationException {	
 		//Check system tray availability
@@ -48,6 +53,20 @@ public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFo
 		//Add listeners
 		this.TRAY_ICON.addMouseListener(this);
 		this.addWindowFocusListener(this);
+		
+		//Create Context-menu to exit program
+		PopupMenu m = new PopupMenu();
+		MenuItem mi = new MenuItem("Exit Anybeam");
+		m.add(mi);
+		mi.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+				
+			}
+		});
+		this.TRAY_ICON.setPopupMenu(m);
 		
 	}
 	
@@ -121,19 +140,22 @@ public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFo
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		//Check when the last focus lost was to prevent window to reopen after a click on the trayicon
+		if(e.isPopupTrigger() || (System.currentTimeMillis() - this.lastFocusLost < 250))
+			return;
+		
 		this.setVisible(!this.isVisible());
 		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		this.setHideOnFocusLost(false);
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		this.setHideOnFocusLost(true);
+
 	}
 
 	@Override
@@ -155,6 +177,9 @@ public class TrayWindow extends AnybeamWindow implements MouseListener, WindowFo
 	public void windowLostFocus(WindowEvent e) {
 		if(this.isHideOnFocusLost())
 			this.setVisible(false);
+		
+		this.lastFocusLost = System.currentTimeMillis();
+
 		
 	}
 }

@@ -1,17 +1,14 @@
 package de.hfu.anybeam.desktop.model.settings;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -43,15 +40,63 @@ public class Settings {
 
 		return singleton;
 	}
+	
+	protected static boolean isInitialised() {
+		return singleton != null;
+		
+	}
 
 	private static Settings loadSettings() throws JAXBException {
-		
-		if(!getSettingsFile().exists())
-			restoreDefaultSettings();
-		
-		JAXBContext jaxbContext = JAXBContext.newInstance(Settings.class, PreferencesGroup.class, Preference.class, TextPreference.class, IntegerPreference.class, BooleanPreference.class, ListPreference.class);
-		return (Settings) jaxbContext.createUnmarshaller().unmarshal(getSettingsFile());
+		Unmarshaller unmarshaller = JAXBContext.newInstance(
+				Settings.class, 
+				PreferencesGroup.class, 
+				Preference.class, 
+				FilePreference.class, 
+				TextPreference.class, 
+				IntegerPreference.class, 
+				BooleanPreference.class, 
+				ListPreference.class).createUnmarshaller();
 
+		//Load Default Settings
+		Settings defaultSettings = (Settings) unmarshaller.unmarshal(getDefaultSettingsStream());
+
+		//Load Settings
+		Settings usedSettings = null;
+		try {
+			usedSettings = (Settings) unmarshaller.unmarshal(getSettingsFile());
+
+		} catch(Exception e) {	
+			e.printStackTrace();
+		}
+		
+		//If no Settings where found, return the default one and save it to create the settings file
+		if(usedSettings == null) {
+			defaultSettings.save();
+			return defaultSettings;
+		}
+		
+		//If we reach this point, we have default and used settings, let's merge them together
+		//We keep the dafault settings but we will copy all the old settings to the default ones
+		List<Preference> defaultPrefs = defaultSettings.getAllPreferences();
+		List<Preference> usedPrefs = usedSettings.getAllPreferences();
+
+		//Iterate over default preferences
+		for(Preference dPref : defaultPrefs) {
+			
+			//If the used ones contain the preference
+			if(usedPrefs.contains(dPref)) {
+				//Get it from the used ones
+				Preference uPref = usedPrefs.get(usedPrefs.indexOf(dPref));
+				//Copy the value
+				dPref.setValue(uPref.getValue());
+				
+			}
+			
+		}
+		
+		//Save the changes and go on.
+		defaultSettings.save();
+		return defaultSettings;
 	}
 	
 	private static File getSettingsFile() {
@@ -72,24 +117,8 @@ public class Settings {
 		return returnFile;		
 	}
 	
-	private static void restoreDefaultSettings() {
-		File f = getSettingsFile();
-		f.getParentFile().mkdirs();
-		
-		try {
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
-			BufferedReader in = new BufferedReader(new InputStreamReader(Settings.class.getResourceAsStream("default_settings.xml")));
-			String line;
-			while((line = in.readLine()) != null)
-				out.write(line + "\n");
-			
-			out.close();
-			in.close();
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-			
-		}
+	private static InputStream getDefaultSettingsStream() {
+		return Settings.class.getResourceAsStream("default_settings.xml");
 	}
 
 	/*
@@ -97,7 +126,7 @@ public class Settings {
 	 */
 	@XmlElement(name="PreferencesGroup")
 	private List<PreferencesGroup> groups;
-
+	
 	public ArrayList<PreferencesGroup> getGroups() {
 		return new ArrayList<PreferencesGroup>(this.groups);
 	}
@@ -122,23 +151,47 @@ public class Settings {
 		return null;
 	}
 	
-	public Preference getPreference(String id) {
+	private List<Preference> getAllPreferences() {
+		List<Preference> prefList = new ArrayList<>();
+		
 		for(PreferencesGroup group : this.groups) {
 			for(Preference pref : group.getPreferences()) {
-				if(pref.getId().equals(id)) {
-					return pref;
-					
-				}
+				prefList.add(pref);
+			}
+		}
+		
+		return prefList;
+	}
+	
+	public Preference getPreference(String id) {
+		for(Preference pref : getAllPreferences()) {
+			if(pref.getId().equals(id)) {
+				return pref;
+				
 			}
 		}
 		
 		return null;
 	}
 
-	public void preferenceWasChanged(Preference preference) {
+	public void preferenceWasChanged(Preference preference) { 
+		//Cancel if not initialised
+		if(!isInitialised())
+			return;
+		
+		//Save
+		this.save();
+		
+		//Tell Control
+		Control.getControl().preferenceWasChanged(preference);
+
+
+	}
+	
+	private void save() {
 		//Save settings
 		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(Settings.class, PreferencesGroup.class, Preference.class, TextPreference.class, IntegerPreference.class, BooleanPreference.class, ListPreference.class);
+			JAXBContext jaxbContext = JAXBContext.newInstance(Settings.class, PreferencesGroup.class, FilePreference.class, Preference.class, TextPreference.class, IntegerPreference.class, BooleanPreference.class, ListPreference.class);
 
 			Marshaller m = jaxbContext.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
@@ -147,11 +200,6 @@ public class Settings {
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
-
-		//Tell Control
-		Control.getControl().preferenceWasChanged(preference);
-
-
 	}
 
 }

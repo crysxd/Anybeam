@@ -37,22 +37,33 @@ import de.hfu.anybeam.networkCore.Client.SendTask;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 
 public class SendActivity extends Activity implements NetworkEnvironmentListener, OnItemClickListener, OnItemLongClickListener {
-	
+
 	private ListView clientList;
-		
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 		setTitle(R.string.send_title);
-		
+
 		//Start loading animation
 		ImageView ivSearching = (ImageView) findViewById(R.id.ivSearching);
 		AnimationDrawable frameAnimation = (AnimationDrawable) ivSearching.getDrawable();
 		frameAnimation.setCallback(ivSearching);
 		frameAnimation.setVisible(true, true);
 		frameAnimation.start();
-		
+
+		clientList = (ListView) findViewById(R.id.lvClient);
+		clientList.setOnItemLongClickListener(this);
+		clientList.setOnItemClickListener(this);
+
+		this.updateView();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
 		//Load Settings
 		try {
 			NetworkEnvironmentManager.addNetworkEnvironmentListener(this);
@@ -60,51 +71,47 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 		}	
-					
-		clientList = (ListView) findViewById(R.id.lvClient);
-		clientList.setOnItemLongClickListener(this);
-		clientList.setOnItemClickListener(this);
-		
-		this.updateView();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
+
 		try {
 			NetworkEnvironmentManager.removeNetworkEnvironmentListener(this);
 			NetworkEnvironmentManager.getNetworkEnvironment(this).cancelClientSearch();
+			
 		} catch(Exception e) {
 			e.printStackTrace();
-			
+
 		}
 	}
-		
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.search_menu, menu);
-	    return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.search_menu, menu);
+		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
+
 		if(item.getItemId() == R.id.action_refresh) {
-	    	RotateAnimation anim = new RotateAnimation(
-	    			0f,
-	    			350f,
-	    			Animation.RELATIVE_TO_SELF,
-	    			0.5f,
-	    			Animation.RELATIVE_TO_SELF,
-	    			0.5f);
-    		anim.setInterpolator(new LinearInterpolator());
-    		anim.setRepeatCount(1);
-    		anim.setDuration(750);
-    		
-    	findViewById(R.id.action_refresh).startAnimation(anim);
+			RotateAnimation anim = new RotateAnimation(
+					0f,
+					350f,
+					Animation.RELATIVE_TO_SELF,
+					0.5f,
+					Animation.RELATIVE_TO_SELF,
+					0.5f);
+			anim.setInterpolator(new LinearInterpolator());
+			anim.setRepeatCount(1);
+			anim.setDuration(750);
+
+			findViewById(R.id.action_refresh).startAnimation(anim);
 			try {
 				NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).startClientSearch();
 			} catch (Exception e) {
@@ -114,16 +121,16 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 
 			return true;
 		}
-		
+
 		if(item.getItemId() == R.id.action_settings) {
 			Intent settingsActivity = new Intent(getBaseContext(), SettingsActivity.class);
 			startActivity(settingsActivity);
 			return true;
 		}
-		
+
 		return super.onOptionsItemSelected(item);
 	}
-		
+
 	private void updateView() {
 		this.runOnUiThread(new Runnable() {
 
@@ -136,7 +143,7 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 
 				} catch (Exception e) {
 					e.printStackTrace();
-					
+
 					ArrayList<Client> l = new ArrayList<Client> ();
 					clientList.setAdapter(new ClientAdapter(getApplicationContext(), l));
 
@@ -168,14 +175,14 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 
 	@Override
 	public void clientSearchStarted() {
-		
+
 	}
 
 	@Override
 	public void clientSearchDone() {
-		
+
 	}
-			
+
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		//On long click show device info if valid Client
@@ -197,27 +204,27 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 		try {					
 			Client c = (Client) clientList.getItemAtPosition(position);
 			Intent intent = getIntent();
-		    String action = intent.getAction();
-		    Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-		    String path = null;
-		    
-		    //Try to get path from the uri
-		    try {
-		    	path = Uri.decode(fileUri.toString());
-		    	Log.i("Filepaht", path);
+			String action = intent.getAction();
+			Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+			String path = null;
+
+			//Try to get path from the uri
+			try {
+				path = Uri.decode(fileUri.toString());
+				Log.i("Filepaht", path);
 			} catch (Exception e) {
 			}
-		    
-		    Client.SendTask builder = new Client.SendTask();
-		    builder.setAdapter(new GeneralTransmission(getApplicationContext()));
-		    
-		    //Decide what kind of content will be send
-		    if (Intent.ACTION_SEND.equals(action)) {
-		        if (path == null) {
-		        	String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-		    		if (sharedText != null) {
-		    			sendClipboard(c, sharedText, builder);
-		    		}
+
+			Client.SendTask builder = new Client.SendTask();
+			builder.setAdapter(new GeneralTransmission(getApplicationContext()));
+
+			//Decide what kind of content will be send
+			if (Intent.ACTION_SEND.equals(action)) {
+				if (path == null) {
+					String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+					if (sharedText != null) {
+						sendClipboard(c, sharedText, builder);
+					}
 				} else {
 					if (path.startsWith("content")) {
 						sendContent(c, fileUri, builder);
@@ -226,29 +233,29 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 					if (path.startsWith("file")) {
 						sendFile(c, path, builder);
 					}
-		        }
-		    }
-		    							
+				}
+			}
+
 			//Close Activity after Sending
 			finish();
-			
+
 		} catch (IndexOutOfBoundsException e) {
 			Log.w("ClientList", "ClientList is Empty");
-			
+
 		} catch (Exception e) {
 			//Warn User for File sending error
 			new AlertDialog.Builder(this)
-				.setTitle(R.string.error_file_select)
-				.setMessage(R.string.error_file_select_summary)
-				.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				})
-				.create()
-				.show();
-			
+			.setTitle(R.string.error_file_select)
+			.setMessage(R.string.error_file_select_summary)
+			.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			})
+			.create()
+			.show();
+
 			e.printStackTrace();
 		}		
 	}
@@ -282,10 +289,10 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 				new File(path)));
 		builder.setSourceName(getFilenameFromPath(path));
 		builder.setInputStreamLength(new File(path)
-				.length());
+		.length());
 		builder.sendTo(c);
 	}
-	
+
 	/**
 	 * Helper Function to get the Filename
 	 * @param path the file path
@@ -317,9 +324,9 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 		} else {
 			throw new FileNotFoundException();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Function to find file name from the contentUri
 	 * @param contentUri the {@link Uri} for the File
@@ -327,20 +334,20 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 	 */
 	private String getFilenameFromURI(Uri contentUri) {
 		String fileName = null;
-        String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
-        Cursor metaCursor = getContentResolver().query(contentUri, projection, null, null, null);
-        if (metaCursor != null) {
-            try {
-                if (metaCursor.moveToFirst()) {
-                    fileName = metaCursor.getString(0);
-                }
-            } finally {
-                metaCursor.close();
-            }
-        }
-        return fileName;
+		String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
+		Cursor metaCursor = getContentResolver().query(contentUri, projection, null, null, null);
+		if (metaCursor != null) {
+			try {
+				if (metaCursor.moveToFirst()) {
+					fileName = metaCursor.getString(0);
+				}
+			} finally {
+				metaCursor.close();
+			}
+		}
+		return fileName;
 	}
-	
+
 	/**
 	 * Function to find file size from the contentUri
 	 * @param contentUri the {@link Uri} for the File
