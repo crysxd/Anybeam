@@ -30,8 +30,6 @@ public class MainActivity extends Activity {
 		setListeners();
 
 		this.includeShareIcon((TextView) this.findViewById(R.id.tvInstructionText));
-
-		NetworkEnvironmentManager.createScreenOnBroadcastReceiver(this);
 		
 		try {
 			NetworkEnvironmentManager.getNetworkEnvironment(this);

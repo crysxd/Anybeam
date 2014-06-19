@@ -5,14 +5,12 @@ import java.net.BindException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -36,17 +34,7 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 	private static WifiManager wifi;
 	private static LocalNetworkProvider localNetworkProvider;
 	private static AndroidDataReceiver androidDataReceiver;
-	private static NetworkEnvironmentManager screenOnBroadcastReceiver;
-	
-	public static void createScreenOnBroadcastReceiver(Context context) {
-		if(screenOnBroadcastReceiver == null) {
-			System.out.println("create");
-			screenOnBroadcastReceiver = new NetworkEnvironmentManager();
-			context.registerReceiver(screenOnBroadcastReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
 
-		}	
-	}
-	
 	/**
 	 * Returns or creates  the current {@link NetworkEnvironment}
 	 * @param context the application {@link Context}
@@ -80,16 +68,16 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 			} catch (BindException e) {
 				//Warn User for Bind Exception
 				new AlertDialog.Builder(context)
-					.setTitle(R.string.error_port_bind)
-					.setMessage(R.string.error_port_bind_summary)
-					.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					})
-					.create()
-					.show();
+				.setTitle(R.string.error_port_bind)
+				.setMessage(R.string.error_port_bind_summary)
+				.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				})
+				.create()
+				.show();
 				e.printStackTrace();
 			}
 		}
@@ -215,35 +203,20 @@ public class NetworkEnvironmentManager extends BroadcastReceiver {
 	public synchronized static void updateNetworkEnvironment(Context context) throws Exception {
 		disposeNetworkEnvironment();
 	}
-	
+
 	@Override
 	public void onReceive(Context context, Intent intent) {    
-		if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-			try {
-				System.out.println("Screen on");
-				NetworkEnvironment n = getNetworkEnvironment(context);
-				if(n != null)
-					n.startClientSearch(10, TimeUnit.MILLISECONDS);
-
-			} catch(Exception e) {
-				e.printStackTrace();
-				
+		try {
+			switch(getWifiManager(context).getWifiState()) {
+			case WifiManager.WIFI_STATE_DISABLED:
+			case WifiManager.WIFI_STATE_DISABLING: disposeNetworkEnvironment(); break;
+			case WifiManager.WIFI_STATE_ENABLED: getNetworkEnvironment(context); break;
 			}
-		} else {
-			//create screen on broadcast receiver
-			createScreenOnBroadcastReceiver(context);
-			
-			try {
-				switch(getWifiManager(context).getWifiState()) {
-				case WifiManager.WIFI_STATE_DISABLED:
-				case WifiManager.WIFI_STATE_DISABLING: disposeNetworkEnvironment(); break;
-				case WifiManager.WIFI_STATE_ENABLED: getNetworkEnvironment(context); break;
-				}
 
-			} catch(Exception e) {
-				e.printStackTrace();
+		} catch(Exception e) {
+			e.printStackTrace();
 
-			}
 		}
+
 	}	
 }
