@@ -27,7 +27,7 @@ public abstract class Preference {
 	}
 	
 	public String getSummary() {
-		return summary.replaceAll("@value", this.getValue());
+		return summary.replace("@value", this.getValue());
 	}
 	
 	public String getPlainSummary() {
@@ -47,6 +47,11 @@ public abstract class Preference {
 	protected void setValue(String value) {
 		this.value = value;
 		
+		if(!Settings.isInitialised()) {
+			return;
+
+		}
+		
 		//Tell Control about the Change (new thread)
 		Preference.THREAD_EXECUTOR.execute(new Runnable() {
 			
@@ -56,6 +61,23 @@ public abstract class Preference {
 				
 			}
 		});
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if(obj instanceof Preference) {
+			return ((Preference) obj).getId().equals(this.getId());
+			
+		}
+		
+		if(obj instanceof String) {
+			obj.equals(this.getId());
+			
+		}
+		
+		return super.equals(obj);
+		
 	}
 	
 	public abstract PreferenceEditView createEditView();

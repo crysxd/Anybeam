@@ -31,11 +31,13 @@ public class MainActivity extends Activity {
 
 		this.includeShareIcon((TextView) this.findViewById(R.id.tvInstructionText));
 
+		NetworkEnvironmentManager.createScreenOnBroadcastReceiver(this);
+		
 		try {
 			NetworkEnvironmentManager.getNetworkEnvironment(this);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 	
 	@Override
