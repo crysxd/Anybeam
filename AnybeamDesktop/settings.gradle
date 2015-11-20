@@ -1,0 +1,4 @@
+rootProject.name = 'AnybeamDesktop'
+
+include ':core'
+project(':core').projectDir = new File('../AnybeamCore')

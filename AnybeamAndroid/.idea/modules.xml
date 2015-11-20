@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AnybeamAndroid.iml" filepath="$PROJECT_DIR$/AnybeamAndroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../AnybeamCore/core.iml" filepath="$PROJECT_DIR$/../AnybeamCore/core.iml" />
+    </modules>
+  </component>
+</project>
