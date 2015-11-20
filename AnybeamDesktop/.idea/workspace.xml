@@ -2,95 +2,80 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f565907b-34e4-46a6-b881-0d11406d9536" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo12.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/gradle/wrapper/gradle-wrapper.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/.idea/.name" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/.idea/compiler.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/.idea/copyright/profiles_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/.idea/gradle.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/.idea/runConfigurations.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/AndroidDataReceiver.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/ClientAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/GeneralTransmission.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/MainActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/NetworkEnvironmentManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/SendActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/SettingsActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/WelcomeActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/fragments/DeviceInfoFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/fragments/SettingsFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/fragments/WelcomeFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/fragments/WelcomeFragmentAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/utils/ClipboardUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/de/hfu/anybeam/android/utils/DeviceIconUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/org/goodev/helpviewpager/BlankFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/org/goodev/helpviewpager/CirclePageIndicator.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/org/goodev/helpviewpager/EventOnLastPage.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/org/goodev/helpviewpager/HelpFragmentPagerAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/org/goodev/helpviewpager/HelpFragmentStatePagerAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/org/goodev/helpviewpager/LICENCE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/org/goodev/helpviewpager/OnLastPageListener.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/java/org/goodev/helpviewpager/PageIndicator.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progress_indeterminate_horizontal_holo.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/layout/activity_main.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/layout/activity_search.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/layout/client_item.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/layout/client_not_found.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/layout/fragment_device_info.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/layout/fragment_welcome1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/layout/fragment_welcome2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/layout/fragment_welcome3.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/layout/fragment_welcome4.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/layout/simple_circles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/menu/main_menu.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/menu/search_menu.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/values-v11/styles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/values-v14/styles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/values/array.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/values/colors.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/values/strings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/values/styles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/values/themes.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/values/vpi__attrs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/values/vpi__colors.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/values/vpi__defaults.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/values/vpi__styles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/xml/preferences.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/test/java/hfu/de/anybeam/ExampleUnitTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/gradle.properties" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/gradle/wrapper/gradle-wrapper.properties" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/gradlew" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../AnybeamAndroid/gradlew.bat" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../.classpath" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/.classpath" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/.project" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/AndroidManifest.xml" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/ic_launcher-web.png" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/libs/android-support-v4.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/proguard-project.txt" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/project.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_action_refresh.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_action_settings.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_action_share.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_actionbar.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_clipboard.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_clipboard_auto.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_device_computer.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_device_laptop.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_device_phone.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_device_tablet.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_device_unknown.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_launcher_large.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_notification.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/img_device.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/img_share.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_action_refresh.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_action_settings.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_action_share.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_actionbar.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_clipboard.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_clipboard_auto.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_device_computer.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_device_laptop.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_device_phone.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_device_tablet.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_device_unknown.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_launcher_large.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_notification.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/img_device.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/img_share.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_action_refresh.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_action_settings.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_action_share.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_actionbar.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_clipboard.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_clipboard_auto.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_device_computer.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_device_laptop.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_device_phone.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_device_tablet.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_device_unknown.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_launcher_large.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_notification.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/img_device.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/img_share.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_action_refresh.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_action_settings.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_action_share.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_actionbar.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_clipboard.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_clipboard_auto.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_device_computer.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_device_laptop.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_device_phone.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_device_tablet.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_device_unknown.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_launcher_large.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_notification.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/img_device.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/img_share.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxxhdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxxhdpi/ic_launcher_large.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxxhdpi/img_device.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxxhdpi/img_share.png" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progress_indeterminate_horizontal_holo.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo01.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo02.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo03.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo04.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo05.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo06.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo07.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo08.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo09.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo10.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo11.png" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo12.png" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/layout/activity_main.xml" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/layout/activity_search.xml" afterPath="" />
@@ -269,6 +254,87 @@
       <change type="DELETED" beforePath="$PROJECT_DIR$/src/de/hfu/anybeam/desktop/view/welcome/WelcomeWindowSlide.java" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../Keystore/Keystore" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/../Keystore/Passwort.txt" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/AndroidManifest.xml" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/AndroidManifest.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/proguard-project.txt" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/proguard-rules.pro" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_action_refresh.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_action_refresh.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_action_settings.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_action_settings.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_action_share.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_action_share.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_actionbar.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_actionbar.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_clipboard.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_clipboard.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_clipboard_auto.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_clipboard_auto.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_device_computer.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_device_computer.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_device_laptop.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_device_laptop.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_device_phone.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_device_phone.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_device_tablet.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_device_tablet.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_device_unknown.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_device_unknown.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_launcher.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_launcher_large.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_launcher_large.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/ic_notification.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/ic_notification.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/img_device.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/img_device.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-hdpi/img_share.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-hdpi/img_share.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_action_refresh.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_action_refresh.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_action_settings.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_action_settings.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_action_share.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_action_share.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_actionbar.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_actionbar.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_clipboard.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_clipboard.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_clipboard_auto.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_clipboard_auto.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_device_computer.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_device_computer.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_device_laptop.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_device_laptop.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_device_phone.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_device_phone.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_device_tablet.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_device_tablet.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_device_unknown.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_device_unknown.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_launcher.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_launcher_large.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_launcher_large.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/ic_notification.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/ic_notification.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/img_device.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/img_device.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-mdpi/img_share.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-mdpi/img_share.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_action_refresh.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_action_refresh.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_action_settings.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_action_settings.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_action_share.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_action_share.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_actionbar.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_actionbar.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_clipboard.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_clipboard.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_clipboard_auto.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_clipboard_auto.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_device_computer.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_device_computer.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_device_laptop.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_device_laptop.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_device_phone.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_device_phone.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_device_tablet.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_device_tablet.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_device_unknown.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_device_unknown.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_launcher.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_launcher_large.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_launcher_large.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/ic_notification.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/ic_notification.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/img_device.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/img_device.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xhdpi/img_share.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xhdpi/img_share.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_action_refresh.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_action_refresh.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_action_settings.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_action_settings.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_action_share.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_action_share.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_actionbar.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_actionbar.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_clipboard.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_clipboard.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_clipboard_auto.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_clipboard_auto.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_device_computer.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_device_computer.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_device_laptop.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_device_laptop.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_device_phone.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_device_phone.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_device_tablet.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_device_tablet.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_device_unknown.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_device_unknown.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_launcher.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_launcher_large.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_launcher_large.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/ic_notification.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/ic_notification.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/img_device.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/img_device.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxhdpi/img_share.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxhdpi/img_share.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxxhdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxxhdpi/ic_launcher.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxxhdpi/ic_launcher_large.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxxhdpi/ic_launcher_large.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxxhdpi/img_device.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxxhdpi/img_device.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable-xxxhdpi/img_share.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable-xxxhdpi/img_share.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo01.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo01.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo02.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo02.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo03.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo03.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo04.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo04.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo05.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo05.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo06.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo06.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo07.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo07.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo08.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo08.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo09.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo09.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo10.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo10.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../AnybeamAndroid/res/drawable/progressbar_indeterminate_holo11.png" afterPath="$PROJECT_DIR$/../AnybeamAndroid/app/src/main/res/drawable/progressbar_indeterminate_holo11.png" />
     </list>
     <ignored path="AnybeamDesktop.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -876,30 +942,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AnybeamDesktop" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AnybeamDesktop" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AnybeamDesktop" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AnybeamDesktop" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
@@ -1158,7 +1200,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1167,10 +1209,10 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.50208336" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.49791667" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
