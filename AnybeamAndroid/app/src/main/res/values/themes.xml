@@ -9,7 +9,7 @@
     <!-- ActionBar styles -->
     <style name="AnybeamActionbar"
            parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/anybeam_green</item>
+        <item name="android:background">@color/colorPrimary</item>
         <item name="android:icon">@drawable/ic_actionbar</item>
     </style>
 </resources>

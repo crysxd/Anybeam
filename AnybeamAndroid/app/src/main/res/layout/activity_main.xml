@@ -13,7 +13,7 @@
         android:gravity="center"
         android:text="@string/main_instruction"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/grey" />
+        android:textColor="@color/lightGrey" />
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
                 android:gravity="center"
                 android:text="@string/main_click_to_share"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/grey" />
+                android:textColor="@color/lightGrey" />
         </LinearLayout>
     </FrameLayout>
 

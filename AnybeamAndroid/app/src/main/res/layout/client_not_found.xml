@@ -16,6 +16,6 @@
             android:gravity="center_horizontal"
             android:text="@string/replaceMe"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/grey" />
+            android:textColor="@color/lightGrey" />
 
 </RelativeLayout>

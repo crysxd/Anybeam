@@ -36,7 +36,7 @@
             android:orientation="vertical"
             android:text="@string/replaceMe"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/anybeam_gray" />
+            android:textColor="@color/darkGrey" />
 
         <TextView
             android:id="@+id/tvDeviceInfo"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:text="@string/replaceMe"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/grey" />
+            android:textColor="@color/lightGrey" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					ivClipboard.setColorFilter(R.color.anybeam_gray);					
+					ivClipboard.setColorFilter(R.color.darkGrey);
 					break;
 				case MotionEvent.ACTION_UP:
 					
