@@ -2,7 +2,7 @@
 <resources>
     <!-- the theme applied to the application or activity -->
     <style name="AnybeamTheme"
-           parent="@android:style/Theme.Holo.Light.DarkActionBar">
+           parent="Theme.AppCompat.NoActionBar">
         <item name="android:actionBarStyle">@style/AnybeamActionbar</item>
     </style>
 

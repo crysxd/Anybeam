@@ -18,6 +18,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,7 +38,7 @@ import de.hfu.anybeam.networkCore.Client;
 import de.hfu.anybeam.networkCore.Client.SendTask;
 import de.hfu.anybeam.networkCore.NetworkEnvironmentListener;
 
-public class SendActivity extends Activity implements NetworkEnvironmentListener, OnItemClickListener, OnItemLongClickListener {
+public class SendActivity extends AppCompatActivity implements NetworkEnvironmentListener, View.OnClickListener, OnItemClickListener, OnItemLongClickListener {
 
 	private ListView clientList;
 
@@ -52,6 +54,14 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 		frameAnimation.setCallback(ivSearching);
 		frameAnimation.setVisible(true, true);
 		frameAnimation.start();
+
+		// Setup toolbar
+		Toolbar v = (Toolbar) this.findViewById(R.id.toolbar);
+		v.setLogo(R.drawable.ic_actionbar);
+		this.setSupportActionBar(v);
+
+        // Setup fap click action
+        this.findViewById(R.id.buttonRefresh).setOnClickListener(this);
 
 		clientList = (ListView) findViewById(R.id.lvClient);
 		clientList.setOnItemLongClickListener(this);
@@ -90,16 +100,9 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.search_menu, menu);
-		return true;
-	}
+	public void onClick(View v) {
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		if(item.getItemId() == R.id.action_refresh) {
+		if(v.getId() == R.id.buttonRefresh) {
 			RotateAnimation anim = new RotateAnimation(
 					0f,
 					350f,
@@ -111,7 +114,7 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 			anim.setRepeatCount(1);
 			anim.setDuration(750);
 
-			findViewById(R.id.action_refresh).startAnimation(anim);
+			findViewById(R.id.buttonRefresh).startAnimation(anim);
 			try {
 				NetworkEnvironmentManager.getNetworkEnvironment(SendActivity.this).startClientSearch();
 			} catch (Exception e) {
@@ -119,16 +122,7 @@ public class SendActivity extends Activity implements NetworkEnvironmentListener
 			}
 			updateView();
 
-			return true;
 		}
-
-		if(item.getItemId() == R.id.action_settings) {
-			Intent settingsActivity = new Intent(getBaseContext(), SettingsActivity.class);
-			startActivity(settingsActivity);
-			return true;
-		}
-
-		return super.onOptionsItemSelected(item);
 	}
 
 	private void updateView() {

@@ -1,22 +1,56 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_alignParentLeft="true"
-    android:layout_centerVertical="true"
-    android:orientation="vertical" >
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <ImageView
-        android:id="@+id/ivSearching"
-        android:layout_width="match_parent"
+    <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical" >
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:elevation="@dimen/toolbar_elevation"
+            android:id="@+id/toolbar">
+
+        </android.support.v7.widget.Toolbar>
+
+        <ImageView
+            android:id="@+id/ivSearching"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/progress_indeterminate_horizontal_holo"
+            android:layout_marginLeft="-10dp"
+            android:contentDescription="@string/alt_ivsearching"/>
+
+        <ListView
+            android:id="@+id/lvClient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/buttonRefresh"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:src="@drawable/progress_indeterminate_horizontal_holo" 
-        android:contentDescription="@string/alt_ivsearching"/>
+        android:src="@drawable/ic_action_refresh"
+        android:layout_marginBottom="@dimen/margin_default"
+        android:layout_marginRight="@dimen/margin_default"
+        android:layout_gravity="bottom|end"
+        android:elevation="4dp"
+        app:borderWidth="0dp"
+        app:elevation="@dimen/fap_elevation"
+        app:fabSize="normal" />
 
-    <ListView
-        android:id="@+id/lvClient"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

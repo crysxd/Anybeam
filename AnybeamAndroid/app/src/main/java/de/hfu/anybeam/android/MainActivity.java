@@ -1,11 +1,12 @@
 package de.hfu.anybeam.android;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
@@ -18,9 +19,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import de.hfu.anybeam.android.utils.ClipboardUtils;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 	
 
 	@Override
@@ -30,6 +32,11 @@ public class MainActivity extends Activity {
 		setListeners();
 
 		this.includeShareIcon((TextView) this.findViewById(R.id.tvInstructionText));
+
+		// Setup toolbar
+        Toolbar v = (Toolbar) this.findViewById(R.id.toolbar);
+        v.setLogo(R.drawable.ic_actionbar);
+        this.setSupportActionBar(v);
 		
 		try {
 			NetworkEnvironmentManager.getNetworkEnvironment(this);
